@@ -1,0 +1,24 @@
+﻿
+<html>
+
+<body>
+@foreach(var year in Model.Years) {
+  <h2>@year.Name</h2>
+
+  <ul>
+  @foreach(var month in year.Months) {
+
+  <!--<ul>-->
+    foreach(var post in month.Posts) {
+    <li>
+      <a href="@post.UrlPath">@post.Title</a> (@month.Name)
+    </li>
+    }
+ <!-- </ul>-->
+
+  }
+  </ul>
+}
+
+</body>
+</html>
