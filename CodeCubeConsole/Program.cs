@@ -39,10 +39,11 @@ namespace CodeCubeConsole
             await SaveFile(result, string.Format("{0}.html", templateName));
 
             // now generate each individual content page
+            string postTemplate = await GetTemplate("post");
+            Razor.Compile(postTemplate, typeof(Post), "post");
             Parallel.ForEach(model, post =>
             {
-                string postTemplate = GetTemplate("post").Result;
-                string postResult = Razor.Parse(postTemplate, post);
+                string postResult = Razor.Run("post", post);
                 SaveFile(postResult, post.UrlPath);
             });
         }
@@ -66,7 +67,6 @@ namespace CodeCubeConsole
         {
             XElement root = XElement.Load("content.xml");
 
-
             var query = (from xElem in root.Elements("channel").Elements("item")
                          select new
                              Post
@@ -82,8 +82,6 @@ namespace CodeCubeConsole
             return query.OrderByDescending(p => p.PublishedOn).ToArray();
 
         }
-
-
 
         private static async Task<string> GetTemplate(string template)
         {
