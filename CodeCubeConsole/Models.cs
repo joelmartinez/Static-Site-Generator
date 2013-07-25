@@ -3,6 +3,12 @@ using System.Text.RegularExpressions;
 
 namespace CodeCubeConsole
 {
+    public class Master
+    {
+        public string Title { get; set; }
+        public string Content { get; set; }
+    }
+
     public class Year
     {
         public string Name { get; set; }

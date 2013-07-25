@@ -19,6 +19,8 @@ namespace CodeCubeConsole
         private static async void BuildSite()
         {
             var model = GetContent();
+            string masterTemplate = await GetTemplate("master");
+            Razor.Compile(masterTemplate, typeof(Master), "master");
 
             // start with the index page
             string templateName = "index";
@@ -36,7 +38,7 @@ namespace CodeCubeConsole
                 })
                 .ToArray();
             string result = Razor.Parse(indexTemplate, new { Years = groupedModel });
-            await SaveFile(result, string.Format("{0}.html", templateName));
+            await SaveFile("Joel Martinez", result, string.Format("{0}.html", templateName));
 
             // now generate each individual content page
             string postTemplate = await GetTemplate("post");
@@ -44,12 +46,18 @@ namespace CodeCubeConsole
             Parallel.ForEach(model, post =>
             {
                 string postResult = Razor.Run("post", post);
-                SaveFile(postResult, post.UrlPath);
+                SaveFile(post.Title, postResult, post.UrlPath);
             });
         }
 
-        private static async Task SaveFile(string content, string path)
+        private static async Task SaveFile(string title, string content, string path)
         {
+            await SaveFile(new Master { Title = title, Content = content }, path);
+        }
+        private static async Task SaveFile(Master master, string path)
+        {
+            string content = Razor.Run("master", master);
+
             if (path.First() == '/') path = path.Substring(1, path.Length - 1);
             if (path.Last() == '/') path += "index.html";
 
