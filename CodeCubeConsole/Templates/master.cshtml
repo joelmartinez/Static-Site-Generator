@@ -6,10 +6,20 @@
 </head>
 <body>
   <div id="header">
-    <a href="/">
-      <img src="http://www.gravatar.com/avatar/a61a4be80ce39683142620a76299820b.png" title="ItsAMeee" />
-    </a>
+    <div>
+	  <a href="/"><img height="50" width="50" src="http://www.gravatar.com/avatar/a61a4be80ce39683142620a76299820b.png" title="ItsAMeee" /></a>
+      <a href="/about">About</a>
+    </div>
   </div>
-@Raw(Model.Content);
+
+  <div id="contentwrapper">
+	  <div id="content">
+		@Raw(Model.Content);
+	  </div>
+  </div>
+
+  <div id="footer">
+    copyright 2013
+  </div>
 </body>
 </html>
