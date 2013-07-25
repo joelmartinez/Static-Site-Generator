@@ -1,9 +1,15 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-<title>@Model.Title</title>
+	<title>@Model.Title</title>
+	<link rel="stylesheet" type="text/css" href="/design/style.css" />
 </head>
 <body>
+  <div id="header">
+    <a href="/">
+      <img src="http://www.gravatar.com/avatar/a61a4be80ce39683142620a76299820b.png" title="ItsAMeee" />
+    </a>
+  </div>
 @Raw(Model.Content);
 </body>
 </html>
