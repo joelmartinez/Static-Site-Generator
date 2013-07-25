@@ -1,5 +1,12 @@
 ﻿
+<div>
+  @foreach(var year in Model.Years) {
+  <a href="#@year.Name">@year.Name</a> @:|
+  }
+</div>
+
 @foreach(var year in Model.Years) {
+  <a name="@year.Name" />
   <h2>@year.Name</h2>
 
   <ul>
