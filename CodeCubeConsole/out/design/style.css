@@ -24,7 +24,13 @@
 }
 
 #header a:visited { color:#fff}
-
+#header #flair {
+	block:none;
+	position:absolute;
+	top:-6px;
+	right:-10px;
+}
+#header span { color:#fff }
 #contentwrapper {
 	width:100%;
 	background:#fff;
@@ -49,5 +55,22 @@
 	padding-bottom:50px;
 }
 #archivelist{
-	margin-bottom:5px;
+	list-style:none;
+}
+#archivelist li {
+	padding:10px;
+	font-size:1.2em;
+	font-weight:bold;
+}
+.titleicon {
+ vertical-align:middle
+}
+#socialtable {
+	margin-top:20px;
+	width:100%;
+	border-collapse:collapse;
+	border:none;
+}
+#socialtable td {
+	text-align:center;
 }
