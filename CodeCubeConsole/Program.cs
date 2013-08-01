@@ -40,6 +40,11 @@ namespace CodeCubeConsole
             string result = Razor.Parse(indexTemplate, new { Years = groupedModel });
             await SaveFile("Joel Martinez", result, string.Format("{0}.html", templateName));
 
+            // the 'about' page
+            string abouttemplate = await GetTemplate("about");
+            result = Razor.Parse(abouttemplate);
+            SaveFile("About Joel Martinez", result, "/about/");
+
             // now generate each individual content page
             string postTemplate = await GetTemplate("post");
             Razor.Compile(postTemplate, typeof(Post), "post");
