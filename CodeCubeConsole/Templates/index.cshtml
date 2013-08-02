@@ -20,17 +20,14 @@
   <a name="@year.Name" />
   <h2>@year.Name</h2>
 
-  <ul id="archivelist">
+  <ul id="archivelist" class="hfeed">
   @foreach(var month in year.Months) {
 
-  <!--<ul>-->
     foreach(var post in month.Posts) {
-    <li>
-      <a href="@post.UrlPath">@post.Title</a> (@month.Name)
+    <li class="hentry">
+      <span class="entry-title"><a href="@post.UrlPath" rel="bookmark">@post.Title</a></span> (<abbr class="published" title="@post.PublishedOn">@month.Name</abbr>)
     </li>
     }
- <!-- </ul>-->
-
   }
   </ul>
 }

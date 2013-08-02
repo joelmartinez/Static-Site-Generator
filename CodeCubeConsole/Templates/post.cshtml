@@ -1,9 +1,10 @@
-﻿
-  <h1>@Model.Title</h1>
-  <p id="author">By Joel Martinez</p>
-  <p>Posted on @Model.PublishedOn.ToShortDateString()</p>
-  <div>
+﻿<div class="hentry">
+  <h1 class="entry-title">@Model.Title</h1>
+  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author">Joel Martinez</a> on <span class="published">@Model.PublishedOn.ToShortDateString()</span>
+</p>
+  <div class="entry-content">
     @Raw(Model.ParsedBody)
   </div>
+</div>
 <p>See more in the <a href="/#archives">archives</a>
 </p>
