@@ -5,6 +5,15 @@
 	<title>@Model.Title</title>
 	<link rel="stylesheet" type="text/css" href="/design/style.css" />
   <link rel="author" href="https://plus.google.com/113262807276471082782/posts"/>
+  @foreach(var meta in Model.Meta)
+  {
+    if (meta.Key.StartsWith("twitter")) {
+    <link name="@meta.Key" content="@meta.Value" />
+    }
+    else {
+    <link property="@meta.Key" content="@meta.Value" />
+    }
+  }
 </head>
 <body>
   <div id="header">

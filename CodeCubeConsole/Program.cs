@@ -51,7 +51,23 @@ namespace CodeCubeConsole
             Parallel.ForEach(model, post =>
             {
                 string postResult = Razor.Run("post", post);
-                SaveFile(post.Title, postResult, post.UrlPath);
+                Master master = new Master()
+                {
+                    Title = post.Title,
+                    Content = postResult
+                };
+
+                // set up meta tags
+                master.Meta["twitter:card"] = "summary";
+                master.Meta["twitter:creator"] = "@joelmartinez";
+                master.Meta["og:title"] = post.Title;
+                master.Meta["og:description"] = post.BodySummary;
+                if (post.HasImage)
+                {
+                    master.Meta["og:image"] = post.ImageUrl;
+                }
+
+                SaveFile(master, post.UrlPath);
             });
         }
 
