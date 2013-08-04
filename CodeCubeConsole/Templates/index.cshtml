@@ -15,10 +15,11 @@
   <a href="#@year.Name">@year.Name</a> @:|
   }
 </div>
-
+@{var numPosts = 0;}
 @foreach(var year in Model.Years) {
   <a name="@year.Name" />
   <h2>@year.Name</h2>
+
 
   <ul id="archivelist" class="hfeed">
   @foreach(var month in year.Months) {
@@ -26,6 +27,9 @@
     foreach(var post in month.Posts) {
     <li class="hentry">
       <span class="entry-title"><a href="@post.UrlPath" rel="bookmark">@post.Title</a></span> (<abbr class="published" title="@post.PublishedOn">@month.Name</abbr>)
+      @if(numPosts++ < 5) {
+      <p class="entry-summary">@post.BodySummary</p>
+      }
     </li>
     }
   }
