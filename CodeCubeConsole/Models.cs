@@ -77,6 +77,12 @@ namespace CodeCubeConsole
                     }
                     else
                     {
+                        // let's make sure this isn't just a really long text node
+                        if (t.Length > len)
+                        {
+                            int charsLeft = len - sb.Length;
+                            sb.Append(t.Substring(0, charsLeft));
+                        }
                         sb.Append("...");
                         break;
                     }
