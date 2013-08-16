@@ -10199,5 +10199,35 @@ I would really love to see more apps be tools to let you author your own content
     <wp:status>publish</wp:status>
     <category domain="category" nicename="programming"><![CDATA[Apps]]></category>
   </item>
+  <item>
+    <title>Exceptionally Simple Writing Tips</title>
+    <link>http://codecube.net/2013/08/exceptionally-simple-writing-tips/</link>
+    <pubDate>Fri, 16 Aug 2013 14:51:34 +0000</pubDate>
+    <dc:creator>admin</dc:creator>
+    <contentencoded>
+      <![CDATA[<p>Pretty awesome Reddit thread where people give tips on writing. Some of my favorite tidbits:</p>
+<blockquote>
+<p>From someone who taught me a good deal about effective writing. Eliminate "very" from your vocabulary; it's a lazy way to say something, and it means nothing.</p>
+<p>Very smart? You mean brilliant. Very pretty? You mean stunning. Very stupid? You mean moronic.</p>
+</blockquote>
+<p>And also this great one about <a href="http://www.reddit.com/r/AskReddit/comments/1jltqn/writers_of_reddit_what_are_exceptionally_simple/cbg1zxy">how you structure your sentences</a>:</p>
+<blockquote>
+<p>My favorite has always been the Gary Provost lesson on varying sentence length to create rhythm and flow</p>
+<p>This sentence has five words. Here are five more words. Five-word sentences are fine. But several together become monotonous. Listen to what is happening. The writing is getting boring. The sound of it drones. It&rsquo;s like a stuck record. The ear demands some variety. Now listen. I vary the sentence length, and I create music. Music. The writing sings. It has a pleasant rhythm, a lilt, a harmony. I use short sentences. And I use sentences of medium length. And sometimes, when I am certain the reader is rested, I will engage him with a sentence of considerable length, a sentence that burns with energy and builds with all the impetus of a crescendo, the roll of the drums, the crash of the cymbals&ndash;sounds that say listen to this, it is important.</p>
+</blockquote>
+<p>And probably <a href="http://www.reddit.com/r/AskReddit/comments/1jltqn/writers_of_reddit_what_are_exceptionally_simple/cbfyn4u">my favorite tip</a>:</p>
+<blockquote>
+<p>&ldquo;In six seconds, you&rsquo;ll hate me. But in six months, you&rsquo;ll be a better writer.</p>
+<p>From this point forward&mdash;at least for the next half year&mdash;you may not use &ldquo;thought&rdquo; verbs. These include: Thinks, Knows, Understands, Realizes, Believes, Wants, Remembers, Imagines, Desires, and a hundred others you love to use.</p>
+<p>The list should also include: Loves and Hates. And it should include: Is and Has, but we&rsquo;ll get to those later.</p>
+</blockquote>
+<p>Some of the comments in that thread are hilarious too ... they'll usually take the tip given by the top level comment, and respond in the style suggested by the tip.&nbsp;</p>]]>
+    </contentencoded>
+    <wp:post_date>2013-08-16 09:51:34</wp:post_date>
+    <wp:post_date_gmt>2013-08-16 14:51:34</wp:post_date_gmt>
+    <wp:post_name>exceptionally-simple-writing-tips</wp:post_name>
+    <wp:status>publish</wp:status>
+    <category domain="category" nicename="writing"><![CDATA[Writing]]></category>
+  </item>
 </channel>
 </rss>
