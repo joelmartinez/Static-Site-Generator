@@ -45,6 +45,11 @@ namespace CodeCubeConsole
             result = Razor.Parse(abouttemplate);
             SaveFile("About Joel Martinez", result, "/about/");
 
+            // syndication
+            string rsstemplate = await GetTemplate("rss");
+            result = Razor.Parse(rsstemplate, model.Take(15).ToArray());
+            SaveFile(result, "/feed/");
+
             // now generate each individual content page
             string postTemplate = await GetTemplate("post");
             Razor.Compile(postTemplate, typeof(Post), "post");
@@ -58,13 +63,25 @@ namespace CodeCubeConsole
                 };
 
                 // set up meta tags
+                string summary = post.BodySummary;
+
+                master.Meta["title"] = post.Title;
+                master.Meta["description"] = summary;
+
                 master.Meta["twitter:card"] = "summary";
+                master.Meta["twitter:site"] = "@joelmartinez";
                 master.Meta["twitter:creator"] = "@joelmartinez";
+                master.Meta["twitter:title"] = post.Title;
+                master.Meta["twitter:description"] = summary;
+
+                master.Meta["og:type"] = "article";
                 master.Meta["og:title"] = post.Title;
-                master.Meta["og:description"] = post.BodySummary;
+                master.Meta["og:description"] = summary;
                 if (post.HasImage)
                 {
+                    master.Meta["twitter:image"] = post.ImageUrl;
                     master.Meta["og:image"] = post.ImageUrl;
+                    master.Meta["image"] = post.ImageUrl;
                 }
 
                 SaveFile(master, post.UrlPath);
@@ -79,6 +96,11 @@ namespace CodeCubeConsole
         {
             string content = Razor.Run("master", master);
 
+            path = await SaveFile(content, path);
+        }
+
+        private static async Task<string> SaveFile(string content, string path)
+        {
             if (path.First() == '/') path = path.Substring(1, path.Length - 1);
             if (path.Last() == '/') path += "index.html";
 
@@ -90,6 +112,7 @@ namespace CodeCubeConsole
             {
                 await writer.WriteAsync(content);
             }
+            return path;
         }
 
         private static  IEnumerable<Post> GetContent()

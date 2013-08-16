@@ -3,15 +3,16 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=utf8" />
 	<title>@Model.Title</title>
+  <link rel="alternate" type="application/rss+xml" title="Joel Martinez" href="http://codecube.net/feed/" />
 	<link rel="stylesheet" type="text/css" href="/design/style.css" />
   <link rel="author" href="https://plus.google.com/113262807276471082782/posts"/>
   @foreach(var meta in Model.Meta)
   {
-    if (meta.Key.StartsWith("twitter")) {
-    <link name="@meta.Key" content="@meta.Value" />
+    if (meta.Key.StartsWith("og:")) {
+      <link property="@meta.Key" content="@meta.Value" />
     }
     else {
-    <link property="@meta.Key" content="@meta.Value" />
+      <link name="@meta.Key" content="@meta.Value" />
     }
   }
 </head>

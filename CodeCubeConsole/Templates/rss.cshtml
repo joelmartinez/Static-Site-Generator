@@ -1,0 +1,20 @@
+﻿<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>Joel Martinez</title>
+    <link>http://codecube.net/</link>
+    <description>I make apps: mobile, web, desktop. Founded ONETUG. Author of 'C# 5 First Look' http://amzn.com/1849686769.</description>
+    <language>en-us</language>
+    @foreach(var post in @Model) {
+    
+    @:<item>
+      <title>@post.Title</title>
+      @:<link>@post.URL</link>
+      <description>@post.BodySummary</description>
+      <dc:creator>Joel Martinez</dc:creator>
+      <dc:date>@post.PublishedOn.ToString("s")</dc:date>
+    @:</item>
+    
+    }
+
+  </channel>
+</rss>
