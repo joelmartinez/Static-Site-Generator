@@ -10229,5 +10229,23 @@ I would really love to see more apps be tools to let you author your own content
     <wp:status>publish</wp:status>
     <category domain="category" nicename="writing"><![CDATA[Writing]]></category>
   </item>
+
+  <item>
+    <title>Xamarin</title>
+    <link>http://codecube.net/2013/08/xamarin/</link>
+    <pubDate>Mon, 19 Aug 2013 14:51:34 +0000</pubDate>
+    <dc:creator>admin</dc:creator>
+    <contentencoded>
+      <![CDATA[<a href="http://xamarin.com" style="display:block;width:300px;margin-left:auto;margin-right:auto"><img src="http://codecube.net/design/images/Xamarin-Logo.png" title="Xamarin, inc." /></a>
+
+I'm incredibly excited to announce that I've joined Xamarin! When I <a href="http://codecube.net/2012/12/c-5-first-look/" title="C# 5 First Look">wrote my book</a>, I remarked to a few friends at the time that it was basically a love letter to C#; a language that is powerful, expressive, and concise all at the same time. Working with the folks who are responsible for bringing C# to <a href="http://www.mono-project.com/Supported_Platforms">just about every platform</a> makes me happy, as does the fact that Xamarin's focus has been primarily to make cross-platform mobile development a reality.
+      ]]>
+    </contentencoded>
+    <wp:post_date>2013-08-19 09:51:34</wp:post_date>
+    <wp:post_date_gmt>2013-08-19 14:51:34</wp:post_date_gmt>
+    <wp:post_name>xamarin</wp:post_name>
+    <wp:status>publish</wp:status>
+    <category domain="category" nicename="job"><![CDATA[Job]]></category>
+  </item>
 </channel>
 </rss>
