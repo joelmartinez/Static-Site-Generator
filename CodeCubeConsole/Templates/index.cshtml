@@ -7,6 +7,17 @@
     <td><a href="http://www.linkedin.com/in/joelmartinez" rel="me"><img src="/design/images/icon_linkedin.png" /></a></td>
   </tr>
 </table>
+@{
+var firstPost = Model.Years[0].Months[0].Posts[0];
+}
+<div class="hentry">
+  <span class="entry-title">
+    <a href="@firstPost.UrlPath" rel="bookmark">
+      <h2>@firstPost.Title</h2>
+    </a>
+  </span> 
+  <p class="entry-body">@Raw(firstPost.Body)</p>
+</div>
 
 <a name="archives" />
 <h1><img src="/design/images/icon_writing.png" class="titleicon" /> Archives</h1>
@@ -25,6 +36,7 @@
   @foreach(var month in year.Months) {
 
     foreach(var post in month.Posts) {
+      if (post == firstPost) { continue; }
     <li class="hentry">
       <span class="entry-title"><a href="@post.UrlPath" rel="bookmark">@post.Title</a></span> (<abbr class="published" title="@post.PublishedOn">@month.Name</abbr>)
       @if(numPosts++ < 5) {

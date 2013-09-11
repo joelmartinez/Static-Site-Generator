@@ -10247,5 +10247,31 @@ I'm incredibly excited to announce that I've joined Xamarin! When I <a href="htt
     <wp:status>publish</wp:status>
     <category domain="category" nicename="job"><![CDATA[Job]]></category>
   </item>
+
+  <item>
+    <title>How Work is Changing</title>
+    <link>http://codecube.net/2013/09/how-work-is-changing/</link>
+    <pubDate>Tuesday, 10 September 2013 14:51:34 +0000</pubDate>
+    <dc:creator>admin</dc:creator>
+    <contentencoded>
+      <![CDATA[<p>As a Software Engineer/Programmer/Developer/NinjaPirateWhateverHipstersAreCallingThemselvesTheseDays, it&rsquo;s hard not to see the slowly changing tide of work culture in our particular industry. It is becoming easier and easier to survive (and in fact, thrive) as an independent worker. For the purposes of this discussion, I will constrain the definition of an independent worker to include both remote employees, and (truly) independent contractors. The important bits are the ability to work with the hardware and software that the independent worker chooses (even if that means using their own license), and being able to work while physically separated from the rest of the group.</p>
+<p>Of course, you will be able to find people on either end of the spectrum; those who have been living and working this way for years, and those who are still &ldquo;shackled&rdquo; to a cube and have to go in to work every day. But suffice to say that the idea is not without its supporters. There are some that say that the future will be a &ldquo;swarm economy&rdquo; (<a href="http://falkvinge.net/2013/08/31/more-thoughts-on-the-coming-swarm-economy/" target="_blank">http://falkvinge.net/2013/08/31/more-thoughts-on-the-coming-swarm-economy/</a>&nbsp;)</p>
+<blockquote>
+<div>&ldquo;We are already seeing how people have pet projects on the side of their (one) employment, and projects weave in and out of somebody&rsquo;s life from time to time while they also change jobs and life situations. With increasing connectivity, this trend can be expected to accelerate toward a point where most people have some five to ten ongoing projects, some of which are paid and some are not, rather than having one &lsquo;day job&rsquo;. &ldquo;</div>
+</blockquote>
+<p>For me personally, I have definitely felt this change happening. Not only have my jobs been getting &ldquo;more free&rdquo; over the last several years, but so too has the drive and opportunity for &ldquo;side projects&rdquo;. Having gone from working in very restrictive corporate environments, to working remotely from my home (and periodically, from co-working spaces) has been extremely gratifying. Between tools like GitHub, IRC, IM, and Trello &hellip; it has become very easy to work effectively with a distributed team. Those that are talking about the swarm economy point to these advancements, and then others that allow non-tech members of the economy to monetize their skills (VoiceBunny, Etsy) knowledge (Mechanical Turk), or assets (AirBnB, Lyft).</p>
+<p>The problem with many of these discussions is that they are centered around the idea that just because it&rsquo;s happening for us programmers (or high tech entrepreneurs in general), that it is happening for the rest of society.There is a lot of evidence that many in the economy are either being left behind, or even being taken advantage of by this massive advancement in productivity (&nbsp;<a href="http://techcrunch.com/2013/09/09/the-data-factory/" rel="nofollow" target="_blank">http://techcrunch.com/2013/09/09/the-data-factory/</a>&nbsp;).</p>
+<blockquote>
+<div>&ldquo;It&rsquo;s tough if you&rsquo;re poor, it&rsquo;s tough if you&rsquo;re middle class. It means you have to have the right education to work at [the tech giants]. If you&rsquo;re not like us, it&rsquo;s tough&rdquo;</div>
+</blockquote>
+<p>I&rsquo;m glad that the conversation is happening. The truth of course lies somewhere in the middle; that there are many changes happening in the economy, and many opportunities for those who have the knowledge and the drive to take advantage of it. However there will surely be casualties. Those members of society that will not have the entrepreneurial spirit; who would have in generations past been content with working a low skilled factory job for their entire life until they can retire on their pension. I&rsquo;m not sure what is in store for that generation (or two) that has to survive during this cultural shift &hellip; but we will probably have to figure it out at some point in the near future.</p>
+<p>Time will tell how we do.</p>]]>
+    </contentencoded>
+    <wp:post_date>2013-09-10 09:51:34</wp:post_date>
+    <wp:post_date_gmt>2013-09-10 14:51:34</wp:post_date_gmt>
+    <wp:post_name>how-work-is-changing</wp:post_name>
+    <wp:status>publish</wp:status>
+    <category domain="category" nicename="software"><![CDATA[Software]]></category>
+  </item>
 </channel>
 </rss>
