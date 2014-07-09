@@ -115,7 +115,7 @@ namespace CodeCubeConsole
             return path;
         }
 
-        private static  IEnumerable<Post> GetContent()
+        private static IEnumerable<Post> GetContent()
         {
             XElement root = XElement.Load("content.xml");
 
@@ -131,9 +131,16 @@ namespace CodeCubeConsole
                         )
                        ;
 
+			IEnumerable<Post> markdownPosts = GetMarkdownContent ();
+
             return query.OrderByDescending(p => p.PublishedOn).ToArray();
 
         }
+
+		static IEnumerable<Post> GetMarkdownContent ()
+		{
+			throw new NotImplementedException ();
+		}
 
         private static async Task<string> GetTemplate(string template)
         {
