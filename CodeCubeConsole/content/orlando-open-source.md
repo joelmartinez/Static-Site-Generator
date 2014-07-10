@@ -15,6 +15,7 @@ fiercely maintained; we want to find out who the movers and shakers in open sour
 [Complete This Survey on your Orlando Open Source Projects](https://docs.google.com/forms/d/1IPrM4dBG6Cb9RXXDQa3ay3Vl4EaolLKoAxCXWvJ1iSE/edit)
 
 Goals:
-- Encourage local developers to collaborate.
-- Bring visibility to innovative work happening in Orlando.
-- Foster new ideas.
+
+* Encourage local developers to collaborate.
+* Bring visibility to innovative work happening in Orlando.
+* Foster new ideas.

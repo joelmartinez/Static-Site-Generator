@@ -27,6 +27,7 @@ namespace CodeCubeConsole
             Console.WriteLine("Generating {0}", templateName);
             string indexTemplate = await GetTemplate(templateName);
             var groupedModel = model
+				.Where(m => m.IsPublished)
                 .GroupBy(p => p.PublishedOn.Year)
                 .Select(p => new Year
                 {
@@ -158,12 +159,17 @@ namespace CodeCubeConsole
 				DateTime pubdate = DateTime.Parse (meta ["Date"]);
 				string url = Path.GetFileNameWithoutExtension (file);
 				url = string.Format ("http://codecube.net/{0}/{1}/{2}/", pubdate.Year, pubdate.Month, url);
-
+				bool isPublished = true;
+				if (meta.ContainsKey ("Published")) {
+					isPublished = bool.Parse (meta ["Published"]);
+				}
 				yield return new Post {
 					Title = meta["Title"],
 					Body = transformedContent,
 					PublishedOn = pubdate,
-					URL = url
+					URL = url,
+					IsPublished = isPublished,
+					ShouldRenderDoubleNewLine = false
 				};
 			}
 		}

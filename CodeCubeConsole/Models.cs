@@ -33,12 +33,15 @@ namespace CodeCubeConsole
 
         public string Title { get; set; }
         public string Body { get; set; }
+		public bool ShouldRenderDoubleNewLine = true;
         public string ParsedBody
         {
             get
             {
                 string body = this.Body;
-                body = body.Replace("\n\n", "<br /><br />");
+				if (ShouldRenderDoubleNewLine) {
+					body = body.Replace ("\n\n", "<br /><br />");
+				}
 
                 if (body.Contains("[gist"))
                 {
@@ -99,6 +102,7 @@ namespace CodeCubeConsole
             }
         }
         public DateTime PublishedOn { get; set; }
+		public bool IsPublished = true;
 
         private IEnumerable<string> GetHtml(HtmlNode node)
         {
