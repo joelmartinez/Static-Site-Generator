@@ -12,11 +12,11 @@ namespace CodeCubeConsole
     {
         static void Main(string[] args)
         {
-            BuildSite();
+			BuildSite().Wait();
             Console.ReadKey();
         }
 
-        private static async void BuildSite()
+        private static async Task BuildSite()
         {
             var model = GetContent();
             string masterTemplate = await GetTemplate("master");
@@ -133,13 +133,39 @@ namespace CodeCubeConsole
 
 			IEnumerable<Post> markdownPosts = GetMarkdownContent ();
 
-            return query.OrderByDescending(p => p.PublishedOn).ToArray();
+			return query.Union(markdownPosts).OrderByDescending(p => p.PublishedOn).ToArray();
 
         }
 
 		static IEnumerable<Post> GetMarkdownContent ()
 		{
-			throw new NotImplementedException ();
+			var allMarkdownFiles = Directory.EnumerateFiles ("content", "*.md", SearchOption.AllDirectories);
+
+			MarkdownSharp.Markdown md = new MarkdownSharp.Markdown ();
+
+
+			foreach (var file in allMarkdownFiles) {
+				var content = File.ReadAllLines (file);
+				var meta = content.TakeWhile (line => line.Contains (":")).Select (line => {
+					var split = line.Split(':');
+					return new KeyValuePair<string, string>(split[0], split[1]);
+				}).ToDictionary(i => i.Key, i => i.Value);
+
+				var contentLines = content.Skip (meta.Count);
+				string markdownContent = string.Join (Environment.NewLine, contentLines);
+				string transformedContent = md.Transform (markdownContent);
+
+				DateTime pubdate = DateTime.Parse (meta ["Date"]);
+				string url = Path.GetFileNameWithoutExtension (file);
+				url = string.Format ("http://codecube.net/{0}/{1}/{2}/", pubdate.Year, pubdate.Month, url);
+
+				yield return new Post {
+					Title = meta["Title"],
+					Body = transformedContent,
+					PublishedOn = pubdate,
+					URL = url
+				};
+			}
 		}
 
         private static async Task<string> GetTemplate(string template)
