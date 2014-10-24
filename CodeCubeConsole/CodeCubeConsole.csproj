@@ -85,6 +85,9 @@
     <None Include="content\fsharp-scenekit.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="content\better-know-a-xamarin-joel-martinez.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="content.xml">
