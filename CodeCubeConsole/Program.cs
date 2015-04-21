@@ -10,7 +10,7 @@ namespace CodeCubeConsole
 {
     class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
 			BuildSite().Wait();
             Console.ReadKey();
@@ -140,7 +140,7 @@ namespace CodeCubeConsole
 
 		static IEnumerable<Post> GetMarkdownContent ()
 		{
-			var allMarkdownFiles = Directory.EnumerateFiles ("content", "*.md", SearchOption.AllDirectories);
+			var allMarkdownFiles = Directory.EnumerateFiles ("content", "*.md", SearchOption.AllDirectories).ToArray();
 
 			MarkdownSharp.Markdown md = new MarkdownSharp.Markdown ();
 
