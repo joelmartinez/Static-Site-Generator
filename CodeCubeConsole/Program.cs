@@ -85,7 +85,7 @@ namespace CodeCubeConsole
                     master.Meta["image"] = post.ImageUrl;
                 }
 
-                SaveFile(master, post.UrlPath);
+					SaveFile(master, post.UrlPath).Wait();
             });
         }
 
