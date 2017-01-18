@@ -15,16 +15,28 @@ namespace CodeCubeConsole
 			if (args == null || args.Length == 0)
 				BuildSite().Wait();
 			else if (args.Length == 1 && args[0] == "export")
-				Export();
+				Export().Wait();
 			
             Console.ReadKey();
         }
 
-		private static void Export()
+		private static async Task Export()
 		{
 			var model = GetContent();
 
+			string postTemplate = await GetTemplate("post");
+			Razor.Compile(postTemplate, typeof(Post), "post");
+
+			var renderedPost = model.Select(p => new
+			{
+				Content = Razor.Run("post", p),
+				Model = p
+			});
+
 			var doc = new XDocument();
+
+			// TODO: build up the XML doc
+
 		}
 
         private static async Task BuildSite()
