@@ -12,9 +12,20 @@ namespace CodeCubeConsole
     {
         public static void Main(string[] args)
         {
-			BuildSite().Wait();
+			if (args == null || args.Length == 0)
+				BuildSite().Wait();
+			else if (args.Length == 1 && args[0] == "export")
+				Export();
+			
             Console.ReadKey();
         }
+
+		private static void Export()
+		{
+			var model = GetContent();
+
+			var doc = new XDocument();
+		}
 
         private static async Task BuildSite()
         {
