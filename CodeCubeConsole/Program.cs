@@ -13,7 +13,6 @@ namespace CodeCubeConsole
         public static void Main(string[] args)
         {
 			BuildSite().Wait();
-            Console.ReadKey();
         }
 
         private static async Task BuildSite()

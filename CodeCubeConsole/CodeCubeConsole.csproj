@@ -79,6 +79,10 @@
     <None Include="Templates\rss.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="content\*.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <!--
     <None Include="content\orlando-open-source.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -105,7 +109,7 @@
     </None>
     <None Include="content\xamarin-devdays-orlando.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </None>-->
   </ItemGroup>
   <ItemGroup>
     <Content Include="content.xml">
