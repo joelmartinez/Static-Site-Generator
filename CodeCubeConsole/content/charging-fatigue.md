@@ -4,7 +4,7 @@ Published: true
 
 Anyone else get tired of charging stuff? 
 
-I do. 
+I do! 
 
 These days, I have to worry about a whole menagerie of things that may or may not work when I pick
 it up, based on whether I remembered to charge it:
