@@ -3,10 +3,10 @@ Static-Site-Generator
 =====================
 
 
-CLI tool to generate a static site from a Wordpress export file.
+CLI tool to generate a static site from a Wordpress export file, and markdown content.
  Uses RazorEngine as the templating engine, and a Wordpress post export file as the input.
 
-This is, at least initially, being written primarily to support the move of my blog (http://codecube.net) off of Wordpress. However this tool could be generalized into a more broadly useful tool given time and attention :)
+This was originally written primarily to support the move of my blog (http://codecube.net) off of Wordpress. However this tool could be generalized into a more broadly useful tool given time and attention :)
 
 In the meantime, it can be easily customized.
 
@@ -16,4 +16,4 @@ In the meantime, it can be easily customized.
 * The content templates use Razor syntax and are stored in /Templates folder.
 * Any non-template content such as images and css can be put in the /out folder. Just make sure you set the file properties to "copy if newer".
 
-The static site will be output into the output location's 'out' folder (ie. /bin/debug/out).
+The static site will be output into the output location's 'out' folder (ie. `/bin/debug/out`).
