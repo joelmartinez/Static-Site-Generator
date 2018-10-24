@@ -41,6 +41,9 @@ pre { font-family:Consolas, Courier New; font-size:.9em}
 	margin:0px;
 	border-bottom:5px solid #FF8F00;
 }
+.entry-content {
+        overflow-x: scroll;
+} 
 #content {
 	color:#333332;
 	width:800px;
