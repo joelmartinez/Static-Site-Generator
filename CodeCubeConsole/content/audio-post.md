@@ -1,0 +1,30 @@
+Title: Dynamic Audio Posts
+Date: 2019-07-27  
+Published: false  
+
+Trying out something new ... adding some dynamic audio generation
+capabilities to my blog posts, using [tone.js](https://tonejs.github.io/).
+
+<button id="dapButton">Play Sound</button>
+
+<script language="text/javascript">
+var postdata = (function()
+{
+    var context = {};
+    context.synth = new Tone.Synth().toMaster();
+
+    var dapButton = document.getElementById("dapButton");
+    var lowNote=true;
+    dapButton.onclick=function() {
+        var note = "E2";
+        if (!lowNote) note="F2";
+        synth.triggerAttackRelease(note, "8n");
+        lowNote = !lowNote;
+    }
+
+    return context;
+})();
+</script>
+
+Go ahead, press the button a few times, if you can recognize it,
+[send me a tweet!](https://twitter.com/joelmartinez)
