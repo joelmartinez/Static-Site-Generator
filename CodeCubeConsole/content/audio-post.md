@@ -1,11 +1,14 @@
 Title: Dynamic Audio Posts
 Date: 2019-07-27  
-Published: false  
+Published: true  
 
 Trying out something new ... adding some dynamic audio generation
-capabilities to my blog posts, using [tone.js](https://tonejs.github.io/).
+capabilities to my blog posts, using [tone.js](https://tonejs.github.io/). 
+Turn up your speakers and let's see if this works:
 
-<button id="dapButton">Play Sound</button>
+<blockquote>
+    <button id="dapButton">Play Sound</button>
+</blockquote>
 
 <script>
 document.postcontext = (function()
