@@ -8,16 +8,18 @@ capabilities to my blog posts, using [tone.js](https://tonejs.github.io/).
 <button id="dapButton">Play Sound</button>
 
 <script language="text/javascript">
-var postdata = (function()
+document.postcontext = (function()
 {
     var context = {};
     context.synth = new Tone.Synth().toMaster();
 
     var dapButton = document.getElementById("dapButton");
     var lowNote=true;
+    console.log("setting up post context");
     dapButton.onclick=function() {
         var note = "E2";
         if (!lowNote) note="F2";
+        console.log("playing " + note);
         synth.triggerAttackRelease(note, "8n");
         lowNote = !lowNote;
     }
