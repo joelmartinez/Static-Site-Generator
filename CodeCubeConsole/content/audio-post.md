@@ -7,7 +7,7 @@ capabilities to my blog posts, using [tone.js](https://tonejs.github.io/).
 
 <button id="dapButton">Play Sound</button>
 
-<script language="text/javascript">
+<script>
 document.postcontext = (function()
 {
     var context = {};
