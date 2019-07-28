@@ -20,7 +20,7 @@ document.postcontext = (function()
         var note = "E2";
         if (!lowNote) note="F2";
         console.log("playing " + note);
-        synth.triggerAttackRelease(note, "8n");
+        context.synth.triggerAttackRelease(note, "8n");
         lowNote = !lowNote;
     }
 
