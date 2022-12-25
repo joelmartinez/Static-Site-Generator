@@ -12,4 +12,4 @@ jobs:
       with:
         dotnet-version: 4.5.2
     - name: Build and Run
-      run: msbuild build.proj /t:BuildAndRun
+      run: msbuild build.proj /t:BuildAndRun 
