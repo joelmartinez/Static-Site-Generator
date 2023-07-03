@@ -8,6 +8,11 @@ using System.Xml.Linq;
 
 namespace CodeCubeConsole
 {
+    public class IndexModel
+    {
+        public Year[] Years { get; set; }
+    }
+
     class Program
     {
         public static void Main(string[] args)
@@ -37,7 +42,7 @@ namespace CodeCubeConsole
                         .ToArray()
                 })
                 .ToArray();
-            string result = Razor.Parse(indexTemplate, new { Years = groupedModel });
+            string result = Razor.Parse(indexTemplate, new IndexModel { Years = groupedModel });
             await SaveFile("Joel Martinez", result, string.Format("{0}.html", templateName));
 
             // the 'about' page
