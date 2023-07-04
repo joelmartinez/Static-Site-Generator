@@ -22,11 +22,14 @@ jobs:
     - name: Restore NuGet packages
       run: nuget restore CodeCubeConsole.sln
 
-    - name: Build solution
+    - name: Build Code Generator
       run: msbuild CodeCubeConsole.sln /p:Configuration=Release
+    
+    - name: Run Site Generator
+      run: ./CodeCubeConsole/bin/Release/CodeCubeConsole.exe
 
-    - name: Archive production artifacts
+    - name: publish site artifacts
       uses: actions/upload-artifact@v2
       with:
         name: published
-        path: ./CodeCubeConsole/bin/Release/*
+        path: ./CodeCubeConsole/bin/Release/out/*
