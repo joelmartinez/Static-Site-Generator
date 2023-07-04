@@ -29,6 +29,15 @@ jobs:
       run: ./CodeCubeConsole.exe
       working-directory: ./CodeCubeConsole/bin/Release/
 
+    - name: 📂 Sync files
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: crane.dreamhost.com
+        username: ${{ secrets.CODECUBE_FTP_USER }}
+        password: ${{ secrets.CODECUBE_FTP_PASS }}
+        local-dir: ./CodeCubeConsole/bin/Release/out/
+        server-dir: ./static_codecube/
+    
     - name: publish site artifacts
       uses: actions/upload-artifact@v2
       with:
