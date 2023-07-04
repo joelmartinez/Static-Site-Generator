@@ -24,9 +24,10 @@ jobs:
 
     - name: Build Code Generator
       run: msbuild CodeCubeConsole.sln /p:Configuration=Release
-    
+  
     - name: Run Site Generator
       run: ./CodeCubeConsole/bin/Release/CodeCubeConsole.exe
+      working-directory: ./CodeCubeConsole/bin/Release/
 
     - name: publish site artifacts
       uses: actions/upload-artifact@v2
