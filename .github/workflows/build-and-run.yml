@@ -1,0 +1,32 @@
+name: BuildAndRun
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1.0.2
+
+    - name: Restore NuGet packages
+      run: nuget restore CodeCubeConsole.sln
+
+    - name: Build solution
+      run: msbuild CodeCubeConsole.sln /p:Configuration=Release
+
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: published
+        path: ./CodeCubeConsole/bin/Release/*
