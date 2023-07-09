@@ -30,6 +30,7 @@ jobs:
       working-directory: ./CodeCubeConsole/bin/Release/
 
     - name: 📂 Sync files
+      if: github.ref == 'refs/heads/master'
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
         server: crane.dreamhost.com
