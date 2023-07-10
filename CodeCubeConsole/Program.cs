@@ -162,7 +162,7 @@ namespace CodeCubeConsole
 
 				DateTime pubdate = DateTime.Parse (meta ["Date"]);
 				string url = Path.GetFileNameWithoutExtension (file);
-				url = string.Format ("http://codecube.net/{0}/{1}/{2}/", pubdate.Year, pubdate.Month, url);
+				url = string.Format ("https://codecube.net/{0}/{1}/{2}/", pubdate.Year, pubdate.Month, url);
 				bool isPublished = true;
 				if (meta.ContainsKey ("Published")) {
 					isPublished = bool.Parse (meta ["Published"]);
