@@ -8,10 +8,10 @@
   @foreach(var meta in Model.Meta)
   {
     if (meta.Key.StartsWith("og:")) {
-      <link property="@meta.Key" content="@meta.Value" />
+      <meta property="@meta.Key" content="@meta.Value" />
     }
     else {
-      <link name="@meta.Key" content="@meta.Value" />
+      <meta name="@meta.Key" content="@meta.Value" />
     }
   }
   
