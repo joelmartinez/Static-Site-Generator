@@ -137,6 +137,13 @@ pre { font-family:Consolas, Courier New; font-size:.9em}
 #timeline
 {
 	
+	.gamedev {}
+	.community {}
+	.frontend {}
+	.backend {}
+	.leadership {}
+	.author {}
+	.mobile {}
 
 /* Timeline Titles/Main Headings */
 .timeline-title {
@@ -156,6 +163,13 @@ pre { font-family:Consolas, Courier New; font-size:.9em}
     border-right: 1px solid var(--timeline-border-color);
 
 	margin:0;
+
+	span {
+		clip-path: polygon(0 0, 100% 0, 100% 80%, 50% 100%, 0 80%);
+		background-image: url('/design/images/icon_github.png');
+		background-size: cover;
+		border:1px dashed red;
+	}
 }
 
 /* Timeline Subheadings */
@@ -193,6 +207,8 @@ pre { font-family:Consolas, Courier New; font-size:.9em}
 
 	margin:0;
 	margin-bottom:15px;
+
+	padding: 15px 0 0 20px;
 }
 
 /* Footer Text */
