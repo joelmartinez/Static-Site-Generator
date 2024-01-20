@@ -109,18 +109,53 @@ pre { font-family:Consolas, Courier New; font-size:.9em}
     font-size: 18px; /* Adjust as needed */
 }
 
+/******************/
+
+:root {
+	--timeline-border-color: #000;
+
+	--color-accent: #2c3e50; /* Dark Blue for the main background */
+	--color-background: #ecf0f1; /* Light Blue for the card background */
+	--color-accent-blue: #3498db; /* Bright Blue for buttons and icons */
+	--color-gray: #95a5a6; /* Gray for secondary text elements */
+	--color-dark-gray: #7f8c8d; /* Dark Gray for less emphasized elements */
+	--color-accent-text: #fff; /* White for primary text */
+  }
+
 #timeline>div {
-    border: 1px solid black;
-	margin:10px;
+    width: 50%;
+    margin: auto;
+	background-color: var(--color-background);
+}
+#timeline:nth-child(even) {
+	margin-left:10px;
+}
+#timeline:nth-child(odd) {
+	margin-right:10px;
 }
 
 #timeline
 {
+	
+
 /* Timeline Titles/Main Headings */
 .timeline-title {
     font-family: 'Roboto Slab', Georgia, serif;
     font-weight: bold;
     font-size: 20px; /* Adjust as needed */
+	text-align: center;
+
+	background-color: var(--color-accent);
+	color: var(--color-accent-text);
+
+
+	border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-top: 1px solid var(--timeline-border-color);
+    border-left: 1px solid var(--timeline-border-color);
+    border-right: 1px solid var(--timeline-border-color);
+
+	margin:0;
 }
 
 /* Timeline Subheadings */
@@ -128,18 +163,36 @@ pre { font-family:Consolas, Courier New; font-size:.9em}
     font-family: 'Open Sans', Tahoma, sans-serif;
     font-weight: semi-bold;
     font-size: 16px; /* Adjust as needed */
+	
+    border-left: 1px solid var(--timeline-border-color);
+    border-right: 1px solid var(--timeline-border-color);
+	margin:0;
 }
 
 /* Timeline Dates */
 .timeline-date {
     font-family: 'Roboto', 'Courier New', monospace;
     font-size: 14px; /* Adjust as needed */
+    border-left: 1px solid var(--timeline-border-color);
+    border-right: 1px solid var(--timeline-border-color);
+
+	margin:0;
 }
 
 /* Body Text/Descriptions */
 .body-text {
     font-family: 'Source Sans Pro', 'Times New Roman', serif;
     font-size: 14px; /* Adjust as needed */
+	
+	border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+
+    border-left: 1px solid var(--timeline-border-color);
+    border-right: 1px solid var(--timeline-border-color);
+	border-bottom: 1px solid var(--timeline-border-color);
+
+	margin:0;
+	margin-bottom:15px;
 }
 
 /* Footer Text */
