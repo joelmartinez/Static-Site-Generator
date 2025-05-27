@@ -33,7 +33,7 @@ jobs:
       if: github.ref == 'refs/heads/master'
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
-        server: crane.dreamhost.com
+        server: pdx1-shared-a3-05.dreamhost.com
         username: ${{ secrets.CODECUBE_FTP_USER }}
         password: ${{ secrets.CODECUBE_FTP_PASS }}
         local-dir: ./CodeCubeConsole/bin/Release/out/
