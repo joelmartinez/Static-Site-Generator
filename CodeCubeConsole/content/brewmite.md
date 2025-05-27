@@ -8,7 +8,7 @@ Sometimes life gives you weirdly unique opportunities. I wrote about my experien
 
 -----
 
-https://www.linkedin.com/posts/joelmartinez_brewmite-activity-7321626162495971328-svAY?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAA-I2IBOZ7h68PPOCTTaLjsgdkhed1XBSw
+[Read on LinkedIn Here](https://www.linkedin.com/posts/joelmartinez_brewmite-activity-7321626162495971328-svAY?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAA-I2IBOZ7h68PPOCTTaLjsgdkhed1XBSw)
 
 Recently, I had the unique opportunity to appear in a commercial for GarageBeer, featuring Jason Kelce and Beau Allen (of NFL fame). The commercial, titled "Brewmite", is a loving parody of the martial arts classic "Bloodsport," and thanks to my training in Iaido, I was perfectly positioned to seize this epic moment when they were looking for extras. (If you squint at exactly 4 minutes and 2 seconds, and ignore Jason's performance, you'll clearly see my Oscar-worthy background appearance.)
 
