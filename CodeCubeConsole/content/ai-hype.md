@@ -15,7 +15,7 @@ A few other terms I’ve seen lately that feel like this:
 - "Memory": state tracking plus a vector store
 - "Cognitive architecture": prompt templates with logic and tool use
 - "Copilots": chat + retrieval + API calls
-- "Synthetic users": GPT with constraints
+- "Synthetic users": prompted chat with constraints
 - "Reasoning engine": Chain of Thought prompts with some heuristics thrown in
 - "MCP": basically tool calling plus JSON-RPC with some standardization
 
