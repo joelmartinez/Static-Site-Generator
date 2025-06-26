@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Markdig;
 
 namespace CodeCubeConsole
 {
@@ -146,10 +147,9 @@ namespace CodeCubeConsole
 		{
 			var allMarkdownFiles = Directory.EnumerateFiles ("content", "*.md", SearchOption.AllDirectories).ToArray();
 
-			MarkdownSharp.Markdown md = new MarkdownSharp.Markdown ();
+                        var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
 
-
-			foreach (var file in allMarkdownFiles) {
+                        foreach (var file in allMarkdownFiles) {
 				var content = File.ReadAllLines (file);
 				var meta = content.TakeWhile (line => line.Contains (":")).Select (line => {
 					var split = line.Split(':');
@@ -158,7 +158,7 @@ namespace CodeCubeConsole
 
 				var contentLines = content.Skip (meta.Count);
 				string markdownContent = string.Join (Environment.NewLine, contentLines);
-				string transformedContent = md.Transform (markdownContent);
+                                string transformedContent = Markdown.ToHtml (markdownContent, pipeline);
 
 				DateTime pubdate = DateTime.Parse (meta ["Date"]);
 				string url = Path.GetFileNameWithoutExtension (file);
