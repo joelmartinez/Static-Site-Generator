@@ -1,10 +1,11 @@
-﻿using RazorEngine;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using RazorLight;
+using Markdig;
 
 namespace CodeCubeConsole
 {
@@ -15,16 +16,23 @@ namespace CodeCubeConsole
 
     class Program
     {
-        public static void Main(string[] args)
+        static readonly RazorLightEngine Engine = new RazorLightEngineBuilder()
+            .UseMemoryCachingProvider()
+            .Build();
+
+        static readonly string BasePath = AppContext.BaseDirectory;
+
+        static string MasterTemplate = string.Empty;
+
+        public static async Task Main(string[] args)
         {
-			BuildSite().Wait();
+            await BuildSite();
         }
 
         private static async Task BuildSite()
         {
             var model = GetContent();
-            string masterTemplate = await GetTemplate("master");
-            Razor.Compile(masterTemplate, typeof(Master), "master");
+            MasterTemplate = await GetTemplate("master");
 
             // start with the index page
             string templateName = "index";
@@ -42,25 +50,24 @@ namespace CodeCubeConsole
                         .ToArray()
                 })
                 .ToArray();
-            string result = Razor.Parse(indexTemplate, new IndexModel { Years = groupedModel });
+            string result = await Engine.CompileRenderStringAsync("index", indexTemplate, new IndexModel { Years = groupedModel });
             await SaveFile("Joel Martinez", result, string.Format("{0}.html", templateName));
 
             // the 'about' page
             string abouttemplate = await GetTemplate("about");
-            result = Razor.Parse(abouttemplate);
-            SaveFile("About Joel Martinez", result, "/about/");
+            result = await Engine.CompileRenderStringAsync("about", abouttemplate, (object?)null);
+            await SaveFile("About Joel Martinez", result, "/about/");
 
             // syndication
             string rsstemplate = await GetTemplate("rss");
-            result = Razor.Parse(rsstemplate, model.Take(15).ToArray());
-            SaveFile(result, "/feed/");
+            result = await Engine.CompileRenderStringAsync("rss", rsstemplate, model.Take(15).ToArray());
+            await SaveFile(result, "/feed/");
 
             // now generate each individual content page
             string postTemplate = await GetTemplate("post");
-            Razor.Compile(postTemplate, typeof(Post), "post");
-            Parallel.ForEach(model, post =>
+            foreach (var post in model)
             {
-                string postResult = Razor.Run("post", post);
+                string postResult = await Engine.CompileRenderStringAsync("post", postTemplate, post);
                 Master master = new Master()
                 {
                     Title = post.Title,
@@ -89,8 +96,8 @@ namespace CodeCubeConsole
                     master.Meta["image"] = post.ImageUrl;
                 }
 
-					SaveFile(master, post.UrlPath).Wait();
-            });
+                await SaveFile(master, post.UrlPath);
+            }
         }
 
         private static async Task SaveFile(string title, string content, string path)
@@ -99,7 +106,7 @@ namespace CodeCubeConsole
         }
         private static async Task SaveFile(Master master, string path)
         {
-            string content = Razor.Run("master", master);
+            string content = await Engine.CompileRenderStringAsync("master", MasterTemplate, master);
 
             path = await SaveFile(content, path);
         }
@@ -109,7 +116,7 @@ namespace CodeCubeConsole
             if (path.First() == '/') path = path.Substring(1, path.Length - 1);
             if (path.Last() == '/') path += "index.html";
 
-            path = Path.Combine("out", path);
+            path = Path.Combine(BasePath, "out", path);
 
             Directory.CreateDirectory(Path.GetDirectoryName(path));
             Console.WriteLine("Persisting to {0}", path);
@@ -122,7 +129,8 @@ namespace CodeCubeConsole
 
         private static IEnumerable<Post> GetContent()
         {
-            XElement root = XElement.Load("content.xml");
+            string contentFile = Path.Combine(BasePath, "content.xml");
+            XElement root = XElement.Load(contentFile);
 
             var query = (from xElem in root.Elements("channel").Elements("item")
                          select new
@@ -142,14 +150,14 @@ namespace CodeCubeConsole
 
         }
 
-		static IEnumerable<Post> GetMarkdownContent ()
-		{
-			var allMarkdownFiles = Directory.EnumerateFiles ("content", "*.md", SearchOption.AllDirectories).ToArray();
+                static IEnumerable<Post> GetMarkdownContent ()
+                {
+                        var contentFolder = Path.Combine(BasePath, "content");
+                        var allMarkdownFiles = Directory.EnumerateFiles (contentFolder, "*.md", SearchOption.AllDirectories).ToArray();
 
-			MarkdownSharp.Markdown md = new MarkdownSharp.Markdown ();
+                        var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
 
-
-			foreach (var file in allMarkdownFiles) {
+                        foreach (var file in allMarkdownFiles) {
 				var content = File.ReadAllLines (file);
 				var meta = content.TakeWhile (line => line.Contains (":")).Select (line => {
 					var split = line.Split(':');
@@ -158,7 +166,7 @@ namespace CodeCubeConsole
 
 				var contentLines = content.Skip (meta.Count);
 				string markdownContent = string.Join (Environment.NewLine, contentLines);
-				string transformedContent = md.Transform (markdownContent);
+                                string transformedContent = Markdown.ToHtml (markdownContent, pipeline);
 
 				DateTime pubdate = DateTime.Parse (meta ["Date"]);
 				string url = Path.GetFileNameWithoutExtension (file);
@@ -180,7 +188,8 @@ namespace CodeCubeConsole
 
         private static async Task<string> GetTemplate(string template)
         {
-            using (StreamReader reader = new StreamReader(string.Format("Templates/{0}.cshtml", template)))
+            string templatePath = Path.Combine(BasePath, "Templates", $"{template}.cshtml");
+            using (StreamReader reader = new StreamReader(templatePath))
             {
                 //Does not block the main thread
                 string content = await reader.ReadToEndAsync();
