@@ -1,20 +1,12 @@
-<Project
-  xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
-  DefaultTargets="BuildAndRun"
-  ToolsVersion="12.0">
-    <Target Name="BuildAndRun" DependsOnTargets="
-        Build;
-        Run;
-        "/>
-    <Target Name="Build">
-        <MSBuild
-        Projects="CodeCubeConsole.sln"
-        Properties="Configuration=Release"/>
-        <Message Text="Congratulations! Here's an ounce of confidence in your pull request!" Importance="high"/>
-    </Target>
-    <Target Name="Run">
-        <Exec 
-            Command="CodeCubeConsole.exe" 
-            WorkingDirectory="CodeCubeConsole/bin/Release/"/>
-    </Target>
-  </Project>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="BuildAndRun">
+  <Target Name="BuildAndRun" DependsOnTargets="Build;Run" />
+
+  <Target Name="Build">
+    <Exec Command="dotnet publish CodeCubeConsole/CodeCubeConsole.csproj -c Release -o bin/publish" />
+    <Message Text="Congratulations! Here's an ounce of confidence in your pull request!" Importance="high" />
+  </Target>
+
+  <Target Name="Run">
+    <Exec Command="dotnet CodeCubeConsole.dll" WorkingDirectory="bin/publish" />
+  </Target>
+</Project>

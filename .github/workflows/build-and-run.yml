@@ -9,25 +9,25 @@ on:
 
 jobs:
   build:
-
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1.0.2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
 
-    - name: Restore NuGet packages
-      run: nuget restore CodeCubeConsole.sln
+    - name: Restore
+      run: dotnet restore
 
-    - name: Build Code Generator
-      run: msbuild CodeCubeConsole.sln /p:Configuration=Release
-  
+    - name: Publish
+      run: dotnet publish CodeCubeConsole/CodeCubeConsole.csproj -c Release -o publish --no-restore
+
     - name: Run Site Generator
-      run: ./CodeCubeConsole.exe
-      working-directory: ./CodeCubeConsole/bin/Release/
+      run: dotnet publish/CodeCubeConsole.dll
 
     - name: 📂 Sync files
       if: github.ref == 'refs/heads/master'
@@ -36,11 +36,11 @@ jobs:
         server: pdx1-shared-a3-05.dreamhost.com
         username: ${{ secrets.CODECUBE_FTP_USER }}
         password: ${{ secrets.CODECUBE_FTP_PASS }}
-        local-dir: ./CodeCubeConsole/bin/Release/out/
+        local-dir: ./publish/out/
         server-dir: ./static_codecube/
     
     - name: publish site artifacts
       uses: actions/upload-artifact@v4
       with:
         name: published
-        path: ./CodeCubeConsole/bin/Release/out/*
+        path: ./publish/out/*

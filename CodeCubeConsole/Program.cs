@@ -1,10 +1,10 @@
-﻿using RazorEngine;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using RazorLight;
 using Markdig;
 
 namespace CodeCubeConsole
@@ -16,16 +16,21 @@ namespace CodeCubeConsole
 
     class Program
     {
-        public static void Main(string[] args)
+        static readonly RazorLightEngine Engine = new RazorLightEngineBuilder()
+            .UseMemoryCachingProvider()
+            .Build();
+
+        static string MasterTemplate = string.Empty;
+
+        public static async Task Main(string[] args)
         {
-			BuildSite().Wait();
+            await BuildSite();
         }
 
         private static async Task BuildSite()
         {
             var model = GetContent();
-            string masterTemplate = await GetTemplate("master");
-            Razor.Compile(masterTemplate, typeof(Master), "master");
+            MasterTemplate = await GetTemplate("master");
 
             // start with the index page
             string templateName = "index";
@@ -43,25 +48,24 @@ namespace CodeCubeConsole
                         .ToArray()
                 })
                 .ToArray();
-            string result = Razor.Parse(indexTemplate, new IndexModel { Years = groupedModel });
+            string result = await Engine.CompileRenderStringAsync("index", indexTemplate, new IndexModel { Years = groupedModel });
             await SaveFile("Joel Martinez", result, string.Format("{0}.html", templateName));
 
             // the 'about' page
             string abouttemplate = await GetTemplate("about");
-            result = Razor.Parse(abouttemplate);
-            SaveFile("About Joel Martinez", result, "/about/");
+            result = await Engine.CompileRenderStringAsync("about", abouttemplate, (object?)null);
+            await SaveFile("About Joel Martinez", result, "/about/");
 
             // syndication
             string rsstemplate = await GetTemplate("rss");
-            result = Razor.Parse(rsstemplate, model.Take(15).ToArray());
-            SaveFile(result, "/feed/");
+            result = await Engine.CompileRenderStringAsync("rss", rsstemplate, model.Take(15).ToArray());
+            await SaveFile(result, "/feed/");
 
             // now generate each individual content page
             string postTemplate = await GetTemplate("post");
-            Razor.Compile(postTemplate, typeof(Post), "post");
-            Parallel.ForEach(model, post =>
+            foreach (var post in model)
             {
-                string postResult = Razor.Run("post", post);
+                string postResult = await Engine.CompileRenderStringAsync("post", postTemplate, post);
                 Master master = new Master()
                 {
                     Title = post.Title,
@@ -90,8 +94,8 @@ namespace CodeCubeConsole
                     master.Meta["image"] = post.ImageUrl;
                 }
 
-					SaveFile(master, post.UrlPath).Wait();
-            });
+                await SaveFile(master, post.UrlPath);
+            }
         }
 
         private static async Task SaveFile(string title, string content, string path)
@@ -100,7 +104,7 @@ namespace CodeCubeConsole
         }
         private static async Task SaveFile(Master master, string path)
         {
-            string content = Razor.Run("master", master);
+            string content = await Engine.CompileRenderStringAsync("master", MasterTemplate, master);
 
             path = await SaveFile(content, path);
         }
