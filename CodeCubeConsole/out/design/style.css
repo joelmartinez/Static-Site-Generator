@@ -96,7 +96,7 @@ pre { font-family:Consolas, Courier New; font-size:.9em}
 #author { font-weight:bold; }
 
 /* Table styling */
-table {
+.hentry table {
         width:100%;
         border-collapse:collapse;
         margin:20px 0;
@@ -105,31 +105,31 @@ table {
         overflow:hidden;
 }
 
-table thead {
+.hentry table thead {
         background:#f5f5f5;
         border-bottom:2px solid #FF8F00;
 }
 
-table thead th {
+.hentry table thead th {
         padding:10px;
         text-align:left;
         text-transform:uppercase;
 }
 
-table tbody td {
+.hentry table tbody td {
         padding:10px;
         border-bottom:1px solid #ddd;
 }
 
-table tbody tr:nth-child(even) {
+.hentry table tbody tr:nth-child(even) {
         background:#fafafa;
 }
 
-table tbody tr:hover {
+.hentry table tbody tr:hover {
         background:#f1f1f1;
 }
 
-table caption {
+.hentry table caption {
         caption-side:bottom;
         font-size:.9em;
         padding-top:5px;
