@@ -20,6 +20,8 @@ namespace CodeCubeConsole
             .UseMemoryCachingProvider()
             .Build();
 
+        static readonly string BasePath = AppContext.BaseDirectory;
+
         static string MasterTemplate = string.Empty;
 
         public static async Task Main(string[] args)
@@ -114,7 +116,7 @@ namespace CodeCubeConsole
             if (path.First() == '/') path = path.Substring(1, path.Length - 1);
             if (path.Last() == '/') path += "index.html";
 
-            path = Path.Combine("out", path);
+            path = Path.Combine(BasePath, "out", path);
 
             Directory.CreateDirectory(Path.GetDirectoryName(path));
             Console.WriteLine("Persisting to {0}", path);
@@ -127,7 +129,8 @@ namespace CodeCubeConsole
 
         private static IEnumerable<Post> GetContent()
         {
-            XElement root = XElement.Load("content.xml");
+            string contentFile = Path.Combine(BasePath, "content.xml");
+            XElement root = XElement.Load(contentFile);
 
             var query = (from xElem in root.Elements("channel").Elements("item")
                          select new
@@ -147,9 +150,10 @@ namespace CodeCubeConsole
 
         }
 
-		static IEnumerable<Post> GetMarkdownContent ()
-		{
-			var allMarkdownFiles = Directory.EnumerateFiles ("content", "*.md", SearchOption.AllDirectories).ToArray();
+                static IEnumerable<Post> GetMarkdownContent ()
+                {
+                        var contentFolder = Path.Combine(BasePath, "content");
+                        var allMarkdownFiles = Directory.EnumerateFiles (contentFolder, "*.md", SearchOption.AllDirectories).ToArray();
 
                         var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
 
@@ -184,7 +188,8 @@ namespace CodeCubeConsole
 
         private static async Task<string> GetTemplate(string template)
         {
-            using (StreamReader reader = new StreamReader(string.Format("Templates/{0}.cshtml", template)))
+            string templatePath = Path.Combine(BasePath, "Templates", $"{template}.cshtml");
+            using (StreamReader reader = new StreamReader(templatePath))
             {
                 //Does not block the main thread
                 string content = await reader.ReadToEndAsync();

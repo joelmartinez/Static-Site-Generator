@@ -27,7 +27,8 @@ jobs:
       run: dotnet publish CodeCubeConsole/CodeCubeConsole.csproj -c Release -o publish --no-restore
 
     - name: Run Site Generator
-      run: dotnet ./publish/CodeCubeConsole.dll
+      working-directory: ./publish
+      run: dotnet CodeCubeConsole.dll
 
     - name: 📂 Sync files
       if: github.ref == 'refs/heads/master'
