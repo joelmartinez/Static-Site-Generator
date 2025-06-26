@@ -94,3 +94,44 @@ pre { font-family:Consolas, Courier New; font-size:.9em}
 	text-align:center;
 }
 #author { font-weight:bold; }
+
+/* Table styling */
+.hentry table {
+        width:100%;
+        border-collapse:collapse;
+        margin:20px 0;
+        font-size:.95em;
+        border-radius:4px;
+        overflow:hidden;
+}
+
+.hentry table thead {
+        background:#f5f5f5;
+        border-bottom:2px solid #FF8F00;
+}
+
+.hentry table thead th {
+        padding:10px;
+        text-align:left;
+        text-transform:uppercase;
+}
+
+.hentry table tbody td {
+        padding:10px;
+        border-bottom:1px solid #ddd;
+}
+
+.hentry table tbody tr:nth-child(even) {
+        background:#fafafa;
+}
+
+.hentry table tbody tr:hover {
+        background:#f1f1f1;
+}
+
+.hentry table caption {
+        caption-side:bottom;
+        font-size:.9em;
+        padding-top:5px;
+        color:#666;
+}
