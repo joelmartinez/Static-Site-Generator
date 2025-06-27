@@ -135,3 +135,47 @@ pre { font-family:Consolas, Courier New; font-size:.9em}
         padding-top:5px;
         color:#666;
 }
+
+/* Resume page layout */
+.resume {
+        font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height:1.6;
+        margin:0 auto;
+        padding:2rem;
+        max-width:1000px;
+        background-color:#fdfdfd;
+        color:#333;
+}
+.resume h1,
+.resume h2,
+.resume h3 {
+        color:#2c3e50;
+}
+.resume h1 {
+        border-bottom:2px solid #ccc;
+        padding-bottom:.3em;
+}
+.resume section {
+        margin-top:2em;
+}
+.resume .two-columns {
+        display:flex;
+        flex-wrap:wrap;
+        gap:2rem;
+}
+.resume .column {
+        flex:1;
+        min-width:300px;
+}
+.resume ul {
+        padding-left:1.2rem;
+}
+@media print {
+        .resume {
+                padding:0;
+                max-width:none;
+        }
+        .resume .two-columns {
+                display:block;
+        }
+}
