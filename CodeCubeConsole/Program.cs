@@ -58,6 +58,11 @@ namespace CodeCubeConsole
             result = await Engine.CompileRenderStringAsync("about", abouttemplate, (object?)null);
             await SaveFile("About Joel Martinez", result, "/about/");
 
+            // the 'resume' page
+            string resumetemplate = await GetTemplate("resume");
+            result = await Engine.CompileRenderStringAsync("resume", resumetemplate, (object?)null);
+            await SaveFile("Joel Martinez - Resume", result, "/resume/");
+
             // syndication
             string rsstemplate = await GetTemplate("rss");
             result = await Engine.CompileRenderStringAsync("rss", rsstemplate, model.Take(15).ToArray());
