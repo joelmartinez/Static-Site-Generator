@@ -27,10 +27,11 @@ var firstPost = Model.Years[0].Months[0].Posts[0];
   <a href="#@year.Name">@year.Name</a> @:|
   }
 </div>
-@{var numPosts = 0;}
+@{var yearIndex = 0;}
 @foreach(var year in Model.Years) {
   <a name="@year.Name" />
   <h2>@year.Name</h2>
+@{ int previewLimit = 6 - yearIndex; if(previewLimit < 1) { previewLimit = 1; } int previewCount = 0; }
 
 
   <ul id="archivelist" class="hfeed">
@@ -40,11 +41,13 @@ var firstPost = Model.Years[0].Months[0].Posts[0];
       if (post == firstPost) { continue; }
     <li class="hentry">
       <span class="entry-title"><a href="@post.UrlPath" rel="bookmark">@post.Title</a></span> (<abbr class="published" title="@post.PublishedOn">@month.Name</abbr>)
-      @if(numPosts++ < 5) {
+      @if(previewCount < previewLimit) {
       <p class="entry-summary">@post.BodySummary</p>
+        previewCount++;
       }
     </li>
     }
   }
   </ul>
+  yearIndex++;
 }
