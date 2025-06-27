@@ -68,12 +68,18 @@ pre { font-family:Consolas, Courier New; font-size:.9em}
 	padding-bottom:50px;
 }
 #archivelist{
-	list-style:none;
+        list-style:none;
+        display:flex;
+        flex-wrap:wrap;
+        margin:0;
+        padding:0;
 }
 #archivelist li {
-	padding:10px;
-	font-size:1.2em;
-	font-weight:bold;
+        padding:10px;
+        font-size:1.2em;
+        font-weight:bold;
+        box-sizing:border-box;
+        width:50%;
 }
 #archivelist p {
 	font-size:.9em;
