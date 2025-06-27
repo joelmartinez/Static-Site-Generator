@@ -43,7 +43,7 @@ var firstPost = Model.Years[0].Months[0].Posts[0];
       <span class="entry-title"><a href="@post.UrlPath" rel="bookmark">@post.Title</a></span> (<abbr class="published" title="@post.PublishedOn">@month.Name</abbr>)
       @if(previewCount < previewLimit) {
       <p class="entry-summary">@post.BodySummary</p>
-      @{ previewCount++; }
+      @previewCount++;
       }
     </li>
     }
