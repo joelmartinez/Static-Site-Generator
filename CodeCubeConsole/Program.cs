@@ -68,6 +68,9 @@ namespace CodeCubeConsole
             result = await Engine.CompileRenderStringAsync("rss", rsstemplate, model.Take(15).ToArray());
             await SaveFile(result, "/feed/");
 
+            // sitemap
+            await GenerateSitemap(model);
+
             // now generate each individual content page
             string postTemplate = await GetTemplate("post");
             foreach (var post in model)
@@ -199,6 +202,59 @@ namespace CodeCubeConsole
                 //Does not block the main thread
                 string content = await reader.ReadToEndAsync();
                 return content;
+            }
+        }
+
+        private static async Task GenerateSitemap(IEnumerable<Post> posts)
+        {
+            var sitemap = new XDocument(
+                new XDeclaration("1.0", "UTF-8", null),
+                new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "urlset",
+                    new XAttribute(XNamespace.Xmlns + "xsi", "http://www.w3.org/2001/XMLSchema-instance"),
+                    new XAttribute(XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance") + "schemaLocation", 
+                        "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"),
+                    
+                    // Homepage
+                    new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "url",
+                        new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "loc", "https://codecube.net/"),
+                        new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "lastmod", DateTime.Now.ToString("yyyy-MM-dd")),
+                        new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "changefreq", "weekly"),
+                        new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "priority", "1.0")
+                    ),
+                    
+                    // About page
+                    new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "url",
+                        new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "loc", "https://codecube.net/about/"),
+                        new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "lastmod", DateTime.Now.ToString("yyyy-MM-dd")),
+                        new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "changefreq", "monthly"),
+                        new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "priority", "0.8")
+                    ),
+                    
+                    // Resume page
+                    new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "url",
+                        new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "loc", "https://codecube.net/resume/"),
+                        new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "lastmod", DateTime.Now.ToString("yyyy-MM-dd")),
+                        new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "changefreq", "monthly"),
+                        new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "priority", "0.8")
+                    ),
+                    
+                    // All published posts
+                    from post in posts.Where(p => p.IsPublished)
+                    select new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "url",
+                        new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "loc", post.URL),
+                        new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "lastmod", post.PublishedOn.ToString("yyyy-MM-dd")),
+                        new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "changefreq", "monthly"),
+                        new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "priority", "0.6")
+                    )
+                )
+            );
+
+            string sitemapPath = Path.Combine(BasePath, "out", "sitemap.xml");
+            Console.WriteLine("Generating sitemap at {0}", sitemapPath);
+            Directory.CreateDirectory(Path.GetDirectoryName(sitemapPath));
+            await using (var writer = new StreamWriter(sitemapPath))
+            {
+                await writer.WriteAsync(sitemap.ToString());
             }
         }
     }
