@@ -7,5 +7,30 @@
   </div>
   <meta itemprop="description" content="@Model.BodySummary" />
 </article>
+
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "Article",
+  "headline": "@Model.Title.Replace("\"", "\\\"")",
+  "description": "@Model.BodySummary.Replace("\"", "\\\"").Replace("\r", "").Replace("\n", " ")",
+  "author": {
+    "@@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net/about/"
+  },
+  "publisher": {
+    "@@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net"
+  },
+  "datePublished": "@Model.PublishedOn.ToString("yyyy-MM-dd")",
+  "dateModified": "@Model.PublishedOn.ToString("yyyy-MM-dd")",
+  "mainEntityOfPage": {
+    "@@type": "WebPage",
+    "@@id": "@Model.URL"
+  }
+}
+</script>
 <p>See more in the <a href="/#archives">archives</a>
 </p>
