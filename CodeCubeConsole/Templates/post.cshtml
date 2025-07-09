@@ -1,10 +1,11 @@
-﻿<div class="hentry">
-  <h1 class="entry-title">@Model.Title</h1>
-  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author">Joel Martinez</a> on <span class="published">@Model.PublishedOn.ToShortDateString()</span>
+﻿<article class="hentry" itemscope itemtype="https://schema.org/Article">
+  <h1 class="entry-title" itemprop="headline">@Model.Title</h1>
+  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="@Model.PublishedOn.ToString("yyyy-MM-dd")">@Model.PublishedOn.ToShortDateString()</time>
 </p>
-  <div class="entry-content">
+  <div class="entry-content" itemprop="articleBody">
     @Raw(Model.ParsedBody)
   </div>
-</div>
+  <meta itemprop="description" content="@Model.BodySummary" />
+</article>
 <p>See more in the <a href="/#archives">archives</a>
 </p>

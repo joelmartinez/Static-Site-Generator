@@ -1,0 +1,15 @@
+{
+  "nlweb": "1.0",
+  "siteName": "Joel Martinez - Code Cube",
+  "siteUrl": "https://codecube.net",
+  "aiAccess": "allow",
+  "summary": "Software Engineer blog featuring articles on AI, mobile development, Xamarin, .NET, and software engineering practices.",
+  "author": "Joel Martinez",
+  "contentTypes": ["article", "blog"],
+  "lastUpdated": "2025-01-27T00:00:00Z",
+  "policies": {
+    "summarization": "allow",
+    "citation": "required",
+    "attribution": "Joel Martinez - codecube.net"
+  }
+}
