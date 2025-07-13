@@ -9,6 +9,9 @@
    id="svg1"
    inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
    sodipodi:docname="codecube-logo.svg"
+   inkscape:export-filename="codecube-logo-web.svg"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -39,16 +42,16 @@
      inkscape:groupmode="layer"
      id="layer1">
     <path
-       id="rect1-8"
+       id="ccube"
        style="fill:#f12100;fill-opacity:1;stroke-width:0.264365"
        d="m 39.999789,9.9999755 v 9.9999065 h -9.999907 v 30.000236 h 9.999907 v 9.999907 H 60.000118 V 40.000211 h -9.999906 v -9.999906 h 9.999906 V 9.9999755 Z" />
     <path
-       id="rect1"
+       id="ccode"
        style="fill:#ff8220;fill-opacity:1;stroke-width:0.264365"
        d="M 19.999813 9.9999064 L 19.999813 19.999813 L 9.9999064 19.999813 L 9.9999064 50.000049 L 19.999813 50.000049 L 19.999813 59.999955 L 40.000142 59.999955 L 40.000142 40.000142 L 30.000236 40.000142 L 30.000236 30.000236 L 40.000142 30.000236 L 40.000142 9.9999064 L 19.999813 9.9999064 z " />
     <rect
        style="fill:#0eccf1;fill-opacity:1;stroke-width:0.452653"
-       id="rect2-7"
+       id="cchighlight"
        width="20"
        height="20"
        x="0"
