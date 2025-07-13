@@ -10,7 +10,10 @@
 	<link rel="stylesheet" type="text/css" href="/design/style2.css" />
   @foreach(var meta in Model.Meta)
   {
-    if (meta.Key.StartsWith("og:")) {
+    if (meta.Key == "canonical") {
+      <link rel="canonical" href="@meta.Value" />
+    }
+    else if (meta.Key.StartsWith("og:")) {
       <meta property="@meta.Key" content="@meta.Value" />
     }
     else {
