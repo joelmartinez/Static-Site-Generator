@@ -7,6 +7,12 @@ using System.Text.RegularExpressions;
 
 namespace CodeCubeConsole
 {
+    public class PostPageModel
+    {
+        public Post CurrentPost { get; set; }
+        public Post LatestPost { get; set; }
+    }
+
     public class Master
     {
         public Master()

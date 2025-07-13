@@ -73,9 +73,17 @@ namespace CodeCubeConsole
 
             // now generate each individual content page
             string postTemplate = await GetTemplate("post");
+            var latestPost = model.Where(m => m.IsPublished).OrderByDescending(p => p.PublishedOn).FirstOrDefault();
+            
             foreach (var post in model)
             {
-                string postResult = await Engine.CompileRenderStringAsync("post", postTemplate, post);
+                var postPageModel = new PostPageModel 
+                { 
+                    CurrentPost = post, 
+                    LatestPost = latestPost 
+                };
+                
+                string postResult = await Engine.CompileRenderStringAsync("post", postTemplate, postPageModel);
                 Master master = new Master()
                 {
                     Title = post.Title,
@@ -87,6 +95,7 @@ namespace CodeCubeConsole
 
                 master.Meta["title"] = post.Title;
                 master.Meta["description"] = summary;
+                master.Meta["canonical"] = post.URL;
 
                 master.Meta["twitter:card"] = "summary";
                 master.Meta["twitter:site"] = "@joelmartinez";

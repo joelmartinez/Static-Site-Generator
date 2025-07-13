@@ -1,9 +1,9 @@
 ﻿<article class="hentry" itemscope itemtype="https://schema.org/Article">
-  <h1 class="entry-title" itemprop="headline">@Model.Title</h1>
-  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="@Model.PublishedOn.ToString("yyyy-MM-dd")">@Model.PublishedOn.ToShortDateString()</time>
+  <h1 class="entry-title" itemprop="headline">@Model.CurrentPost.Title</h1>
+  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="@Model.CurrentPost.PublishedOn.ToString("yyyy-MM-dd")">@Model.CurrentPost.PublishedOn.ToShortDateString()</time>
 </p>
   <div class="entry-content" itemprop="articleBody">
-    @Raw(Model.ParsedBody)
+    @Raw(Model.CurrentPost.ParsedBody)
   </div>
 </article>
 
@@ -11,8 +11,8 @@
 {
   "@@context": "https://schema.org",
   "@@type": "Article",
-  "headline": "@Model.Title.Replace("\"", "\\\"")",
-  "description": "@Model.BodySummary.Replace("\"", "\\\"").Replace("\r", "").Replace("\n", " ")",
+  "headline": "@Model.CurrentPost.Title.Replace("\"", "\\\"")",
+  "description": "@Model.CurrentPost.BodySummary.Replace("\"", "\\\"").Replace("\r", "").Replace("\n", " ")",
   "author": {
     "@@type": "Person",
     "name": "Joel Martinez",
@@ -23,13 +23,19 @@
     "name": "Joel Martinez",
     "url": "https://codecube.net"
   },
-  "datePublished": "@Model.PublishedOn.ToString("yyyy-MM-dd")",
-  "dateModified": "@Model.PublishedOn.ToString("yyyy-MM-dd")",
+  "datePublished": "@Model.CurrentPost.PublishedOn.ToString("yyyy-MM-dd")",
+  "dateModified": "@Model.CurrentPost.PublishedOn.ToString("yyyy-MM-dd")",
   "mainEntityOfPage": {
     "@@type": "WebPage",
-    "@@id": "@Model.URL"
+    "@@id": "@Model.CurrentPost.URL"
   }
 }
 </script>
+
+@if (Model.LatestPost != null && Model.LatestPost.URL != Model.CurrentPost.URL)
+{
+<p><strong>Latest post:</strong> <a href="@Model.LatestPost.UrlPath">@Model.LatestPost.Title</a></p>
+}
+
 <p>See more in the <a href="/#archives">archives</a>
 </p>
