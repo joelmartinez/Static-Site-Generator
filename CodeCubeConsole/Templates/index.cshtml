@@ -1,50 +1,72 @@
-﻿
-<!--I know, tables are dead, right?-->
-<table id="socialtable">
-  <tr>
-    <td><a rel="me" href="https://mastodon.social/@Raw("@")joelmartinez"><img src="/design/images/mastodon-logo.svg" style="height:120px;width:120px" alt="My place in the fediverse, Mastodon"></a></td>
-    <td><a href="https://github.com/joelmartinez" rel="me"><img src="/design/images/icon_github.png" alt="My Github Profile"></a></td>
-    <td><a href="https://www.linkedin.com/in/joelmartinez" rel="me"><img src="/design/images/icon_linkedin.png" alt="My Resume"></a></td>
-    <td><a href="https://twitter.com/joelmartinez" rel="me"><img src="/design/images/icon_twitter.png" alt="My Twitter Profile"></a></td>
-  </tr>
-</table>
-@{
-var firstPost = Model.Years[0].Months[0].Posts[0];
-}
-<div class="hentry">
-  <span class="entry-title">
-    <a href="@firstPost.UrlPath" rel="bookmark">
-      <h2>@firstPost.Title</h2>
-    </a>
-  </span> 
-  <p class="entry-body">@Raw(firstPost.Body)</p>
-</div>
+@using System.Collections.Generic
+@using CodeCubeConsole
 
-<a name="archives" />
-<h1><img src="/design/images/icon_writing.png" class="titleicon" /> Archives</h1>
-<div>
-  @foreach(var year in Model.Years) {
-  <a href="#@year.Name">@year.Name</a> @:|
-  }
-</div>
-@{var numPosts = 0;}
-@foreach(var year in Model.Years) {
-  <a name="@year.Name" />
-  <h2>@year.Name</h2>
+<!-- Hero Section -->
+<section class="hero">
+  <h1>Building Developer Tools and AI Solutions That Scale</h1>
+</section>
 
+<!-- Partners Carousel Placeholder -->
+<section class="partners-carousel">
+  <!-- Reserved for later implementation -->
+</section>
 
-  <ul id="archivelist" class="hfeed">
-  @foreach(var month in year.Months) {
-
-    foreach(var post in month.Posts) {
-      if (post == firstPost) { continue; }
-    <li class="hentry">
-      <span class="entry-title"><a href="@post.UrlPath" rel="bookmark">@post.Title</a></span> (<abbr class="published" title="@post.PublishedOn">@month.Name</abbr>)
-      @if(numPosts++ < 5) {
-      <p class="entry-summary">@post.BodySummary</p>
+<!-- Latest Posts -->
+<section class="latest-posts">
+  <h2>Latest Posts</h2>
+  <div class="post-list">
+    @{
+      var latestPosts = new List<Post>();
+      int count = 0;
+      foreach(var year in Model.Years) {
+        foreach(var month in year.Months) {
+          foreach(var post in month.Posts) {
+            if(count < 6) {
+              latestPosts.Add(post);
+              count++;
+            }
+          }
+        }
       }
-    </li>
     }
+    @foreach(var post in latestPosts) {
+    <article class="post-item">
+      <h3><a href="@post.UrlPath" rel="bookmark">@post.Title</a></h3>
+      <time class="post-date" datetime="@post.PublishedOn.ToString("yyyy-MM-dd")">@post.PublishedOn.ToString("MMMM d, yyyy")</time>
+      <p class="post-summary">@post.BodySummary</p>
+    </article>
+    }
+  </div>
+</section>
+
+<!-- Archive Section -->
+<section class="archive">
+  <a name="archives" />
+  <h2><img src="/design/images/icon_writing.png" class="titleicon" /> Archives</h2>
+  <div>
+    @foreach(var year in Model.Years) {
+    <a href="#@year.Name">@year.Name</a> @:|
+    }
+  </div>
+  @{var postIndex = 0;}
+  @foreach(var year in Model.Years) {
+    <a name="@year.Name" />
+    <h3>@year.Name</h3>
+
+    <ul id="archivelist" class="hfeed">
+    @foreach(var month in year.Months) {
+      foreach(var post in month.Posts) {
+        if(postIndex >= 6) { // Skip the first 6 posts already shown in latest posts
+      <li class="hentry">
+        <span class="entry-title"><a href="@post.UrlPath" rel="bookmark">@post.Title</a></span> (<abbr class="published" title="@post.PublishedOn">@month.Name</abbr>)
+        @if(postIndex < 11) { // Show summaries for posts 7-11 (5 posts with expanded display)
+        <p class="entry-summary">@post.BodySummary</p>
+        }
+      </li>
+        }
+        postIndex++;
+      }
+    }
+    </ul>
   }
-  </ul>
-}
+</section>

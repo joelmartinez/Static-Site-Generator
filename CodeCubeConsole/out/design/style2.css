@@ -263,6 +263,40 @@ main {
   gap: 0.5rem;
 }
 
+/* Years list styling */
+.archive > div:first-of-type {
+  margin-bottom: 2rem;
+  line-height: 1.8;
+}
+
+.archive > div:first-of-type a {
+  color: #4A90E2;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.archive > div:first-of-type a:hover {
+  background-color: #f0f8ff;
+}
+
+/* Mobile and tablet improvements for years list */
+@media (max-width: 1024px) {
+  .archive > div:first-of-type {
+    font-size: 1.1rem;
+    line-height: 2;
+  }
+  
+  .archive > div:first-of-type a {
+    padding: 0.5rem 0.75rem;
+    margin: 0.25rem 0.25rem 0.25rem 0;
+    display: inline-block;
+    font-size: 1rem;
+  }
+}
+
 .titleicon {
   width: 24px;
   height: 24px;
@@ -346,4 +380,61 @@ pre {
   border-radius: 4px;
   overflow-x: auto;
   border: 1px solid #e5e5e5;
+}
+
+/* Additional utility styles from original */
+#author { 
+  font-weight: bold; 
+}
+
+/* Table styling for blog content */
+.hentry table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 0.95em;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.hentry table thead {
+  background: #f5f5f5;
+  border-bottom: 2px solid #4A90E2;
+}
+
+.hentry table thead th {
+  padding: 10px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.hentry table tbody td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.hentry table tbody tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+/* Content images */
+.hentry img, main img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin: 1rem 0;
+}
+
+/* Code styling */
+code {
+  background: #f1f3f4;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+/* Lists in content */
+.hentry li {
+  padding-bottom: 10px;
 }
