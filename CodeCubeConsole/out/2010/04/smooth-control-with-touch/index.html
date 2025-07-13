@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf8" />
+	<title>Smooth Control with Touch</title>
+  <meta name="author" content="Joel Martinez" />
+  <meta name="nlweb:ai-access" content="allow" />
+  <link rel="alternate" type="application/rss+xml" title="Smooth Control with Touch" href="//codecube.net/feed/" />
+  <link rel="nlweb-manifest" href="/nlweb.json" />
+	<link rel="stylesheet" type="text/css" href="/design/style.css?v=2" />
+      <meta name="title" content="Smooth Control with Touch" />
+      <meta name="description" content="The new touch capabilities that are present in XNA 4.0/windows phone 7 present new opportunities for letting the user take control of the games that we can write. Unlike the input from the xbox 360..." />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="@joelmartinez" />
+      <meta name="twitter:creator" content="@joelmartinez" />
+      <meta name="twitter:title" content="Smooth Control with Touch" />
+      <meta name="twitter:description" content="The new touch capabilities that are present in XNA 4.0/windows phone 7 present new opportunities for letting the user take control of the games that we can write. Unlike the input from the xbox 360..." />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content="Smooth Control with Touch" />
+      <meta property="og:description" content="The new touch capabilities that are present in XNA 4.0/windows phone 7 present new opportunities for letting the user take control of the games that we can write. Unlike the input from the xbox 360..." />
+  
+  <script src="/script/tone.js"></script>
+</head>
+<body>
+  <div id="header">
+    <div>
+	  <a href="/" rel="home"><img height="50" width="50" src="//www.gravatar.com/avatar/a61a4be80ce39683142620a76299820b.png" title="ItsAMeee" /></a>
+      <a href="/about/" rel="author">Joel Martinez</a>
+      <a href="/resume/">Resume</a>
+
+      <img id="flair" src="/design/images/flair.png" />
+    </div>
+  </div>
+
+  <div id="contentwrapper">
+	  <div id="content">
+		<article class="hentry" itemscope itemtype="https://schema.org/Article">
+  <h1 class="entry-title" itemprop="headline">Smooth Control with Touch</h1>
+  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="2010-04-05">04/05/2010</time>
+</p>
+  <div class="entry-content" itemprop="articleBody">
+    The new touch capabilities that are present in XNA 4.0/windows phone 7 present new opportunities for letting the user take control of the games that we can write. Unlike the input from the xbox 360 gamepad, or the mouse though, the user is not restricted to incremental analog adjustments (ie. moving the mouse by 5 pixels per frame, or having the left stick pushed up to a value of .5). So it is completely possible for the user to press his finger in the bottom left of the screen, drag it 20 pixels, lift for 5 seconds, and then press it down somewhere in the upper right of the screen.<br /><br />In a naive implementation of handling touch input, you could just take the touch point as fact, and the entity would snap directly over to the user's finger in the scenario described above. This may be visually jarring, which of course may be ok for your game. However, if you want your entity to have more of a realistic presence in the game world, to feel more "real", the you probably don't want it teleporting around the screen; At the same time, you want the user's input not to feel laggy or non-responsive.<br /><br />So how do we handle this fundamental difference in user input techniques?<br /><br />The problem of incomplete or inconsistent input reminded me of the network prediction sample, which is available on the XNA Creator's Club site (<a href="http://creators.xna.com/en-US/sample/networkprediction">http://creators.xna.com/en-US/sample/networkprediction</a>). In that sample, they present two solutions to deal with the issues brought on by network latency. Particularly, I was interested in their smoothing solution because it solves my problem.
+<blockquote>Smoothing is a simple concept. When a network packet is received, rather than teleporting immediately to the new position, we can interpolate gradually from the previous position toward this new location, giving the illusion of continuous motion ...</blockquote>
+I took that smoothing concept and applied it here so that when the user re-touches in another location, the onscreen entity will smoothly accelerate towards his current touch point. And because it's using interpolation, it will always catch up to the current location after half a second regardless of where the user is moving his finger.
+<ul>
+	<li>Required: Windows Phone CTP</li>
+	<li>Download: <a href="http://codecube.net/bloguploads/XNATouchSmoothing.zip">XNATouchSmoothing.zip</a></li>
+</ul>
+The entity class from the project is listed below. The important bits are the "isCatchingUp" and "currentSmoothing" variables. When the input handling code realizes that it needs to catch up, it starts to decay the "currentSmoothing" variable, which is then used in the interpolation to smoothly transition to the current location (via Vector2.Lerp).
+<blockquote>
+<pre>class Entity
+{
+    private Vector2 lastKnownPosition;
+    private Vector2 touchPosition;
+    private float currentSmoothing;<br /><br />    public Vector2 Position;
+    public Texture2D Texture;<br /><br />    public void Update()
+    {
+        var touches = TouchPanel.GetState();
+        float decay = 1f / 15f;<br /><br />        bool isTouching = touches.Count &gt; 0;
+        bool isCatchingUp = currentSmoothing &gt; 0;<br /><br />        if (isTouching)
+        {
+            if (isCatchingUp)
+            {
+                currentSmoothing -= decay;
+            }<br /><br />            foreach (var touch in touches)
+            {
+                touchPosition = touch.Position;
+            }
+        }
+        else if (!isCatchingUp)
+        {
+            currentSmoothing = 1;
+        }<br /><br />        if (!isCatchingUp)
+        {
+            lastKnownPosition = touchPosition;
+        }<br /><br />        Vector2 positionToDraw = lastKnownPosition;
+        if (isCatchingUp)
+        {
+            Vector2.Lerp(
+                ref touchPosition,
+                ref lastKnownPosition,
+                currentSmoothing,
+                out positionToDraw);
+        }<br /><br />        this.Position = new Vector2(
+            positionToDraw.X - Texture.Width / 2,
+            positionToDraw.Y - Texture.Height / 2);
+    }
+}</pre>
+</blockquote>
+Little touches like this add an extra level of polish that players will appreciate ... and yes, I intended the pun ;-)
+  </div>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Smooth Control with Touch",
+  "description": "The new touch capabilities that are present in XNA 4.0/windows phone 7 present new opportunities for letting the user take control of the games that we can write. Unlike the input from the xbox 360...",
+  "author": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net/about/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net"
+  },
+  "datePublished": "2010-04-05",
+  "dateModified": "2010-04-05",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://codecube.net/2010/04/smooth-control-with-touch/"
+  }
+}
+</script>
+<p>See more in the <a href="/#archives">archives</a>
+</p>
+
+	  </div>
+  </div>
+
+  <div id="footer">
+    copyright 2013 - 2025 - <a rel="me" href="https://mastodon.social/@joelmartinez">me @ Mastodon</a> and <a rel="me" href="https://www.threads.net/@joeldm1971">Threads</a>
+  </div>
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WV9DDDSFMW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WV9DDDSFMW');
+</script>
+</body>
+</html>

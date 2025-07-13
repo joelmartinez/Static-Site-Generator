@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf8" />
+	<title>The Problem with C# 5&#x27;s async/await Pattern</title>
+  <meta name="author" content="Joel Martinez" />
+  <meta name="nlweb:ai-access" content="allow" />
+  <link rel="alternate" type="application/rss+xml" title="The Problem with C# 5&#x27;s async/await Pattern" href="//codecube.net/feed/" />
+  <link rel="nlweb-manifest" href="/nlweb.json" />
+	<link rel="stylesheet" type="text/css" href="/design/style.css?v=2" />
+      <meta name="title" content="The Problem with C# 5&#x27;s async/await Pattern" />
+      <meta name="description" content="C# 5 brings a fantastic new feature &#x2026; built-in asynchrony (not to be confused with concurrency..." />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="@joelmartinez" />
+      <meta name="twitter:creator" content="@joelmartinez" />
+      <meta name="twitter:title" content="The Problem with C# 5&#x27;s async/await Pattern" />
+      <meta name="twitter:description" content="C# 5 brings a fantastic new feature &#x2026; built-in asynchrony (not to be confused with concurrency..." />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content="The Problem with C# 5&#x27;s async/await Pattern" />
+      <meta property="og:description" content="C# 5 brings a fantastic new feature &#x2026; built-in asynchrony (not to be confused with concurrency..." />
+  
+  <script src="/script/tone.js"></script>
+</head>
+<body>
+  <div id="header">
+    <div>
+	  <a href="/" rel="home"><img height="50" width="50" src="//www.gravatar.com/avatar/a61a4be80ce39683142620a76299820b.png" title="ItsAMeee" /></a>
+      <a href="/about/" rel="author">Joel Martinez</a>
+      <a href="/resume/">Resume</a>
+
+      <img id="flair" src="/design/images/flair.png" />
+    </div>
+  </div>
+
+  <div id="contentwrapper">
+	  <div id="content">
+		<article class="hentry" itemscope itemtype="https://schema.org/Article">
+  <h1 class="entry-title" itemprop="headline">The Problem with C# 5&#x27;s async/await Pattern</h1>
+  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="2012-05-21">05/21/2012</time>
+</p>
+  <div class="entry-content" itemprop="articleBody">
+    C# 5 brings a fantastic new feature … <a href="http://msdn.microsoft.com/en-us/library/hh191443%28v=vs.110%29.aspx">built-in asynchrony</a> (not to be <a href="http://stackoverflow.com/a/4056583/5416">confused with concurrency</a>). The compiler has added two new keywords, async and await, which allows your code to transparently change execution contexts. For example, instead of writing:
+<blockquote>
+<pre>Task
+  .StartNew(() =&gt; MakeSomeDecisionSlowly())
+  .ContinueWith(result =&gt; ProcessResult(result));</pre>
+</blockquote>
+You can simply say:
+<blockquote>
+<pre>bool result = await MakeSomeDecisionSlowly();
+ProcessResult(result);</pre>
+</blockquote>
+While the two pieces of code are exactly equivalent, the second code is so much simpler to understand. Because you don't really have to think about the fact that there is an asynchronous context switch going on, you are free to focus on your program's logic, rather than worrying about manually orchestrating what tasks are doing what.<br /><br />However, after using these features for several days while porting my <a href="https://github.com/joelmartinez/Khan-Academy-for-Windows-Phone">KhanAcademy windows phone app to windows 8</a>, I've come to approach them with a bit of caution. While they are great for low level IO-bound tasks, in my opinion they don't scale well to higher level API design. A few things to watch out for:<br /><br />If you use await somewhere in your code, then the containing method needs to be marked with the async keyword, and there are specific rules about return types. Namely, the method must either be void, or return Task&lt;T&gt;. For example, the example above would have to be in a method
+<blockquote>
+<pre>public async void DoThatThing() { … }</pre>
+</blockquote>
+Or, if you wanted to return the result of 'MakeSomeDecisionSlowly' back to the caller, it would have to look like this:
+<blockquote>
+<pre>public async Task&lt;bool&gt; DoThatThing() { … }</pre>
+</blockquote>
+Which is great, and all, but then it means that the calling method must be decorated with 'async' as well. If you are refactoring an existing codebase, this can have the effect of rippling up the inheritance chain with numerous (albeit small) changes … depending on the situation.<br /><br />Ok, fine, maybe that's not a huge deal; it's kind of annoying but I can definitely deal with that kind of refactoring. The big problem I have with async/await is that outside of relatively trivial pieces of code, it can tend to wipe away many benefits of proper abstractions.<br /><br />Let's say you are implementing a remote API call, and you have several requirements:
+<ul>
+	<li>Process the results if
+<ul>
+	<li>You have a network connection (common mobile requirement)</li>
+	<li>The server is reachable (what if you're connected at starbucks, but haven't accepted the wifi's terms of use?)</li>
+	<li>The server returns a code 200 (bugs happen)</li>
+	<li>The server indicates that your credentials are ok (what if the user's password expired, or was changed by the user on your website?)</li>
+	<li>The server's json response indicates a successful request</li>
+</ul>
+</li>
+	<li>If any of the above conditions are false, notify the user of the problem (with specific text for the situation).</li>
+</ul>
+This is a very common scenario in any occasionally connected mobile application, and you can see that there are no less than five distinct decisions that need to be made during the course of an API call. If you use async/await blindly, you have two problems:<br /><br />First, you are deferring these decisions to the caller … you'll do a nice asynchronous call, and return a Task&lt;string&gt; with the json results; or if you're sophisticated, a Task&lt;T&gt; with the results already parsed and converted to a strongly typed object. However, it's up to the caller to handle exceptions, check for network connections, deal with individual response scenarios (logged out, invalid request, etc.). So you may end up with every call site looking like this:
+<blockquote>
+<pre>if (HasConnection())
+{
+  try
+  {
+    MyObject result = await MakeRemoteAPICall();
+    ProcessSuccessfulResult(result);
+  }
+  catch(Exception e)
+  {
+    ProcessError(e.Message);
+  }
+}
+else
+{
+  ProcessError("No Connection");
+}</pre>
+</blockquote>
+Second, providing further abstractions is difficult because you are limited to a single return type. So if you want to handle all of the stated requirements for the caller, you will have to wrap up the result in a special return value that can provide some details to the user, such as 'was it successful', the error message if it wasn't, and the parsed return value if it was. While the pros and cons of using error codes for return values have been <a href="https://www.google.com/search?q=error+codes+vs+exception&amp;ie=utf-8&amp;oe=utf-8&amp;aq=t&amp;rls=org.mozilla:en-US:official&amp;client=firefox-a">debated for ages</a>; I tend to prefer simpler return values for local APIs, since a complex return value adds an additional burden on the caller to know how to interpret the results. At best, every call site would look something like this:
+<blockquote>
+<pre>Result&lt;MyObject&gt; value = await MakeRemoteAPICall();
+if (value.WasSuccessful)
+{
+  ProcessSuccessfulResult(value.Result);
+}
+else
+{
+  ProcessError(value.ErrorMessage);
+}</pre>
+</blockquote>
+That's a bit better than before, but still rather verbose for my taste.<br /><br />I propose that the callback style of API design still has a place for situations like this. Consider the following sample:
+<blockquote>
+<pre>MakeRemoteAPICall(
+  result =&gt; ProcessSucessfulResult(result),
+  error =&gt; ProcessError(error));</pre>
+</blockquote>
+For the local consumer of this API, this is logically the same: if the call was successful do this, otherwise do that. But the caller doesn't have to worry about all the nuances of deciding whether a call was successful or not. They can focus on how to process the results, rather than dealing with all of this ceremony. And after all, isn't that what we're all aiming to do, simplify our code?<br /><br />I would love to hear thoughts about how this kind of code can be made even simpler. Would love to hear any opinions, for or against. Thanks!<br /><br /><em>edit: lively debate over on Reddit :) <a href="http://www.reddit.com/r/programming/comments/txhfq/the_problem_with_c_5s_asyncawait_pattern/">http://www.reddit.com/r/programming/comments/txhfq/the_problem_with_c_5s_asyncawait_pattern/</a></em>
+  </div>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "The Problem with C# 5&#x27;s async/await Pattern",
+  "description": "C# 5 brings a fantastic new feature &#x2026; built-in asynchrony (not to be confused with concurrency...",
+  "author": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net/about/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net"
+  },
+  "datePublished": "2012-05-21",
+  "dateModified": "2012-05-21",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://codecube.net/2012/05/the-problem-with-c-5s-asyncawait-pattern/"
+  }
+}
+</script>
+<p>See more in the <a href="/#archives">archives</a>
+</p>
+
+	  </div>
+  </div>
+
+  <div id="footer">
+    copyright 2013 - 2025 - <a rel="me" href="https://mastodon.social/@joelmartinez">me @ Mastodon</a> and <a rel="me" href="https://www.threads.net/@joeldm1971">Threads</a>
+  </div>
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WV9DDDSFMW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WV9DDDSFMW');
+</script>
+</body>
+</html>

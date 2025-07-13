@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf8" />
+	<title>Enslaving Twitter</title>
+  <meta name="author" content="Joel Martinez" />
+  <meta name="nlweb:ai-access" content="allow" />
+  <link rel="alternate" type="application/rss+xml" title="Enslaving Twitter" href="//codecube.net/feed/" />
+  <link rel="nlweb-manifest" href="/nlweb.json" />
+	<link rel="stylesheet" type="text/css" href="/design/style.css?v=2" />
+      <meta name="title" content="Enslaving Twitter" />
+      <meta name="description" content="I&#x27;ve noticed that in recent years, twitter has become the near defacto &quot;engine&quot; for a number of things:&#xA;&#xA;&#x9;Random list data for demos&#xA;Scott Guthrie&#x27;s recent MIX keynote demo..." />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="@joelmartinez" />
+      <meta name="twitter:creator" content="@joelmartinez" />
+      <meta name="twitter:title" content="Enslaving Twitter" />
+      <meta name="twitter:description" content="I&#x27;ve noticed that in recent years, twitter has become the near defacto &quot;engine&quot; for a number of things:&#xA;&#xA;&#x9;Random list data for demos&#xA;Scott Guthrie&#x27;s recent MIX keynote demo..." />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content="Enslaving Twitter" />
+      <meta property="og:description" content="I&#x27;ve noticed that in recent years, twitter has become the near defacto &quot;engine&quot; for a number of things:&#xA;&#xA;&#x9;Random list data for demos&#xA;Scott Guthrie&#x27;s recent MIX keynote demo..." />
+  
+  <script src="/script/tone.js"></script>
+</head>
+<body>
+  <div id="header">
+    <div>
+	  <a href="/" rel="home"><img height="50" width="50" src="//www.gravatar.com/avatar/a61a4be80ce39683142620a76299820b.png" title="ItsAMeee" /></a>
+      <a href="/about/" rel="author">Joel Martinez</a>
+      <a href="/resume/">Resume</a>
+
+      <img id="flair" src="/design/images/flair.png" />
+    </div>
+  </div>
+
+  <div id="contentwrapper">
+	  <div id="content">
+		<article class="hentry" itemscope itemtype="https://schema.org/Article">
+  <h1 class="entry-title" itemprop="headline">Enslaving Twitter</h1>
+  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="2010-04-01">04/01/2010</time>
+</p>
+  <div class="entry-content" itemprop="articleBody">
+    I've noticed that in recent years, twitter has become the near defacto "engine" for a number of things:
+<ul>
+	<li><strong>Random list data for demos</strong>
+Scott Guthrie's recent <a href="http://weblogs.asp.net/scottgu/archive/2010/03/18/building-a-windows-phone-7-twitter-application-using-silverlight.aspx">MIX keynote demo</a> is a perfect example of this. He uses twitter to populate a simple listbox using his own feed. I do something similar in the sample project for <a href="http://nbayes.codeplex.com/">nBayes </a>where I let the user choose two different search terms to populate the two indices from twitter.<br /><br />It's convenient because you don't have to manage the data set. It's a bottomless well of perfectly randomized sample data which makes it perfect for this purpose.</li>
+	<li><strong>Using it as a data communication channel</strong>
+One of the more interesting usage patterns, the use of Twitter to enable large scale communications and/or data transfer. Jeremy Hilton shows how to use it to <a href="http://socialenchilada.com/blog/post/leveraging-twitter-as-a-voting-engine-free-socks/">manage a voting campaign</a>. Other more "ambiguously practical" projects include <a href="http://blogs.msdn.com/coding4fun/archive/2009/04/01/9525376.aspx">TwitterDrive</a>, and even a <a href="http://www.codeproject.com/KB/WCF/WcfOverTwitter.aspx">WCF Communication Channel</a>!</li>
+</ul>
+The only unfortunate thing is that whenever I see this stuff used in a demo, they almost always use some xml parsing api to parse out results from the xml API. This can tend to be ugly and error prone. <a href="http://linqtotwitter.codeplex.com/">Linq2Twitter </a>seems like an interesting solution because it lets you write  nice strongly typed linq queries and get back the results.<br /><br />Depending on what you're doing, having organic sample data can be very useful, there have been <a href="http://bloggingabout.net/blogs/mglaser/archive/2007/06/14/creating-a-custom-data-generator-for-vste-dbpro-aka-datadude.aspx">many </a>projects <a href="http://excel.tips.net/Pages/T002077_Generating_Random_Testing_Data.html">attempting </a>to <a href="http://norefuge.net/vgng/vgng.html">address</a> this in the past. And the use of twitter as a communication channel could be nice because it's infrastructure you wouldn't have to manage and maintain (just be prepared to handle <a href="http://failwhale.com/">fail whales</a>).
+  </div>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Enslaving Twitter",
+  "description": "I&#x27;ve noticed that in recent years, twitter has become the near defacto \&quot;engine\&quot; for a number of things:  &#x9;Random list data for demos Scott Guthrie&#x27;s recent MIX keynote demo...",
+  "author": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net/about/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net"
+  },
+  "datePublished": "2010-04-01",
+  "dateModified": "2010-04-01",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://codecube.net/2010/03/enslaving-twitter/"
+  }
+}
+</script>
+<p>See more in the <a href="/#archives">archives</a>
+</p>
+
+	  </div>
+  </div>
+
+  <div id="footer">
+    copyright 2013 - 2025 - <a rel="me" href="https://mastodon.social/@joelmartinez">me @ Mastodon</a> and <a rel="me" href="https://www.threads.net/@joeldm1971">Threads</a>
+  </div>
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WV9DDDSFMW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WV9DDDSFMW');
+</script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf8" />
+	<title>Twilio-CSharp for MonoTouch and Android</title>
+  <meta name="author" content="Joel Martinez" />
+  <meta name="nlweb:ai-access" content="allow" />
+  <link rel="alternate" type="application/rss+xml" title="Twilio-CSharp for MonoTouch and Android" href="//codecube.net/feed/" />
+  <link rel="nlweb-manifest" href="/nlweb.json" />
+	<link rel="stylesheet" type="text/css" href="/design/style.css?v=2" />
+      <meta name="title" content="Twilio-CSharp for MonoTouch and Android" />
+      <meta name="description" content="I noticed that Twilio&#x27;s official C# client didn&#x27;t have a version that you could use from MonoTouch and Mono for Android. So I took a few minutes, forked the project, and added some MonoDevelop proj..." />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="@joelmartinez" />
+      <meta name="twitter:creator" content="@joelmartinez" />
+      <meta name="twitter:title" content="Twilio-CSharp for MonoTouch and Android" />
+      <meta name="twitter:description" content="I noticed that Twilio&#x27;s official C# client didn&#x27;t have a version that you could use from MonoTouch and Mono for Android. So I took a few minutes, forked the project, and added some MonoDevelop proj..." />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content="Twilio-CSharp for MonoTouch and Android" />
+      <meta property="og:description" content="I noticed that Twilio&#x27;s official C# client didn&#x27;t have a version that you could use from MonoTouch and Mono for Android. So I took a few minutes, forked the project, and added some MonoDevelop proj..." />
+  
+  <script src="/script/tone.js"></script>
+</head>
+<body>
+  <div id="header">
+    <div>
+	  <a href="/" rel="home"><img height="50" width="50" src="//www.gravatar.com/avatar/a61a4be80ce39683142620a76299820b.png" title="ItsAMeee" /></a>
+      <a href="/about/" rel="author">Joel Martinez</a>
+      <a href="/resume/">Resume</a>
+
+      <img id="flair" src="/design/images/flair.png" />
+    </div>
+  </div>
+
+  <div id="contentwrapper">
+	  <div id="content">
+		<article class="hentry" itemscope itemtype="https://schema.org/Article">
+  <h1 class="entry-title" itemprop="headline">Twilio-CSharp for MonoTouch and Android</h1>
+  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="2012-05-18">05/18/2012</time>
+</p>
+  <div class="entry-content" itemprop="articleBody">
+    I noticed that <a href="http://twilio.com">Twilio</a>'s official <a href="https://github.com/twilio/twilio-csharp">C# client</a> didn't have a version that you could use from <a href="http://xamarin.com/monotouch">MonoTouch</a> and <a href="http://xamarin.com/monoforandroid">Mono for Android</a>. So I took a few minutes, <a href="https://github.com/joelmartinez/twilio-csharp">forked the project</a>, and added some <a href="http://monodevelop.com/">MonoDevelop</a> projects so that you can compile for each of those two platforms.<br /><br />The mono versions are using the silverlight version of the API, which uses async style methods where you pass in callbacks. There are two dependencies: <a href="https://github.com/restsharp/RestSharp">RestSharp</a>, and<a href="http://json.codeplex.com/"> json.net</a>. Though it looks like RestSharp has shed their dependency on json.net, there are still some references in the twilio code. The json.net project maintain mono specific versions ... they depend on a portable library for that cross platform support. Unfortunately that means that you can't compile it if you're on a mac and only using monodevelop. Thankfully I found <a href="https://github.com/ayoung/Newtonsoft.Json">this helpful fork</a> that did this work for me.<br /><br />At the risk of  <a href="http://john-sheehan.com/post/17964678895/dont-push-your-pull-requests">'pushing' my pull request</a> onto them, I submitted <a href="https://github.com/twilio/twilio-csharp/pull/28">a pull request</a>; But I made sure to word it such that I'm ok if they want to push back and ask for any changes ... or maybe they don't want to maintain a Mono version at all, in which case I'm happy to keep it in my fork. So we'll see what happens. Please let me know if you have any feedback on this change.<br /><br />As an aside, I also noticed while I was looking around github that many projects that have mono versions tend to use *.MonoTouch and *.MonoDroid for their project/solution names. It's a subtle thing, but  Xamarin is careful not to refer to their product as MonoDroid, but Mono For Android. I wonder if this has to do with the trademarks that are <a href="http://www.businessinsider.com/verizon-drops-droid-brand-for-newest-android-phone-2010-2">owned by Lucasarts</a>, if so I'd hate to wake up to a nice C&amp;D in the mailbox ;)
+  </div>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Twilio-CSharp for MonoTouch and Android",
+  "description": "I noticed that Twilio&#x27;s official C# client didn&#x27;t have a version that you could use from MonoTouch and Mono for Android. So I took a few minutes, forked the project, and added some MonoDevelop proj...",
+  "author": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net/about/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net"
+  },
+  "datePublished": "2012-05-18",
+  "dateModified": "2012-05-18",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://codecube.net/2012/05/twilio-csharp-for-monotouch-and-android/"
+  }
+}
+</script>
+<p>See more in the <a href="/#archives">archives</a>
+</p>
+
+	  </div>
+  </div>
+
+  <div id="footer">
+    copyright 2013 - 2025 - <a rel="me" href="https://mastodon.social/@joelmartinez">me @ Mastodon</a> and <a rel="me" href="https://www.threads.net/@joeldm1971">Threads</a>
+  </div>
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WV9DDDSFMW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WV9DDDSFMW');
+</script>
+</body>
+</html>

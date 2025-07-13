@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf8" />
+	<title>Finite State Machine</title>
+  <meta name="author" content="Joel Martinez" />
+  <meta name="nlweb:ai-access" content="allow" />
+  <link rel="alternate" type="application/rss+xml" title="Finite State Machine" href="//codecube.net/feed/" />
+  <link rel="nlweb-manifest" href="/nlweb.json" />
+	<link rel="stylesheet" type="text/css" href="/design/style.css?v=2" />
+      <meta name="title" content="Finite State Machine" />
+      <meta name="description" content="Thanks to the wonderful waybackmachine, I was able to dig up an old article of mine from the old blog software that I hadn&#x27;t seen for a long time.&amp;nbsp; Figured I&#x27;d post it up for posterity ... plu..." />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="@joelmartinez" />
+      <meta name="twitter:creator" content="@joelmartinez" />
+      <meta name="twitter:title" content="Finite State Machine" />
+      <meta name="twitter:description" content="Thanks to the wonderful waybackmachine, I was able to dig up an old article of mine from the old blog software that I hadn&#x27;t seen for a long time.&amp;nbsp; Figured I&#x27;d post it up for posterity ... plu..." />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content="Finite State Machine" />
+      <meta property="og:description" content="Thanks to the wonderful waybackmachine, I was able to dig up an old article of mine from the old blog software that I hadn&#x27;t seen for a long time.&amp;nbsp; Figured I&#x27;d post it up for posterity ... plu..." />
+  
+  <script src="/script/tone.js"></script>
+</head>
+<body>
+  <div id="header">
+    <div>
+	  <a href="/" rel="home"><img height="50" width="50" src="//www.gravatar.com/avatar/a61a4be80ce39683142620a76299820b.png" title="ItsAMeee" /></a>
+      <a href="/about/" rel="author">Joel Martinez</a>
+      <a href="/resume/">Resume</a>
+
+      <img id="flair" src="/design/images/flair.png" />
+    </div>
+  </div>
+
+  <div id="contentwrapper">
+	  <div id="content">
+		<article class="hentry" itemscope itemtype="https://schema.org/Article">
+  <h1 class="entry-title" itemprop="headline">Finite State Machine</h1>
+  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="2008-11-11">11/11/2008</time>
+</p>
+  <div class="entry-content" itemprop="articleBody">
+    <p>Thanks to the wonderful waybackmachine, I was able to dig up an old article of mine from the old blog software that I hadn't seen for a long time.&nbsp; Figured I'd post it up for posterity ... plus, you never know if a service like archive.org is going to be around forever:</p> <p><a title="http://web.archive.org/web/20041204125618/http://www.codecube.net/item.asp?cc_ItemID=247" href="http://web.archive.org/web/20041204125618/http://www.codecube.net/item.asp?cc_ItemID=247">http://web.archive.org/web/20041204125618/http://www.codecube.net/item.asp?cc_ItemID=247</a></p> <p>One of these days, I'll get around to updating this sample to XNA as I can think of a number of ways that I could factor the code a bit better:</p> <p>----------------------</p> <p>After reading a <a href="http://web.archive.org/web/20041204125618/http://www.ai-junkie.com/architecture/state_driven/tut_state1.html">great article</a> over at <a href="http://web.archive.org/web/20041204125618/http://www.ai-junkie.com/">ai-junkie</a>.� The article describes the tenets of "state driven agent design" much better than I ever could, but just for reference, here's a quick rundown. <br>It is often regarded by many in the ai field that one of the most basic forms of artificial intelligence is using a state based architecture. In the end, it breaks down to being a bunch of if/then/else branches. They can easily be represented as flowcharts and are very easy to understand by most which makes it easy for non-technical people to help with the design of the ai. <br>I decided I'd like to make an implementation of the sample code he provides in C# (the article presents the code in c++). The sample code is a little miner dude ... he gets up in the morning, heads down to the mine to gather gold nuggets. When he gets thirsty, he heads out to the bar and buys a beer. When his pockets are full, he heads to the bank to deposit his gold. When he gets tired, he goes home and sleeps. And eventually, once he deems he has enough gold, he gits outta dodge! <br>On to the code ...</p> <p><a href="http://web.archive.org/web/20041204125618/http://www.codecube.net/demos/games/minergame.zip"><strike>Download Sample Project Files</strike></a></p> <h4>IState interface</h4> <p>The IState interface is how you implement the actual "intelligence". The idea is that an entity can only be in one state at any given time, so you can use this interface to dictate what happens when that state is entered, when to leave that state, and where to go.</p><pre>public interface IState
+{
+	void Enter(IEntity entity);
+	void Execute(IEntity entity);
+	void Exit(IEntity entity);
+}</pre>
+<h4>Entities</h4>
+<p>Every entity that uses the state machine must implement the IEntity interface. This simply dictates that the entity must keep track of the current state, the previous state, and provide a mechanism for changing state. For the sake of reusing common code, I also implemented an EntityBase class which is a simple IEntity implementation. You can create your own, or subclass it if you need additional functionality.</p><pre>public interface IEntity
+{
+	IState CurrentState {get;set;}
+	IState PreviousState {get;set;}
+	void ChangeState(IState newState);
+}&nbsp;&nbsp; public class EntityBase : IEntity
+{
+	private IState mCurrentState;
+	private IState mPreviousState;&nbsp;&nbsp; #region IEntity Members&nbsp;&nbsp; public IState CurrentState
+	{
+		get
+		{return mCurrentState;}
+		set
+		{mCurrentState = value;}
+	}&nbsp;&nbsp; public IState PreviousState
+	{
+		get
+		{return mPreviousState;}
+		set
+		{mPreviousState = value;}
+	}&nbsp;&nbsp; public void ChangeState(IState newState)
+	{
+		if (CurrentState != null)
+			CurrentState.Exit(this);&nbsp;&nbsp; PreviousState = CurrentState;
+		CurrentState = newState;&nbsp;&nbsp; newState.Enter(this);
+	}&nbsp;&nbsp; #endregion
+}</pre>
+<p>Now, if you go back and read the original article, you'll notice that his implementation didn't store the previous state. I added that property because I think it might make the state machine a bit more versatile if your code is able to know what state it was previously in, thus having the ability to change its behavior. Others say that's bad practice because they think that each state should have predictable behavior, and if you want different behavior, that should be another state. I'm still undecided about whether I agree with that ... </p>
+<h4>Miner</h4>
+<p>The miner class is going to be the concrete implementation of the IEntity interface. Notice how we define additional properties such as: Fatigue, Thirs, and GoldNuggets. As the state machine puts it through its paces, those properties will change and dictate the when states transition to another state.</p><pre>public class Miner : EntityBase
+{
+	public Miner()
+	{}&nbsp;&nbsp; public int Fatigue = 0;
+	public int Thirst = 0;
+	public int GoldNuggets = 0;
+	public int Savings;
+}</pre>
+<h4>Concrete State Implementations</h4>
+<p>For the sake of saving space, I will only print one of the State classes, the first one. <a href="http://web.archive.org/web/20041204125618/http://www.codecube.net/demos/games/minergame.zip">download the sample project</a> to see the rest.</p><pre>	class EnterMineAndDigForNugget : IState
+	{
+		private EnterMineAndDigForNugget()
+		{}<br /><br />		private static EnterMineAndDigForNugget _instance;
+		public static EnterMineAndDigForNugget Instance
+		{
+			get 
+			{
+				if (_instance == null)
+				{
+					_instance = new EnterMineAndDigForNugget();
+				}
+				return _instance;
+			}
+		}<br /><br />		#region IState Members<br /><br />		public void Enter(IEntity entity)
+		{
+			Console.WriteLine("Entering the mine");
+		}<br /><br />		public void Execute(IEntity entity)
+		{
+			Miner m = entity as Miner;
+			Console.WriteLine("Picked Up a Nugget");
+			m.GoldNuggets++;
+			m.Thirst++;
+			m.Fatigue++;<br /><br />			if (m.GoldNuggets &gt;= 8)
+			{
+				m.ChangeState(VisitBankAndDepositGold.Instance);
+				return;
+			}<br /><br />			if (m.Fatigue &gt;= 10)
+			{
+				m.ChangeState(GoHomeAndSleepTilRested.Instance);
+				return;
+			}
+			
+			if (m.Thirst &gt;= 6)
+				m.ChangeState(QuenchThirst.Instance);<br /><br />		}<br /><br />		public void Exit(IEntity entity)
+		{
+			Console.WriteLine("Leaving the mine");
+		}<br /><br />	#endregion
+}</pre>
+<p>What will happen is that the app will create a loop and continue to execute the entity's current state (whatever that state may be). It is up to the state itself to decide when it is time to move to another state. That's what makes this such a powerful AI technique because you can easily change the state transition patterns and modify the entity's behavior. </p>
+<p>You will also want to notice that the state class is implemented as a singleton. I did this because every time you want to switch states, you need an instance of the state class. The original implementation had me instantiating a new class every time ... I can imagine that this would be a performance hit in an actual game ... so by using the Singleton pattern, I ensure that there's only one state class at any given time.</p>
+<h5>TypeSafe Enum Pattern</h5>
+<p>I found this pattern about a year ago, and I love it. Here we see it <a href="http://web.archive.org/web/20041204125618/http://weblogs.asp.net/asmith/archive/2003/07/15/10080.aspx">implemented and described by Andy Smith</a>. In retrospect, I could have used this pattern to have a States class with instances of all the individual states. I think this would have looked a little cleaner ... but oh well.</p>
+<h4>Output</h4>
+<p>This is the generated output from the sample project:</p><pre>C:\Documents and Settings\jdmartinez\My Documents\testProjects\MinerGame\bin\Deb
+ug&gt;MinerGame.exe
+Entering the mine
+Picked Up a Nugget
+Picked Up a Nugget
+Picked Up a Nugget
+Picked Up a Nugget
+Picked Up a Nugget
+Picked Up a Nugget
+Leaving the mine
+Buyin' a beer (-1 gold)! Gulp Gulp Gulp Gulp Gulp Gulp  - Ahhh
+Entering the mine
+Picked Up a Nugget
+Picked Up a Nugget
+Picked Up a Nugget
+Leaving the mine
+Depositing 8 Gold ... I now have 8 gold saved up
+Home Sweet Home
+ZZZZZZZZ'nother day, 'nother doller
+Entering the mine
+Picked Up a Nugget
+Picked Up a Nugget
+Picked Up a Nugget
+Leaving the mine
+Buyin' a beer (-1 gold)! Gulp Gulp Gulp Gulp Gulp Gulp  - Ahhh
+Entering the mine
+Picked Up a Nugget
+Picked Up a Nugget
+Picked Up a Nugget
+Picked Up a Nugget
+Picked Up a Nugget
+Picked Up a Nugget
+Leaving the mine
+Depositing 8 Gold ... I now have 16 gold saved up
+Home Sweet Home
+ZZZZZZZZ'nother day, 'nother doller
+Entering the mine
+Picked Up a Nugget
+Leaving the mine
+Buyin' a beer (-1 gold)! Gulp Gulp Gulp Gulp Gulp Gulp Gulp  - Ahhh
+Entering the mine
+Picked Up a Nugget
+Picked Up a Nugget
+Picked Up a Nugget
+Picked Up a Nugget
+Picked Up a Nugget
+Picked Up a Nugget
+Leaving the mine
+Buyin' a beer (-1 gold)! Gulp Gulp Gulp Gulp Gulp Gulp  - Ahhh
+Entering the mine
+Picked Up a Nugget
+Picked Up a Nugget
+Picked Up a Nugget
+Leaving the mine
+Depositing 8 Gold ... I now have 24 gold saved up
+Home Sweet Home
+ZZZZZZZZ'nother day, 'nother doller
+Entering the mine
+Picked Up a Nugget
+Picked Up a Nugget
+Picked Up a Nugget
+Leaving the mine
+Buyin' a beer (-1 gold)! Gulp Gulp Gulp Gulp Gulp Gulp  - Ahhh
+Entering the mine
+Picked Up a Nugget
+Picked Up a Nugget
+Picked Up a Nugget
+Picked Up a Nugget
+Picked Up a Nugget
+Picked Up a Nugget
+Leaving the mine
+Depositing 8 Gold ... I now have 32 gold saved up
+YEEEEEHAAWWWWWWW ... headin' back east with 32 gold nuggets</pre>
+  </div>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Finite State Machine",
+  "description": "Thanks to the wonderful waybackmachine, I was able to dig up an old article of mine from the old blog software that I hadn&#x27;t seen for a long time.&amp;nbsp; Figured I&#x27;d post it up for posterity ... plu...",
+  "author": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net/about/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net"
+  },
+  "datePublished": "2008-11-11",
+  "dateModified": "2008-11-11",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://codecube.net/2008/11/finite-state-machine/"
+  }
+}
+</script>
+<p>See more in the <a href="/#archives">archives</a>
+</p>
+
+	  </div>
+  </div>
+
+  <div id="footer">
+    copyright 2013 - 2025 - <a rel="me" href="https://mastodon.social/@joelmartinez">me @ Mastodon</a> and <a rel="me" href="https://www.threads.net/@joeldm1971">Threads</a>
+  </div>
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WV9DDDSFMW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WV9DDDSFMW');
+</script>
+</body>
+</html>

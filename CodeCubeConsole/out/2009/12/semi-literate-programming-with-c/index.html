@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf8" />
+	<title>Semi-Literate Programming with C#</title>
+  <meta name="author" content="Joel Martinez" />
+  <meta name="nlweb:ai-access" content="allow" />
+  <link rel="alternate" type="application/rss+xml" title="Semi-Literate Programming with C#" href="//codecube.net/feed/" />
+  <link rel="nlweb-manifest" href="/nlweb.json" />
+	<link rel="stylesheet" type="text/css" href="/design/style.css?v=2" />
+      <meta name="title" content="Semi-Literate Programming with C#" />
+      <meta name="description" content="Recently, I&#x27;ve been reading the book Coders at Work, where author Peter Seibel interviews lots of well known developers.&#xA0; One of the questions that he often asks is whether they have tried ..." />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="@joelmartinez" />
+      <meta name="twitter:creator" content="@joelmartinez" />
+      <meta name="twitter:title" content="Semi-Literate Programming with C#" />
+      <meta name="twitter:description" content="Recently, I&#x27;ve been reading the book Coders at Work, where author Peter Seibel interviews lots of well known developers.&#xA0; One of the questions that he often asks is whether they have tried ..." />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content="Semi-Literate Programming with C#" />
+      <meta property="og:description" content="Recently, I&#x27;ve been reading the book Coders at Work, where author Peter Seibel interviews lots of well known developers.&#xA0; One of the questions that he often asks is whether they have tried ..." />
+  
+  <script src="/script/tone.js"></script>
+</head>
+<body>
+  <div id="header">
+    <div>
+	  <a href="/" rel="home"><img height="50" width="50" src="//www.gravatar.com/avatar/a61a4be80ce39683142620a76299820b.png" title="ItsAMeee" /></a>
+      <a href="/about/" rel="author">Joel Martinez</a>
+      <a href="/resume/">Resume</a>
+
+      <img id="flair" src="/design/images/flair.png" />
+    </div>
+  </div>
+
+  <div id="contentwrapper">
+	  <div id="content">
+		<article class="hentry" itemscope itemtype="https://schema.org/Article">
+  <h1 class="entry-title" itemprop="headline">Semi-Literate Programming with C#</h1>
+  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="2009-12-22">12/22/2009</time>
+</p>
+  <div class="entry-content" itemprop="articleBody">
+    Recently, I've been reading the book <a href="http://www.amazon.com/Coders-at-Work-Peter-Seibel/dp/1430219483%3FSubscriptionId%3D08WX39XKK81ZEWHZ52R2%26tag%3Dws%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D1430219483"><em>Coders at Work</em></a>, where author Peter Seibel interviews lots of well known developers.  One of the questions that he often asks is whether they have tried <a href="http://en.wikipedia.org/wiki/Literate_programming">Literate Programming</a>, an idea introduced by Donald Knuth in the 70s.  Although most of them say no, some of them have tried it briefly.  They usually come to the conclusion that it's an interesting idea, but a lot of the tooling doesn't really make it a realistic solution.<br /><br />The author's insistence at asking them about this got me thinking about some of the problems that I've encountered during my career.  Could literate programming be applied in this modern day and age to help solve some of the problems that we all face?
+<h4>A Use Case</h4>
+I started thinking about the types of code where these questions tend to come up with. It's usually around code where business analysts make up some business rules.  Let's use an example.  Say you work at a company that needs to creating billing statements for clients.  When you process the statements, there are a series of fees which you must attach to the bill based on certain conditions.<br /><br />The rules may have been explained to the developer in a face to face meeting like this:
+<ul>
+	<li>Apply a 7% tax on the principal when the client is in Florida</li>
+	<li>A $50 flat fee will be applied when a New York based client maintains a principal of more than $1000</li>
+</ul>
+So I, as a developer will scuttle away and create the program per specifications. The application goes to production and everyone is happy. Two years pass by, most of the original staff that was working when the system was originally deployed has turned over, and the new staff has a question about why some fees are being charged for a given client.<br /><br />In an ideal world, the business will refer back to documentation that they created when wanting to know about the behavior of some system that you programmed. However, in the real world, a more likely scenario is that they will end up asking you over the phone about some obscure section of the code and you end up having to crack open the source to figure out what the code is doing in that piece.
+<h3>The Solution?</h3>
+I want a solution that lets me write code, and without manual intervention, allow other developers and the end user to understand what the business logic is doing.  Of course, most people will point to the <a href="http://msdn.microsoft.com/en-us/library/b2s063f7%28VS.80%29.aspx">XML documentation</a> feature of C# along with auto-documentation products like <a href="http://sandcastle.codeplex.com/">SandCastle</a>, and suggest that this is enough.  However, maintaining XML comments violates the "without manual intervention" part of my own requirements. It also creates output that is not really consumable by end users.<br /><br />There is also another issue that most people probably don't really think about. A lot of the code in today's projects is not really ... useful, to document. Serialization code, parsing code, data access code ... most of that is pretty standard.  Developers will easily understand it assuming they already know how to use the APIs like ADO.NET, and WCF.  And users won't care about it.  So that really just leaves the fundamental logic that is the raison d'être for your application in the first place. This is what I am interested in making easily available for a human to read.<br /><br />For the solution, I wrote a simple Rule class:
+<blockquote>
+<pre>public class Rule&lt;T&gt;
+{
+    private Expression&lt;Action&lt;T&gt;&gt; expression;
+    private Expression&lt;Func&lt;T, bool&gt;&gt; evalExpression;
+    private Action&lt;T&gt; compiled;
+    private Func&lt;T, bool&gt; evalCompiled;<br /><br />    public void Execute(T context)
+    {
+        if (this.evalCompiled(context))
+        {
+            this.compiled(context);
+        }
+    }<br /><br />    public Expression&lt;Func&lt;T, bool&gt;&gt; Evaluation
+    {
+        get { return this.evalExpression; }
+        set
+        {
+            this.evalExpression = value;
+            this.evalCompiled = value.Compile();
+        }
+    }<br /><br />    public Expression&lt;Action&lt;T&gt;&gt; Action
+    {
+        get { return this.expression; }
+        set
+        {
+            this.expression = value;
+            this.compiled = value.Compile();
+        }
+    }<br /><br />    public override string ToString()
+    {
+        return string.Format("if {0} then {1}",
+                                    this.Evaluation.Body,
+                                    this.Action.Body);
+    }
+}</pre>
+</blockquote>
+This class takes, as a generic parameter a context which represents one item that needs to be processed.  You will set two lambda expressions: the Evaluation, and the Action.  The evaluation will return true if the action is to be applied.  An example can be seen below:
+<blockquote>
+<pre>List&lt;Rule&lt;BizContext&gt;&gt; rules = new List&lt;Rule&lt;BizContext&gt;&gt;();<br /><br />rules.Add(new Rule&lt;BizContext&gt;()
+{
+    Evaluation = c =&gt; c.State == Florida,
+    Action = c =&gt; c.Fees.Add(c.Principal * .07M)
+});<br /><br />rules.Add(new Rule&lt;BizContext&gt;()
+{
+    Evaluation = c =&gt; c.State == NewYork &amp;&amp; c.Principal &gt; 1000.00M,
+    Action = c =&gt; c.Fees.Add(50.00M)
+});</pre>
+</blockquote>
+"BizContext" in the above code can contain anything that pertains to the item that needs to be processed.  In our case, the analyst's rules say that we need to operate based on the principal and client's state, and add fees.  So those are the properties that the context contains. Because the rules were added to a list, you can iterate through the list and call the rule class' "Execute" method.
+<blockquote>
+<pre>foreach (var rule in rules)
+{
+    rule.Execute(context);
+}</pre>
+</blockquote>
+So far, there's nothing groundbreaking about the Rule class.  I'm sure many of you have written something similar time and time again. But here's where the literate programming comes into play. Because the "Evaluation" and "Action" methods are actually Expressions ... we have access to the textual representations of the code, in addition to having the ability to execute it.<br /><br />The overridden .ToString method on the class will output an easy to understand string of the business rules using actual code that will execute when it's run.  So for the two rules defined above, you can get a printout like this:
+<blockquote>
+<pre>if (c.State = Florida) then c.Fees.Add((c.Principal * 0.32))
+if ((c.State = NewYork) &amp;&amp; (c.Principal &gt; 1000.00)) then c.Fees.Add(50.00)</pre>
+</blockquote>
+The end user gets a realistic printout of the actual business logic in the system on-demand; And the developer doesn't have to do anything to update this when the business logic changes.<br /><br />So there you have it; I wouldn't exactly call it full fledged literate programming with C# in the way that it was described originally.  But I think that it embodies the qualities of literate programming, where documentation and code are one and the same. It's a compromise, and it would be interesting to see if this approach can be implemented in a real-world scenario.<br /><br />Any takers? :-)
+  </div>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Semi-Literate Programming with C#",
+  "description": "Recently, I&#x27;ve been reading the book Coders at Work, where author Peter Seibel interviews lots of well known developers.&#xA0; One of the questions that he often asks is whether they have tried ...",
+  "author": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net/about/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net"
+  },
+  "datePublished": "2009-12-22",
+  "dateModified": "2009-12-22",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://codecube.net/2009/12/semi-literate-programming-with-c/"
+  }
+}
+</script>
+<p>See more in the <a href="/#archives">archives</a>
+</p>
+
+	  </div>
+  </div>
+
+  <div id="footer">
+    copyright 2013 - 2025 - <a rel="me" href="https://mastodon.social/@joelmartinez">me @ Mastodon</a> and <a rel="me" href="https://www.threads.net/@joeldm1971">Threads</a>
+  </div>
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WV9DDDSFMW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WV9DDDSFMW');
+</script>
+</body>
+</html>

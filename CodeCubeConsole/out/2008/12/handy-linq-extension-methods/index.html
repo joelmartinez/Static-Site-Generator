@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf8" />
+	<title>Handy LinQ Extension Methods</title>
+  <meta name="author" content="Joel Martinez" />
+  <meta name="nlweb:ai-access" content="allow" />
+  <link rel="alternate" type="application/rss+xml" title="Handy LinQ Extension Methods" href="//codecube.net/feed/" />
+  <link rel="nlweb-manifest" href="/nlweb.json" />
+	<link rel="stylesheet" type="text/css" href="/design/style.css?v=2" />
+      <meta name="title" content="Handy LinQ Extension Methods" />
+      <meta name="description" content="Isn&#x27;t it annoying how an IEnumerable&amp;lt;SomeClassThatImplementsISomeInterface&amp;gt;, is not..." />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="@joelmartinez" />
+      <meta name="twitter:creator" content="@joelmartinez" />
+      <meta name="twitter:title" content="Handy LinQ Extension Methods" />
+      <meta name="twitter:description" content="Isn&#x27;t it annoying how an IEnumerable&amp;lt;SomeClassThatImplementsISomeInterface&amp;gt;, is not..." />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content="Handy LinQ Extension Methods" />
+      <meta property="og:description" content="Isn&#x27;t it annoying how an IEnumerable&amp;lt;SomeClassThatImplementsISomeInterface&amp;gt;, is not..." />
+  
+  <script src="/script/tone.js"></script>
+</head>
+<body>
+  <div id="header">
+    <div>
+	  <a href="/" rel="home"><img height="50" width="50" src="//www.gravatar.com/avatar/a61a4be80ce39683142620a76299820b.png" title="ItsAMeee" /></a>
+      <a href="/about/" rel="author">Joel Martinez</a>
+      <a href="/resume/">Resume</a>
+
+      <img id="flair" src="/design/images/flair.png" />
+    </div>
+  </div>
+
+  <div id="contentwrapper">
+	  <div id="content">
+		<article class="hentry" itemscope itemtype="https://schema.org/Article">
+  <h1 class="entry-title" itemprop="headline">Handy LinQ Extension Methods</h1>
+  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="2008-12-05">12/05/2008</time>
+</p>
+  <div class="entry-content" itemprop="articleBody">
+    <p>Isn't it annoying how an IEnumerable&lt;SomeClassThatImplementsISomeInterface&gt;, is <strong>not</strong> castable to IEnumerable&lt;ISomeInterface&gt; ?&nbsp; The reasoning for this makes sense once you get into it ... because of generics, those two are functionally different classes.</p> <p>So, I made a handy-dandy extension method that does the job for me (at the cost of a few more allocations on the heap)</p> <blockquote> <p>public static IEnumerable&lt;KTo&gt; Convert&lt;TFrom, KTo&gt;(this IEnumerable&lt;TFrom&gt; enumerable)<br>&nbsp;&nbsp;&nbsp; where TFrom : KTo<br>{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; return enumerable.Select((TFrom s) =&gt; (KTo)s);<br>}</p></blockquote> <p>The usage is very simple: <em>return list.Convert&lt;SomeClassThatImplementsISomeInterface, ISomeInterface&gt;();</em></p> <p>If you need to do this with an Entity Framework query, where your entities are partial classed to implement an interface ... you need to use this version though:</p> <blockquote> <p>public static IEnumerable&lt;KTo&gt; ConvertToList&lt;TFrom, KTo&gt;(this IEnumerable&lt;TFrom&gt; enumerable)<br>&nbsp;&nbsp;&nbsp; where TFrom : KTo<br>{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; return enumerable.ToList().Select((TFrom s) =&gt; (KTo)s);<br>}</p></blockquote> <p>note the .ToList() that's injected in there ... the reason for this is that the enumerable needs to be fully enumerated so that the EF executes the query and moves all the results into memory, before doing the cast in the select.</p> <p>hope that helps :-)</p>
+  </div>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Handy LinQ Extension Methods",
+  "description": "Isn&#x27;t it annoying how an IEnumerable&amp;lt;SomeClassThatImplementsISomeInterface&amp;gt;, is not...",
+  "author": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net/about/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net"
+  },
+  "datePublished": "2008-12-05",
+  "dateModified": "2008-12-05",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://codecube.net/2008/12/handy-linq-extension-methods/"
+  }
+}
+</script>
+<p>See more in the <a href="/#archives">archives</a>
+</p>
+
+	  </div>
+  </div>
+
+  <div id="footer">
+    copyright 2013 - 2025 - <a rel="me" href="https://mastodon.social/@joelmartinez">me @ Mastodon</a> and <a rel="me" href="https://www.threads.net/@joeldm1971">Threads</a>
+  </div>
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WV9DDDSFMW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WV9DDDSFMW');
+</script>
+</body>
+</html>

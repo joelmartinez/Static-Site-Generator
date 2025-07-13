@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf8" />
+	<title>Universal Subtitles C# API Wrapper</title>
+  <meta name="author" content="Joel Martinez" />
+  <meta name="nlweb:ai-access" content="allow" />
+  <link rel="alternate" type="application/rss+xml" title="Universal Subtitles C# API Wrapper" href="//codecube.net/feed/" />
+  <link rel="nlweb-manifest" href="/nlweb.json" />
+	<link rel="stylesheet" type="text/css" href="/design/style.css?v=2" />
+      <meta name="title" content="Universal Subtitles C# API Wrapper" />
+      <meta name="description" content="This is available on GitHub here:&#xA0;https://github.com/joelmartinez/universalsubtitles-csharp&#xA;&#xA;C# 5.0 API Wrapper for the Universal Subtitles service, which is what the Khan Academy..." />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="@joelmartinez" />
+      <meta name="twitter:creator" content="@joelmartinez" />
+      <meta name="twitter:title" content="Universal Subtitles C# API Wrapper" />
+      <meta name="twitter:description" content="This is available on GitHub here:&#xA0;https://github.com/joelmartinez/universalsubtitles-csharp&#xA;&#xA;C# 5.0 API Wrapper for the Universal Subtitles service, which is what the Khan Academy..." />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content="Universal Subtitles C# API Wrapper" />
+      <meta property="og:description" content="This is available on GitHub here:&#xA0;https://github.com/joelmartinez/universalsubtitles-csharp&#xA;&#xA;C# 5.0 API Wrapper for the Universal Subtitles service, which is what the Khan Academy..." />
+  
+  <script src="/script/tone.js"></script>
+</head>
+<body>
+  <div id="header">
+    <div>
+	  <a href="/" rel="home"><img height="50" width="50" src="//www.gravatar.com/avatar/a61a4be80ce39683142620a76299820b.png" title="ItsAMeee" /></a>
+      <a href="/about/" rel="author">Joel Martinez</a>
+      <a href="/resume/">Resume</a>
+
+      <img id="flair" src="/design/images/flair.png" />
+    </div>
+  </div>
+
+  <div id="contentwrapper">
+	  <div id="content">
+		<article class="hentry" itemscope itemtype="https://schema.org/Article">
+  <h1 class="entry-title" itemprop="headline">Universal Subtitles C# API Wrapper</h1>
+  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="2012-08-03">08/03/2012</time>
+</p>
+  <div class="entry-content" itemprop="articleBody">
+    <em>This is available on GitHub here: <a href="https://github.com/joelmartinez/universalsubtitles-csharp">https://github.com/joelmartinez/universalsubtitles-csharp</a></em><br /><br />C# 5.0 API Wrapper for the <a href="http://www.universalsubtitles.org">Universal Subtitles</a> service, which is what the <a href="http://khanacademy.org">Khan Academy</a> uses as their provider. I'm building this to add subtitles to the <a href="https://github.com/joelmartinez/Khan-Academy-for-WinRT">Khan Academy for Windows RT</a> app.<br /><br />Usage is simple:
+<blockquote>
+<pre>using UniversalSubtitles;
+...
+var api = new UniversalSubtitles.v1.Api();<br /><br />string video_url = "http://www.youtube.com/watch?v=W0VWO4asgmk&amp;feature=youtube_gdata_player";<br /><br />SubtitleLine[] subtitles = await api.SubtitlesAsync(video_url);
+// returns the subtitles in the video's spoken language</pre>
+</blockquote>
+You can also give the user a list of available languages that are available for this video
+<blockquote>
+<pre>Language[] languages = await api.LanguagesAsync(video_url);
+// display the list of available languages<br /><br />SubtitleLine[] subtitles = await api.SubtitlesAsync(video_url, "it"); 
+// or you can pass an instance of Language</pre>
+</blockquote>
+Hope it's useful for someone out there :)
+  </div>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Universal Subtitles C# API Wrapper",
+  "description": "This is available on GitHub here:&#xA0;https://github.com/joelmartinez/universalsubtitles-csharp  C# 5.0 API Wrapper for the Universal Subtitles service, which is what the Khan Academy...",
+  "author": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net/about/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net"
+  },
+  "datePublished": "2012-08-03",
+  "dateModified": "2012-08-03",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://codecube.net/2012/08/universal-subtitles-c-api-wrapper/"
+  }
+}
+</script>
+<p>See more in the <a href="/#archives">archives</a>
+</p>
+
+	  </div>
+  </div>
+
+  <div id="footer">
+    copyright 2013 - 2025 - <a rel="me" href="https://mastodon.social/@joelmartinez">me @ Mastodon</a> and <a rel="me" href="https://www.threads.net/@joeldm1971">Threads</a>
+  </div>
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WV9DDDSFMW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WV9DDDSFMW');
+</script>
+</body>
+</html>

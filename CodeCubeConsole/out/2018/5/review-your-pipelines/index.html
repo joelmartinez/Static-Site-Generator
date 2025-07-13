@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf8" />
+	<title> Review Your Pipelines</title>
+  <meta name="author" content="Joel Martinez" />
+  <meta name="nlweb:ai-access" content="allow" />
+  <link rel="alternate" type="application/rss+xml" title=" Review Your Pipelines" href="//codecube.net/feed/" />
+  <link rel="nlweb-manifest" href="/nlweb.json" />
+	<link rel="stylesheet" type="text/css" href="/design/style.css?v=2" />
+      <meta name="title" content=" Review Your Pipelines" />
+      <meta name="description" content="So everyone knows that friends don&#x27;t let friends right-click-publish.&#xA;I had previously posted about how I created a continuous deployment..." />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="@joelmartinez" />
+      <meta name="twitter:creator" content="@joelmartinez" />
+      <meta name="twitter:title" content=" Review Your Pipelines" />
+      <meta name="twitter:description" content="So everyone knows that friends don&#x27;t let friends right-click-publish.&#xA;I had previously posted about how I created a continuous deployment..." />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content=" Review Your Pipelines" />
+      <meta property="og:description" content="So everyone knows that friends don&#x27;t let friends right-click-publish.&#xA;I had previously posted about how I created a continuous deployment..." />
+  
+  <script src="/script/tone.js"></script>
+</head>
+<body>
+  <div id="header">
+    <div>
+	  <a href="/" rel="home"><img height="50" width="50" src="//www.gravatar.com/avatar/a61a4be80ce39683142620a76299820b.png" title="ItsAMeee" /></a>
+      <a href="/about/" rel="author">Joel Martinez</a>
+      <a href="/resume/">Resume</a>
+
+      <img id="flair" src="/design/images/flair.png" />
+    </div>
+  </div>
+
+  <div id="contentwrapper">
+	  <div id="content">
+		<article class="hentry" itemscope itemtype="https://schema.org/Article">
+  <h1 class="entry-title" itemprop="headline"> Review Your Pipelines</h1>
+  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="2018-05-21">05/21/2018</time>
+</p>
+  <div class="entry-content" itemprop="articleBody">
+    <p>So everyone knows that <a href="https://damianbrady.com.au/2018/02/01/friends-dont-let-friends-right-click-publish/">friends don't let friends right-click-publish</a>.
+I had previously posted about how I <a href="http://codecube.net/2017/11/sprinkling-devops/">created a continuous deployment</a> system for this blog, using VSTS,
+and it had been going great. However, there was a <strong>deep (but simple) problem</strong> lurking in the pipeline that I didn't discover until last week!</p>
+<p>VSTS makes it <em>really easy</em> to integrate with github, so that it builds every time a pull request is made. Awesome right?</p>
+<p>Well, the issue is that in a momentary judgement lapse, I added the last step to the build process (copying files via SSH to the server);
+the deployment step. So if anyone had opened a pull request, it would have automatically built the project,
+and deployed that person's content to my production server, without my review. How embarrassing.</p>
+<p>Thankfully, the fix was really easy ... just use <a href="https://docs.microsoft.com/en-us/vsts/build-release/concepts/definitions/release/what-is-release-management?view=vsts">Release Definitions</a>!</p>
+<p>Once I removed the deployment task from the build definition, and created a release definition, it plugged the hole I had in my
+release pipeline. Using the <a href="https://docs.microsoft.com/en-us/vsts/build-release/concepts/definitions/release/triggers?view=vsts#release-triggers">continuous deployment trigger</a> (limited in scope to the <code>master</code> branch),
+my ssh copy task can easily reach into the build artifact that resulted from the build. That way, the PR can run the build, and I can
+manually inspect the build artifact to make sure it's all good, and then it automatically publishes when I merge the PR.</p>
+<p>So remember that your build/release pipeline is just as important as your application's code ... so review it with the rigor.</p>
+
+  </div>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": " Review Your Pipelines",
+  "description": "So everyone knows that friends don&#x27;t let friends right-click-publish. I had previously posted about how I created a continuous deployment...",
+  "author": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net/about/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net"
+  },
+  "datePublished": "2018-05-21",
+  "dateModified": "2018-05-21",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://codecube.net/2018/5/review-your-pipelines/"
+  }
+}
+</script>
+<p>See more in the <a href="/#archives">archives</a>
+</p>
+
+	  </div>
+  </div>
+
+  <div id="footer">
+    copyright 2013 - 2025 - <a rel="me" href="https://mastodon.social/@joelmartinez">me @ Mastodon</a> and <a rel="me" href="https://www.threads.net/@joeldm1971">Threads</a>
+  </div>
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WV9DDDSFMW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WV9DDDSFMW');
+</script>
+</body>
+</html>

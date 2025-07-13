@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf8" />
+	<title>Scurvy Media v0.5.2007.1104</title>
+  <meta name="author" content="Joel Martinez" />
+  <meta name="nlweb:ai-access" content="allow" />
+  <link rel="alternate" type="application/rss+xml" title="Scurvy Media v0.5.2007.1104" href="//codecube.net/feed/" />
+  <link rel="nlweb-manifest" href="/nlweb.json" />
+	<link rel="stylesheet" type="text/css" href="/design/style.css?v=2" />
+      <meta name="title" content="Scurvy Media v0.5.2007.1104" />
+      <meta name="description" content="I decided to make an &quot;official&quot; binary only release which can be found here.  Technically, the only new feature that wasn&#x27;t there before is a slightly more informative exception that gets thrown if..." />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="@joelmartinez" />
+      <meta name="twitter:creator" content="@joelmartinez" />
+      <meta name="twitter:title" content="Scurvy Media v0.5.2007.1104" />
+      <meta name="twitter:description" content="I decided to make an &quot;official&quot; binary only release which can be found here.  Technically, the only new feature that wasn&#x27;t there before is a slightly more informative exception that gets thrown if..." />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content="Scurvy Media v0.5.2007.1104" />
+      <meta property="og:description" content="I decided to make an &quot;official&quot; binary only release which can be found here.  Technically, the only new feature that wasn&#x27;t there before is a slightly more informative exception that gets thrown if..." />
+  
+  <script src="/script/tone.js"></script>
+</head>
+<body>
+  <div id="header">
+    <div>
+	  <a href="/" rel="home"><img height="50" width="50" src="//www.gravatar.com/avatar/a61a4be80ce39683142620a76299820b.png" title="ItsAMeee" /></a>
+      <a href="/about/" rel="author">Joel Martinez</a>
+      <a href="/resume/">Resume</a>
+
+      <img id="flair" src="/design/images/flair.png" />
+    </div>
+  </div>
+
+  <div id="contentwrapper">
+	  <div id="content">
+		<article class="hentry" itemscope itemtype="https://schema.org/Article">
+  <h1 class="entry-title" itemprop="headline">Scurvy Media v0.5.2007.1104</h1>
+  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="2007-11-04">11/04/2007</time>
+</p>
+  <div class="entry-content" itemprop="articleBody">
+    I decided to make an "official" binary only release which can be found <a href="https://www.codeplex.com/Release/ProjectReleases.aspx?ProjectName=ScurvyMedia&amp;ReleaseId=8148" target="_blank">here</a>.  Technically, the only new feature that wasn't there before is a slightly more informative exception that gets thrown if you try to load a streaming video without the VideoContentManager.<br /><br />Hopefully this will encourage library use, and potentially some feedback/bug reports now that you don't have to compile the code before using it :-)<br /><br />If you're curious about the format of the build number, I've found from recent experience at work, that having an informational build number can be quite useful.  this is basically the format:
+<em>&lt;major&gt;.&lt;minor&gt;.&lt;yyyy&gt;.&lt;mmdd&gt;</em><br /><br />The only reason it's not major.minor.revision.timestamp is because there is <a href="http://blogs.msdn.com/msbuild/archive/2007/01/03/fixing-invalid-version-number-problems-with-the-assemblyinfotask.aspx" target="_blank">a bug</a> in msbuild.<br /><br />On, and also ... I've also checked in a new branch of the code.  This is where I'll hack n' slash the pipeline code to support larger videos.  The problem of course is that currently, the importer will load the whole thing into video, which, on a large video would starve your computer of memory.  It will ideally just load the right kind of importer content type, and only read each frame at "write time" so that only one frame at a time would need to be in memory (or whatever the GC deems appropriate.<br /><br />Slowly but surely, I'm working on this ... by hook or by crook ;-)<br /><br /><em>ps. now that I've had to disable comments, if you have feedback on this lib, just hit up the </em><a href="http://www.codeplex.com/ScurvyMedia/Thread/List.aspx" target="_blank"><em>discussion forums</em></a><em> on the scurvy media codeplex site.</em>
+  </div>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Scurvy Media v0.5.2007.1104",
+  "description": "I decided to make an \&quot;official\&quot; binary only release which can be found here.  Technically, the only new feature that wasn&#x27;t there before is a slightly more informative exception that gets thrown if...",
+  "author": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net/about/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net"
+  },
+  "datePublished": "2007-11-04",
+  "dateModified": "2007-11-04",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://codecube.net/2007/11/scurvy-media-v0520071104/"
+  }
+}
+</script>
+<p>See more in the <a href="/#archives">archives</a>
+</p>
+
+	  </div>
+  </div>
+
+  <div id="footer">
+    copyright 2013 - 2025 - <a rel="me" href="https://mastodon.social/@joelmartinez">me @ Mastodon</a> and <a rel="me" href="https://www.threads.net/@joeldm1971">Threads</a>
+  </div>
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WV9DDDSFMW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WV9DDDSFMW');
+</script>
+</body>
+</html>
