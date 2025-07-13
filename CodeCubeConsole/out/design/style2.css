@@ -35,9 +35,10 @@ header {
 }
 
 .site-title {
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   line-height: 1;
+  /* container will shrink-wrap to the width of "CODECUBE" */
 }
 
 .title-main {
@@ -45,6 +46,7 @@ header {
   font-size: 1.25rem;
   letter-spacing: 0.05em;
   color: #1A202C;
+  /* no special width—just sizes to its text */
 }
 
 .title-sub {
@@ -52,6 +54,8 @@ header {
   font-size: 0.875rem;
   letter-spacing: 0.1em;
   color: #4A90E2;
+  width: 100%;       /* fill the full width of .site-title */
+  text-align: center; /* center the text */
 }
 
 #site-logo {
@@ -136,8 +140,8 @@ main {
 /* Hero section */
 .hero {
   text-align: center;
-  padding: 4rem 0;
-  margin-bottom: 4rem;
+  padding: 2rem 0;
+  margin-bottom: 2rem;
 }
 
 .hero h1 {
