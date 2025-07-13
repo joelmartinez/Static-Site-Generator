@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf8" />
+	<title>Multi-Armed Bandit in C#</title>
+  <meta name="author" content="Joel Martinez" />
+  <meta name="nlweb:ai-access" content="allow" />
+  <link rel="alternate" type="application/rss+xml" title="Multi-Armed Bandit in C#" href="//codecube.net/feed/" />
+  <link rel="nlweb-manifest" href="/nlweb.json" />
+	<link rel="stylesheet" type="text/css" href="/design/style.css?v=2" />
+      <meta name="title" content="Multi-Armed Bandit in C#" />
+      <meta name="description" content="After reading this fantastic blog post about how to do better than A/B testing (http://stevehanov.ca/blog/index.php?id=132), I decided to create an implementation of the algorithm in C#. As I alrea..." />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="@joelmartinez" />
+      <meta name="twitter:creator" content="@joelmartinez" />
+      <meta name="twitter:title" content="Multi-Armed Bandit in C#" />
+      <meta name="twitter:description" content="After reading this fantastic blog post about how to do better than A/B testing (http://stevehanov.ca/blog/index.php?id=132), I decided to create an implementation of the algorithm in C#. As I alrea..." />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content="Multi-Armed Bandit in C#" />
+      <meta property="og:description" content="After reading this fantastic blog post about how to do better than A/B testing (http://stevehanov.ca/blog/index.php?id=132), I decided to create an implementation of the algorithm in C#. As I alrea..." />
+  
+  <script src="/script/tone.js"></script>
+</head>
+<body>
+  <div id="header">
+    <div>
+	  <a href="/" rel="home"><img height="50" width="50" src="//www.gravatar.com/avatar/a61a4be80ce39683142620a76299820b.png" title="ItsAMeee" /></a>
+      <a href="/about/" rel="author">Joel Martinez</a>
+      <a href="/resume/">Resume</a>
+
+      <img id="flair" src="/design/images/flair.png" />
+    </div>
+  </div>
+
+  <div id="contentwrapper">
+	  <div id="content">
+		<article class="hentry" itemscope itemtype="https://schema.org/Article">
+  <h1 class="entry-title" itemprop="headline">Multi-Armed Bandit in C#</h1>
+  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="2012-06-01">06/01/2012</time>
+</p>
+  <div class="entry-content" itemprop="articleBody">
+    After reading this fantastic blog post about how to do better than A/B testing (<a href="http://stevehanov.ca/blog/index.php?id=132"><em>http://stevehanov.ca/blog/index.php?id=132</em></a>), I decided to create an implementation of the algorithm in C#. As I already had a library dealing with statistical decision making on GitHub, I've added this functionality the nBayes library, which you can find here:<br /><br /><a href="https://github.com/joelmartinez/nBayes">https://github.com/joelmartinez/nBayes</a> - specifically, in the <a href="https://github.com/joelmartinez/nBayes/tree/master/nBayes/Optimization">Optimization namespace</a>.<br /><br />I won't reiterate the pros/cons, and explanation of this algorithm, as Steve does a fantastic job over on his blog ... so I'll just present the sample program I wrote to go along with it. This program uses the API to create three options (the same used in the blog post), and then proceeds to simulate users who prefer to act on one option, then partway (35%) through the exercise changing preference. And you can see how the algorithm correctly begins to primarily show the new choice about halfway through.
+<blockquote>
+<pre>/// &lt;summary&gt;This sample program has 3 options, and will use the the optimizer
+/// to run a test scenario. Two options are picked, and we will simulate user interest in one,
+/// then user sentiment changing to favor the second option.&lt;/summary&gt;
+private static void TestOptimizer()
+{
+  var optimizer = new Optimizer();<br /><br />  // define the available options
+  Option[] options = new Option[] {
+    Option.Named("Orange"),
+    Option.Named("Green"),
+    Option.Named("White")
+  };
+  optimizer.Add(options[0]);
+  optimizer.Add(options[1]);
+  optimizer.Add(options[2]);<br /><br />  // pick two options, and define when user interest will change
+  var firstWinner = options[2]; // white
+  var secondWinner = options[1]; // green
+  var switchRatio = .35f; // 35% of the way through the test set
+  int tries = 100; // the test set<br /><br />  for (int i = 0; i &lt; tries; i++) {
+    Option selected = optimizer.Choose().Result; // don't care about asyncrony in this particular example
+    Console.WriteLine("Choosing: {0}", selected);<br /><br />    // decide which chosen option 'the users' will prefer
+    bool isFirstBatch = (float)tries * switchRatio &gt; i;
+    if (isFirstBatch &amp;&amp; selected == firstWinner)
+      firstWinner.IncrementSuccesses();
+    else if (!isFirstBatch &amp;&amp; selected == secondWinner)
+      secondWinner.IncrementSuccesses();
+  }<br /><br />  Console.WriteLine("\nResults! We expect that ({0}) will have the highest success rate, and ({1}) will be in second place", secondWinner, firstWinner);
+  Console.WriteLine("\nThis is the final result after {0} tries\n{1}", tries, optimizer);
+}</pre>
+</blockquote>
+There are multiple strategies to solve the '<a href="http://en.wikipedia.org/wiki/Multi-armed_bandit">multi-armed bandit</a>' problem. This particular implementation is using 'Epsilon-Greedy'. It's still early, and I have other ideas on how to structure the code in order to facilitate multiple strategies ... but for now, let me know if you've got any thoughts or feedback on this bit of code. Thanks! :-)
+  </div>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Multi-Armed Bandit in C#",
+  "description": "After reading this fantastic blog post about how to do better than A/B testing (http://stevehanov.ca/blog/index.php?id=132), I decided to create an implementation of the algorithm in C#. As I alrea...",
+  "author": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net/about/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net"
+  },
+  "datePublished": "2012-06-01",
+  "dateModified": "2012-06-01",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://codecube.net/2012/05/multi-armed-bandit-in-c/"
+  }
+}
+</script>
+<p>See more in the <a href="/#archives">archives</a>
+</p>
+
+	  </div>
+  </div>
+
+  <div id="footer">
+    copyright 2013 - 2025 - <a rel="me" href="https://mastodon.social/@joelmartinez">me @ Mastodon</a> and <a rel="me" href="https://www.threads.net/@joeldm1971">Threads</a>
+  </div>
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WV9DDDSFMW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WV9DDDSFMW');
+</script>
+</body>
+</html>

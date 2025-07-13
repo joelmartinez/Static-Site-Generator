@@ -1,0 +1,69 @@
+@using System.Collections.Generic
+@using CodeCubeConsole
+
+<!-- Hero Section -->
+<section class="hero">
+  <h1>Driving Innovation Through Technology Partnerships</h1>
+</section>
+
+<!-- Partners Carousel Placeholder -->
+<section class="partners-carousel">
+  <!-- Reserved for later implementation -->
+</section>
+
+<!-- Latest Posts -->
+<section class="latest-posts">
+  <h2>Latest Posts</h2>
+  <div class="post-list">
+    @{
+      var latestPosts = new List<Post>();
+      int count = 0;
+      foreach(var year in Model.Years) {
+        foreach(var month in year.Months) {
+          foreach(var post in month.Posts) {
+            if(count < 6) {
+              latestPosts.Add(post);
+              count++;
+            }
+          }
+        }
+      }
+    }
+    @foreach(var post in latestPosts) {
+    <article class="post-item">
+      <h3><a href="@post.UrlPath" rel="bookmark">@post.Title</a></h3>
+      <time class="post-date" datetime="@post.PublishedOn.ToString("yyyy-MM-dd")">@post.PublishedOn.ToString("MMMM d, yyyy")</time>
+      <p class="post-summary">@post.BodySummary</p>
+    </article>
+    }
+  </div>
+</section>
+
+<!-- Existing Archive -->
+<section class="archive">
+  <a name="archives" />
+  <h2><img src="/design/images/icon_writing.png" class="titleicon" /> Archives</h2>
+  <div>
+    @foreach(var year in Model.Years) {
+    <a href="#@year.Name">@year.Name</a> @:|
+    }
+  </div>
+  @{var numPosts = 0;}
+  @foreach(var year in Model.Years) {
+    <a name="@year.Name" />
+    <h3>@year.Name</h3>
+
+    <ul id="archivelist" class="hfeed">
+    @foreach(var month in year.Months) {
+      foreach(var post in month.Posts) {
+      <li class="hentry">
+        <span class="entry-title"><a href="@post.UrlPath" rel="bookmark">@post.Title</a></span> (<abbr class="published" title="@post.PublishedOn">@month.Name</abbr>)
+        @if(numPosts++ < 5) {
+        <p class="entry-summary">@post.BodySummary</p>
+        }
+      </li>
+      }
+    }
+    </ul>
+  }
+</section>

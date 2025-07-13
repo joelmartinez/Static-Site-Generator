@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf8" />
+	<title>Twilio Request Parameters in ASP.NET MVC</title>
+  <meta name="author" content="Joel Martinez" />
+  <meta name="nlweb:ai-access" content="allow" />
+  <link rel="alternate" type="application/rss+xml" title="Twilio Request Parameters in ASP.NET MVC" href="//codecube.net/feed/" />
+  <link rel="nlweb-manifest" href="/nlweb.json" />
+	<link rel="stylesheet" type="text/css" href="/design/style.css?v=2" />
+      <meta name="title" content="Twilio Request Parameters in ASP.NET MVC" />
+      <meta name="description" content="Integrating Twilio into your ASP.NET MVC applications is now just a tiny bit easier ... The latest twilio-csharp..." />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="@joelmartinez" />
+      <meta name="twitter:creator" content="@joelmartinez" />
+      <meta name="twitter:title" content="Twilio Request Parameters in ASP.NET MVC" />
+      <meta name="twitter:description" content="Integrating Twilio into your ASP.NET MVC applications is now just a tiny bit easier ... The latest twilio-csharp..." />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content="Twilio Request Parameters in ASP.NET MVC" />
+      <meta property="og:description" content="Integrating Twilio into your ASP.NET MVC applications is now just a tiny bit easier ... The latest twilio-csharp..." />
+  
+  <script src="/script/tone.js"></script>
+</head>
+<body>
+  <div id="header">
+    <div>
+	  <a href="/" rel="home"><img height="50" width="50" src="//www.gravatar.com/avatar/a61a4be80ce39683142620a76299820b.png" title="ItsAMeee" /></a>
+      <a href="/about/" rel="author">Joel Martinez</a>
+      <a href="/resume/">Resume</a>
+
+      <img id="flair" src="/design/images/flair.png" />
+    </div>
+  </div>
+
+  <div id="contentwrapper">
+	  <div id="content">
+		<article class="hentry" itemscope itemtype="https://schema.org/Article">
+  <h1 class="entry-title" itemprop="headline">Twilio Request Parameters in ASP.NET MVC</h1>
+  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="2012-07-10">07/10/2012</time>
+</p>
+  <div class="entry-content" itemprop="articleBody">
+    Integrating Twilio into your ASP.NET MVC applications is now just a tiny bit easier ... The latest <a href="https://github.com/twilio/twilio-csharp">twilio-csharp</a> project contains a few new classes which can be used as the parameter of your SMS, Voice, and Status endpoints:
+<ul>
+	<li><a href="https://github.com/twilio/twilio-csharp/blob/master/src/Twilio.Mvc/VoiceRequest.cs">VoiceRequest</a></li>
+	<li><a href="https://github.com/twilio/twilio-csharp/blob/master/src/Twilio.Mvc/SmsRequest.cs">SmsRequest</a></li>
+	<li><a href="https://github.com/twilio/twilio-csharp/blob/master/src/Twilio.Mvc/StatusCallbackRequest.cs">StatusCallbackRequest</a></li>
+</ul>
+This makes it so that the MVC framework will automatically map the incoming parameters into a strongly typed object:
+<blockquote>
+<pre>public ActionResult sms(SmsRequest request)
+{
+    var response = new TwilioResponse();
+    response.Sms(string.Format("You said '{0}'", request.Body));<br /><br />    return TwiML(response);
+}</pre>
+</blockquote>
+These changes were merged in with <a href="http://codecube.net/2012/05/twilio-csharp-for-monotouch-and-android/">the pull request</a>, which was originally meant to only include the MonoTouch and Mono For Android projects. But I had made these additional changes in preparation for the talk I'll be giving at <a href="http://onetug.org">ONETUG on using Twilio</a>. So those changes snuck right in to the main lib :)
+  </div>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Twilio Request Parameters in ASP.NET MVC",
+  "description": "Integrating Twilio into your ASP.NET MVC applications is now just a tiny bit easier ... The latest twilio-csharp...",
+  "author": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net/about/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net"
+  },
+  "datePublished": "2012-07-10",
+  "dateModified": "2012-07-10",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://codecube.net/2012/07/twilio-request-parameters-in-asp-net-mvc/"
+  }
+}
+</script>
+<p>See more in the <a href="/#archives">archives</a>
+</p>
+
+	  </div>
+  </div>
+
+  <div id="footer">
+    copyright 2013 - 2025 - <a rel="me" href="https://mastodon.social/@joelmartinez">me @ Mastodon</a> and <a rel="me" href="https://www.threads.net/@joeldm1971">Threads</a>
+  </div>
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WV9DDDSFMW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WV9DDDSFMW');
+</script>
+</body>
+</html>

@@ -53,6 +53,14 @@ namespace CodeCubeConsole
             string result = await Engine.CompileRenderStringAsync("index", indexTemplate, new IndexModel { Years = groupedModel });
             await SaveFile("Joel Martinez", result, string.Format("{0}.html", templateName));
 
+            // generate the new index2 page
+            Console.WriteLine("Generating index2");
+            string index2Template = await GetTemplate("index2");
+            string master2Template = await GetTemplate("master2");
+            string index2Result = await Engine.CompileRenderStringAsync("index2", index2Template, new IndexModel { Years = groupedModel });
+            string index2Content = await Engine.CompileRenderStringAsync("master2", master2Template, new Master { Title = "CodeCube Ventures", Content = index2Result });
+            await SaveFile(index2Content, "index2.html");
+
             // the 'about' page
             string abouttemplate = await GetTemplate("about");
             result = await Engine.CompileRenderStringAsync("about", abouttemplate, (object?)null);

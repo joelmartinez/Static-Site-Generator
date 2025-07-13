@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf8" />
+	<title>Avoid Caching of Ajax Requests</title>
+  <meta name="author" content="Joel Martinez" />
+  <meta name="nlweb:ai-access" content="allow" />
+  <link rel="alternate" type="application/rss+xml" title="Avoid Caching of Ajax Requests" href="//codecube.net/feed/" />
+  <link rel="nlweb-manifest" href="/nlweb.json" />
+	<link rel="stylesheet" type="text/css" href="/design/style.css?v=2" />
+      <meta name="title" content="Avoid Caching of Ajax Requests" />
+      <meta name="description" content="So we recently experienced a subtle little bug in an ajax enabled asp.net mvc application that only showed up in IE7.&#xA0; Turns out that the browser was caching an ajax request.&#xA0; To get around it, we ..." />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="@joelmartinez" />
+      <meta name="twitter:creator" content="@joelmartinez" />
+      <meta name="twitter:title" content="Avoid Caching of Ajax Requests" />
+      <meta name="twitter:description" content="So we recently experienced a subtle little bug in an ajax enabled asp.net mvc application that only showed up in IE7.&#xA0; Turns out that the browser was caching an ajax request.&#xA0; To get around it, we ..." />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content="Avoid Caching of Ajax Requests" />
+      <meta property="og:description" content="So we recently experienced a subtle little bug in an ajax enabled asp.net mvc application that only showed up in IE7.&#xA0; Turns out that the browser was caching an ajax request.&#xA0; To get around it, we ..." />
+  
+  <script src="/script/tone.js"></script>
+</head>
+<body>
+  <div id="header">
+    <div>
+	  <a href="/" rel="home"><img height="50" width="50" src="//www.gravatar.com/avatar/a61a4be80ce39683142620a76299820b.png" title="ItsAMeee" /></a>
+      <a href="/about/" rel="author">Joel Martinez</a>
+      <a href="/resume/">Resume</a>
+
+      <img id="flair" src="/design/images/flair.png" />
+    </div>
+  </div>
+
+  <div id="contentwrapper">
+	  <div id="content">
+		<article class="hentry" itemscope itemtype="https://schema.org/Article">
+  <h1 class="entry-title" itemprop="headline">Avoid Caching of Ajax Requests</h1>
+  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="2009-05-20">05/20/2009</time>
+</p>
+  <div class="entry-content" itemprop="articleBody">
+    So we recently experienced a subtle little bug in an ajax enabled asp.net mvc application that only showed up in IE7.  Turns out that the browser was caching an ajax request.  To get around it, we made the following addition to the global.asax http application class:
+<blockquote>public abstract class MyWebApplication : HttpApplication
+{
+    protected MyWebApplication()
+    {
+        this.BeginRequest += new EventHandler(MyWebApplication_BeginRequest);
+    }<br /><br />    void MyWebApplication_BeginRequest(object sender, EventArgs e)
+    {
+        string requestedWith = this.Request.Headers["x-requested-with"];
+        if (!string.IsNullOrEmpty(requestedWith) &amp;&amp; requestedWith.Equals("XMLHttpRequest", StringComparison.InvariantCultureIgnoreCase))
+        {
+            this.Response.Expires = 0;
+            this.Response.ExpiresAbsolute = DateTime.Now.AddDays(-1);
+            this.Response.AddHeader("pragma", "no-cache");
+            this.Response.AddHeader("cache-control", "private");
+            this.Response.CacheControl = "no-cache";
+        }
+    }
+}</blockquote>
+Basically, any request that comes in with the x-requested-with header (which most or all ajax libs use) will get these extra headers added to the response to tell the browser to avoid caching.<br /><br />Hope it helps someone else out there :-)
+  </div>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Avoid Caching of Ajax Requests",
+  "description": "So we recently experienced a subtle little bug in an ajax enabled asp.net mvc application that only showed up in IE7.&#xA0; Turns out that the browser was caching an ajax request.&#xA0; To get around it, we ...",
+  "author": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net/about/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net"
+  },
+  "datePublished": "2009-05-20",
+  "dateModified": "2009-05-20",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://codecube.net/2009/05/avoid-caching-of-ajax-requests/"
+  }
+}
+</script>
+<p>See more in the <a href="/#archives">archives</a>
+</p>
+
+	  </div>
+  </div>
+
+  <div id="footer">
+    copyright 2013 - 2025 - <a rel="me" href="https://mastodon.social/@joelmartinez">me @ Mastodon</a> and <a rel="me" href="https://www.threads.net/@joeldm1971">Threads</a>
+  </div>
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WV9DDDSFMW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WV9DDDSFMW');
+</script>
+</body>
+</html>

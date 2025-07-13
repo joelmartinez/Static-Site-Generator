@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf8" />
+	<title>XBox and the Case of the Mysterious Color order</title>
+  <meta name="author" content="Joel Martinez" />
+  <meta name="nlweb:ai-access" content="allow" />
+  <link rel="alternate" type="application/rss+xml" title="XBox and the Case of the Mysterious Color order" href="//codecube.net/feed/" />
+  <link rel="nlweb-manifest" href="/nlweb.json" />
+	<link rel="stylesheet" type="text/css" href="/design/style.css?v=2" />
+      <meta name="title" content="XBox and the Case of the Mysterious Color order" />
+      <meta name="description" content="I&#x27;ve been meaning to blog about how I finally got the lastest build of Scurvy.Media out the door. Those of you keeping track at home will remember that, though the previous build shipped with XBox ..." />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="@joelmartinez" />
+      <meta name="twitter:creator" content="@joelmartinez" />
+      <meta name="twitter:title" content="XBox and the Case of the Mysterious Color order" />
+      <meta name="twitter:description" content="I&#x27;ve been meaning to blog about how I finally got the lastest build of Scurvy.Media out the door. Those of you keeping track at home will remember that, though the previous build shipped with XBox ..." />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content="XBox and the Case of the Mysterious Color order" />
+      <meta property="og:description" content="I&#x27;ve been meaning to blog about how I finally got the lastest build of Scurvy.Media out the door. Those of you keeping track at home will remember that, though the previous build shipped with XBox ..." />
+  
+  <script src="/script/tone.js"></script>
+</head>
+<body>
+  <div id="header">
+    <div>
+	  <a href="/" rel="home"><img height="50" width="50" src="//www.gravatar.com/avatar/a61a4be80ce39683142620a76299820b.png" title="ItsAMeee" /></a>
+      <a href="/about/" rel="author">Joel Martinez</a>
+      <a href="/resume/">Resume</a>
+
+      <img id="flair" src="/design/images/flair.png" />
+    </div>
+  </div>
+
+  <div id="contentwrapper">
+	  <div id="content">
+		<article class="hentry" itemscope itemtype="https://schema.org/Article">
+  <h1 class="entry-title" itemprop="headline">XBox and the Case of the Mysterious Color order</h1>
+  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="2008-06-07">06/07/2008</time>
+</p>
+  <div class="entry-content" itemprop="articleBody">
+    I've been meaning to blog about how I finally got the lastest build of <a href="http://www.codeplex.com/ScurvyMedia">Scurvy.Media</a> out the door. Those of you keeping track at home will remember that, though the previous build shipped with XBox platform support, the colors of the videos were unfortunately very "off".<br /><br />After a large amount of experimentation, and tons of help from the guys over on the #Xna IRC channel, we were finally able to figure out the problem. To explain the solution, I must first explain a tiny bit about the architecture of the Scurvy.Media content pipeline.
+<ol>
+	<li>Decode each frame of the video as individual textures. The pipeline currently only supports AVI video using the <a href="http://www.codeproject.com/KB/audio-video/avifilewrapper.aspx">AVIFile</a> library from CodeProject.</li>
+	<li>Write the contents of each frame sequentially into one large .XNB file through the content writer.</li>
+	<li>At runtime, open a stream (and keep it open), and read each texture one at a time in a separate thread.</li>
+	<li>use .SetData to set the contents of a texture based on whatever the current Frame is.� Technically speaking, there are two textures at play for the purpose of double buffering ... but that's largely irrelevant to the topic at hand :-)</li>
+</ol>
+So the confusing part was that the code ran perfectly on windows, but on XBox the colors were all messed up.<br /><br />Now that I've explained the architecture, I'll explain the solution to one of the issues.� Mainly, it's the fact that the color order on the xbox platform is *different* than it is on windows.� Why that is I don't know, I wasn't able to find very many sources of information on this, but c'est la vie :-)<br /><br />XBox:
+<ul>
+	<li>RGBA</li>
+</ul>
+Windows:
+<ul>
+	<li>BGRA</li>
+</ul>
+To get around this problem, I simply had to transpose the color channels as I imported the video when compiling for the xbox platform.
+<blockquote>byte[] xpix = new byte[pix.Length];
+for (int i = 0; i &lt; pix.Length; i += 4)
+{<br /><br />��� int first = i, second = i + 1, third = i + 2, fourth = i + 3;
+��� xpix[first] = pix[third]; //x=red
+��� xpix[second] = pix[second]; //x=green
+��� xpix[third] = pix[first];//x=blue
+��� xpix[fourth] = pix[fourth];//x=alpha�
+}<br /><br />b.SetPixelData(xpix);</blockquote>
+the code snippet above takes a byte array that uses four bytes per channel.� And it just puts it into a copy of the byte array.� Technically, I could have used the same array and just rearranged the byte values as I go ... but perhaps that's an improvement for another day.<br /><br />But Avast! There still be problems on the high waters!<br /><br />After making that change, the colors were still not right.� What we eventually realized is that I was writing byte data directly from windows (who's x86 architecture is little-endian), to be read from the xbox (who's powerpc architecture is big-endian).<br /><br />Sooooo ... the answer was this:
+<blockquote>byte[] xpix = new byte[pix.Length];
+for (int i = 0; i &lt; pix.Length; i += 2)
+{<br /><br />��� int first = i, second = i + 1;
+��� xpix[first] = pix[second];
+��� xpix[second] = pix[first];
+}<br /><br />output.Write(xpix.Length);
+output.Write(xpix);</blockquote>
+Right before writing the byte array to disk ... I flip every other byte.� Once I did that, the video was alight with correct coloration :-)<br /><br />Again, a <strong>huge</strong> thanks to the guys on the #xna IRC channel.� This wouldn't have been possible without them.
+  </div>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "XBox and the Case of the Mysterious Color order",
+  "description": "I&#x27;ve been meaning to blog about how I finally got the lastest build of Scurvy.Media out the door. Those of you keeping track at home will remember that, though the previous build shipped with XBox ...",
+  "author": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net/about/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net"
+  },
+  "datePublished": "2008-06-07",
+  "dateModified": "2008-06-07",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://codecube.net/2008/06/xbox-and-the-case-of-the-mysterious-color-order/"
+  }
+}
+</script>
+<p>See more in the <a href="/#archives">archives</a>
+</p>
+
+	  </div>
+  </div>
+
+  <div id="footer">
+    copyright 2013 - 2025 - <a rel="me" href="https://mastodon.social/@joelmartinez">me @ Mastodon</a> and <a rel="me" href="https://www.threads.net/@joeldm1971">Threads</a>
+  </div>
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WV9DDDSFMW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WV9DDDSFMW');
+</script>
+</body>
+</html>
