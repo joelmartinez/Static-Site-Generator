@@ -3,7 +3,7 @@
 
 <!-- Hero Section -->
 <section class="hero">
-  <h1>Driving Innovation Through Technology Partnerships</h1>
+  <h1>Building Developer Tools and AI Solutions That Scale</h1>
 </section>
 
 <!-- Partners Carousel Placeholder -->
@@ -48,7 +48,7 @@
     <a href="#@year.Name">@year.Name</a> @:|
     }
   </div>
-  @{var numPosts = 0;}
+  @{var postIndex = 0;}
   @foreach(var year in Model.Years) {
     <a name="@year.Name" />
     <h3>@year.Name</h3>
@@ -56,12 +56,15 @@
     <ul id="archivelist" class="hfeed">
     @foreach(var month in year.Months) {
       foreach(var post in month.Posts) {
+        if(postIndex >= 6) { // Skip the first 6 posts already shown in latest posts
       <li class="hentry">
         <span class="entry-title"><a href="@post.UrlPath" rel="bookmark">@post.Title</a></span> (<abbr class="published" title="@post.PublishedOn">@month.Name</abbr>)
-        @if(numPosts++ < 5) {
+        @if(postIndex < 11) { // Show summaries for posts 7-11 (5 posts with expanded display)
         <p class="entry-summary">@post.BodySummary</p>
         }
       </li>
+        }
+        postIndex++;
       }
     }
     </ul>

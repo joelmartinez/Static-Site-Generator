@@ -94,16 +94,8 @@ nav .nav-list a:hover {
   color: #4A90E2;
 }
 
-/* Tablet styles */
+/* Tablet and desktop styles */
 @media (min-width: 768px) {
-  nav .nav-list {
-    flex-direction: column;
-    width: auto;
-  }
-}
-
-/* Desktop styles */
-@media (min-width: 1024px) {
   nav .nav-list {
     flex-direction: row;
   }
@@ -118,6 +110,14 @@ nav .nav-list a:hover {
     padding: 1rem 1.5rem;
   }
   
+  #site-logo {
+    height: 60px; /* Larger logo on mobile */
+  }
+  
+  .site-title .title-main {
+    font-size: 1.4rem; /* Slightly larger text on mobile */
+  }
+  
   nav {
     width: 100%;
     margin-left: 0;
@@ -126,7 +126,18 @@ nav .nav-list a:hover {
   
   nav .nav-list {
     width: 100%;
-    justify-content: center;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+  
+  nav .nav-list li {
+    width: 100%;
+  }
+  
+  nav .nav-list a {
+    display: block;
+    padding: 0.75rem 0;
   }
 }
 
@@ -163,6 +174,7 @@ main {
   min-height: 2rem;
   margin-bottom: 4rem;
   /* Reserved for later implementation */
+  display: none; /* Hidden until implemented */
 }
 
 /* Latest posts section */
@@ -180,8 +192,16 @@ main {
 
 .post-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
+}
+
+/* Mobile-specific adjustments for posts */
+@media (max-width: 767px) {
+  .post-list {
+    grid-template-columns: 1fr; /* Single column on mobile */
+    gap: 1.25rem;
+  }
 }
 
 .post-item {
