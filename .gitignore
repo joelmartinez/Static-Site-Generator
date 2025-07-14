@@ -64,3 +64,12 @@ packages/
 *.testsettings
 
 .vs
+
+# Generated site content - keep static assets but ignore generated pages
+CodeCubeConsole/out/[0-9]*/
+CodeCubeConsole/out/about/
+CodeCubeConsole/out/resume/
+CodeCubeConsole/out/feed/
+CodeCubeConsole/out/index*.html
+CodeCubeConsole/out/sitemap.xml
+CodeCubeConsole/out/nlweb.json
