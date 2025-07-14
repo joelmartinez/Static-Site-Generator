@@ -164,15 +164,29 @@ pre { font-family:Consolas, Courier New; font-size:.9em}
 .resume section {
         margin-top:2em;
 }
+
+/* Two-column layout for desktop and iPad */
 .resume .two-columns {
         display:flex;
         flex-wrap:wrap;
         gap:2rem;
+        align-items:flex-start;
 }
 .resume .column {
-        flex:1;
-        min-width:300px;
+        flex:1 1 calc(50% - 1rem);
+        min-width:0;
 }
+
+/* Mobile layout - single column */
+@media (max-width: 767px) {
+        .resume .two-columns {
+                flex-direction:column;
+        }
+        .resume .column {
+                flex:1 1 100%;
+        }
+}
+
 .resume ul {
         padding-left:1.2rem;
 }
