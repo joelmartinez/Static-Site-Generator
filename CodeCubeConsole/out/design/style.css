@@ -185,6 +185,32 @@ pre { font-family:Consolas, Courier New; font-size:.9em}
         .resume .column {
                 flex:1 1 100%;
         }
+        
+        /* Make main layout responsive on mobile */
+        #header div {
+                width:100%;
+                padding:0 1rem;
+                box-sizing:border-box;
+        }
+        #content {
+                width:100%;
+                padding:0 1rem;
+                box-sizing:border-box;
+        }
+        #footer {
+                width:100%;
+                padding:20px 1rem 50px 1rem;
+                box-sizing:border-box;
+        }
+        .resume {
+                padding:1rem;
+        }
+        
+        /* Ensure text wraps properly */
+        body {
+                word-wrap:break-word;
+                overflow-wrap:break-word;
+        }
 }
 
 .resume ul {
