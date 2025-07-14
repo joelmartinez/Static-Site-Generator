@@ -438,3 +438,73 @@ code {
 .hentry li {
   padding-bottom: 10px;
 }
+
+/* Resume styles */
+.resume {
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  background-color: #fdfdfd;
+  color: #333;
+}
+
+.resume h1,
+.resume h2,
+.resume h3 {
+  color: #2c3e50;
+}
+
+.resume h1 {
+  border-bottom: 2px solid #ccc;
+  padding-bottom: .3em;
+}
+
+.resume section {
+  margin-top: 2em;
+}
+
+/* Two-column layout for desktop and iPad */
+.resume .two-columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.resume .column {
+  flex: 1 1 calc(50% - 1rem);
+  min-width: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.resume ul {
+  padding-left: 1.2rem;
+}
+
+/* Mobile layout - single column */
+@media (max-width: 767px) {
+  .resume {
+    padding: 1rem;
+  }
+  
+  .resume .two-columns {
+    flex-direction: column;
+  }
+  
+  .resume .column {
+    flex: 1 1 100%;
+  }
+}
+
+/* Print layout */
+@media print {
+  .resume {
+    padding: 0;
+    max-width: none;
+  }
+  
+  .resume .two-columns {
+    display: block;
+  }
+}
