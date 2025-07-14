@@ -1,6 +1,7 @@
 Title: How Teams Grow - leadership
 Date: 2025-07-07
 Published: true
+Next: /2005/7/team-series-size/
 
 There’s a certain magic that happens in the right team, at the right time. I’ve seen it a few times in my career... whether it was a small crew at a fintech startup building trade settlement systems with a clear goal and almost no overhead, a tight team building profitable web and mobile app experiences for health, or being the only engineer building Xamarin’s docs infrastructure and shipping something that eventually scaled up to [power all of Microsoft’s .NET API reference](https://learn.microsoft.com/en-us/archive/teamblog/announcing-unified-dotnet-experience-on-docs). These moments stick with me because they felt different. We were fast, focused, and just effective ... and then things changed.
 
@@ -8,8 +9,8 @@ Over time I’ve realized that effectiveness isn’t a fixed point. It lives on 
 
 This is something I’ve wanted to write about for quite some time, so this post is gonna be the start of a series. Over the coming posts, I’ll dig into each of these areas of growth for a company/org/team:
 
-- **Team Size**  
-From tiny startup pods that move fast and talk constantly to larger organizations that need structure, planning, and coordination layers to function. The benefits and tradeoffs change dramatically as headcount grows.
+- [**Team Size**](/2005/7/team-series-size/)  
+From tiny startups and teams that move fast and talk constantly to larger organizations that need structure, planning, and coordination layers to function. The benefits and tradeoffs change dramatically as headcount grows.
 
 - **Generalists vs Specialists**  
 In a scrappy early team, everyone wears five hats and learns fast. As a company matures, deeper expertise becomes more valuable... but sometimes at the cost of speed and cross-functional awareness.
