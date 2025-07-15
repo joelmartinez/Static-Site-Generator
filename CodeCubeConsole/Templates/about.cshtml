@@ -1,12 +1,21 @@
-<!--I know, tables are dead, right?-->
-<table id="socialtable">
-  <tr>
-    <td><a rel="me" href="https://mastodon.social/@Raw("@")joelmartinez"><img src="/design/images/mastodon-logo.svg" style="height:120px;width:120px" alt="My place in the fediverse, Mastodon"></a></td>
-    <td><a href="https://github.com/joelmartinez" rel="me"><img src="/design/images/icon_github.png" alt="My Github Profile"></a></td>
-    <td><a href="https://www.linkedin.com/in/joelmartinez" rel="me"><img src="/design/images/icon_linkedin.png" alt="My Resume"></a></td>
-    <td><a href="https://twitter.com/joelmartinez" rel="me"><img src="/design/images/icon_twitter.png" alt="My Twitter Profile"></a></td>
-  </tr>
-</table>
+<!-- Modern responsive social media links with microformats -->
+<div class="h-card social-links">
+  <a href="https://bsky.app/profile/joelmartinez.codecube.net" rel="me" class="u-url social-link">
+    <img src="/design/images/Bluesky_Logo.svg" alt="My Bluesky Profile" class="social-icon">
+  </a>
+  <a rel="me" href="https://mastodon.social/@Raw("@")joelmartinez" class="u-url social-link">
+    <img src="/design/images/mastodon-logo.svg" alt="My place in the fediverse, Mastodon" class="social-icon">
+  </a>
+  <a href="https://github.com/joelmartinez" rel="me" class="u-url social-link">
+    <img src="/design/images/icon_github.png" alt="My Github Profile" class="social-icon">
+  </a>
+  <a href="https://www.linkedin.com/in/joelmartinez" rel="me" class="u-url social-link">
+    <img src="/design/images/icon_linkedin.png" alt="My Resume" class="social-icon">
+  </a>
+  <a href="https://twitter.com/joelmartinez" rel="me" class="u-url social-link">
+    <img src="/design/images/icon_twitter.png" alt="My Twitter Profile" class="social-icon">
+  </a>
+</div>
 
 <p><strong>Joel Martinez</strong> is a Principal Software Engineering Manager with over two decades of experience
 spanning developer tooling, AI, cloud platforms, mobile, and the game industry. He is currently leading teams that are
@@ -29,3 +38,31 @@ projects, and authored multiple technical books.</p>
 
   <p>His work is driven by a passion for learning, empowering others, and creating systems that scale knowledge and
 capability—whether through code, teams, or platforms.</p>
+
+<h2>Projects</h2>
+
+<div class="projects-section">
+  <div class="project">
+    <div class="project-logo">
+      <img src="/design/images/wildernesslabs-logo.svg" alt="Wilderness Labs" class="project-icon">
+    </div>
+    <div class="project-content">
+      <h3>Chloroplast</h3>
+      <p>Wilderness Labs' powerful documentation engine that transforms markdown source content into beautiful, publishable HTML. Built as a modern static site generator, Chloroplast streamlines the documentation workflow for developers and technical writers.</p>
+      <div class="project-links">
+        <a href="https://github.com/WildernessLabs/Chloroplast" class="project-link">GitHub</a>
+        <a href="https://www.nuget.org/packages/Chloroplast.Tool/" class="project-link">NuGet Package</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="project">
+    <div class="project-logo">
+      <span class="project-icon-emoji">🦉</span>
+    </div>
+    <div class="project-content">
+      <h3>Owl Precision</h3>
+      <p>Something fun brewing over at <a href="https://owlprecision.com">owlprecision.com</a>.</p>
+    </div>
+  </div>
+</div>
