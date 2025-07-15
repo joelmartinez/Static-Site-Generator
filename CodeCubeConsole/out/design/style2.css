@@ -508,3 +508,149 @@ code {
     display: block;
   }
 }
+
+/* Social media links - modern responsive layout */
+.social-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.social-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.social-icon {
+  width: 120px;
+  height: 120px;
+  border-radius: 8px;
+}
+
+/* Projects section */
+.projects-section {
+  margin: 2rem 0;
+}
+
+.project {
+  display: flex;
+  gap: 1.5rem;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #4A90E2;
+}
+
+.project-logo {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.project-icon {
+  width: 80px;
+  height: 80px;
+}
+
+.project-icon-emoji {
+  font-size: 4rem;
+  line-height: 1;
+}
+
+.project-content {
+  flex: 1;
+}
+
+.project-content h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.4rem;
+  color: #1A202C;
+}
+
+.project-content p {
+  margin: 0 0 1rem 0;
+  line-height: 1.6;
+}
+
+.project-links {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.project-link {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: #4A90E2;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.project-link:hover {
+  background: #357ABD;
+  color: white;
+}
+
+/* Mobile responsiveness for social and projects */
+@media (max-width: 768px) {
+  .social-links {
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .social-icon {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .project {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .project-logo {
+    align-self: center;
+  }
+  
+  .project-icon {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .project-icon-emoji {
+    font-size: 3rem;
+  }
+  
+  .project-links {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .social-links {
+    gap: 0.75rem;
+  }
+  
+  .social-icon {
+    width: 60px;
+    height: 60px;
+  }
+}
