@@ -40,6 +40,10 @@ namespace CodeCubeConsole
         public string Title { get; set; }
         public string Body { get; set; }
 		public bool ShouldRenderDoubleNewLine = true;
+        public Post? Previous { get; set; }
+        public Post? Next { get; set; }
+        public string? PreviousUrl { get; set; }
+        public string? NextUrl { get; set; }
         public string ParsedBody
         {
             get

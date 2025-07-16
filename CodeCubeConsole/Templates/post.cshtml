@@ -37,5 +37,26 @@
 <p><strong>Latest post:</strong> <a href="@Model.LatestPost.UrlPath">@Model.LatestPost.Title</a></p>
 }
 
+@if (Model.CurrentPost.Previous != null || Model.CurrentPost.Next != null)
+{
+<nav class="post-navigation">
+    @if (Model.CurrentPost.Previous != null)
+    {
+    <div class="nav-previous">
+        <p><strong>Previous:</strong> <a href="@Model.CurrentPost.Previous.UrlPath">@Model.CurrentPost.Previous.Title</a></p>
+        <p>@Model.CurrentPost.Previous.BodySummary</p>
+    </div>
+    }
+    
+    @if (Model.CurrentPost.Next != null)
+    {
+    <div class="nav-next">
+        <p><strong>Next:</strong> <a href="@Model.CurrentPost.Next.UrlPath">@Model.CurrentPost.Next.Title</a></p>
+        <p>@Model.CurrentPost.Next.BodySummary</p>
+    </div>
+    }
+</nav>
+}
+
 <p>See more in the <a href="/#archives">archives</a>
 </p>

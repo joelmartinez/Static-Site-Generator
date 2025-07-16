@@ -162,9 +162,37 @@ namespace CodeCubeConsole
                        ;
 
 			IEnumerable<Post> markdownPosts = GetMarkdownContent ();
+			var allPosts = query.Union(markdownPosts).OrderByDescending(p => p.PublishedOn).ToArray();
 
-			return query.Union(markdownPosts).OrderByDescending(p => p.PublishedOn).ToArray();
+			// Preprocessing step: Create URL-to-Post map and wire up Previous/Next relationships
+			var urlToPostMap = allPosts.ToDictionary(p => p.UrlPath, p => p);
+			
+			foreach (var post in allPosts)
+			{
+			    // Wire up previous post reference
+			    if (!string.IsNullOrEmpty(post.PreviousUrl) && urlToPostMap.TryGetValue(post.PreviousUrl, out var prevPost))
+			    {
+			        post.Previous = prevPost;
+			        // Bidirectional: if the previous post doesn't already have a Next, set it to this post
+			        if (prevPost.Next == null)
+			        {
+			            prevPost.Next = post;
+			        }
+			    }
+			    
+			    // Wire up next post reference
+			    if (!string.IsNullOrEmpty(post.NextUrl) && urlToPostMap.TryGetValue(post.NextUrl, out var nextPost))
+			    {
+			        post.Next = nextPost;
+			        // Bidirectional: if the next post doesn't already have a Previous, set it to this post
+			        if (nextPost.Previous == null)
+			        {
+			            nextPost.Previous = post;
+			        }
+			    }
+			}
 
+			return allPosts;
         }
 
                 static IEnumerable<Post> GetMarkdownContent ()
@@ -192,13 +220,19 @@ namespace CodeCubeConsole
 				if (meta.ContainsKey ("Published")) {
 					isPublished = bool.Parse (meta ["Published"]);
 				}
+				
+				string? prevUrl = meta.ContainsKey("Prev") ? meta["Prev"].Trim() : null;
+				string? nextUrl = meta.ContainsKey("Next") ? meta["Next"].Trim() : null;
+				
 				yield return new Post {
 					Title = meta["Title"],
 					Body = transformedContent,
 					PublishedOn = pubdate,
 					URL = url,
 					IsPublished = isPublished,
-					ShouldRenderDoubleNewLine = false
+					ShouldRenderDoubleNewLine = false,
+					PreviousUrl = prevUrl,
+					NextUrl = nextUrl
 				};
 			}
 		}
