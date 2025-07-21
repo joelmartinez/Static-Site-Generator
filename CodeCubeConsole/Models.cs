@@ -63,6 +63,17 @@ namespace CodeCubeConsole
         public bool HasImage { get; private set; }
         public string ImageUrl { get; private set; }
         public string? HeroImageUrl { get; set; }
+        
+        public bool IsHeroImageInBody
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(HeroImageUrl))
+                    return false;
+                    
+                return Body.Contains(HeroImageUrl);
+            }
+        }
         public string BodySummary
         {
             get

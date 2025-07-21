@@ -296,6 +296,32 @@ main {
   }
 }
 
+/* Hero image for single post pages */
+.post-hero-single {
+  width: 100%;
+  margin: 1.5rem 0 2rem 0;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.post-hero-single-image {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 767px) {
+  .post-hero-single {
+    margin: 1rem 0 1.5rem 0;
+  }
+  
+  .post-hero-single-image {
+    max-height: 250px;
+  }
+}
+
 /* Archive section */
 .archive {
   border-top: 2px solid #e5e5e5;
