@@ -2,6 +2,14 @@
   <h1 class="entry-title" itemprop="headline">@Model.CurrentPost.Title</h1>
   <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="@Model.CurrentPost.PublishedOn.ToString("yyyy-MM-dd")">@Model.CurrentPost.PublishedOn.ToShortDateString()</time>
 </p>
+  
+  @if (!string.IsNullOrEmpty(Model.CurrentPost.HeroImageUrl) && !Model.CurrentPost.IsHeroImageInBody)
+  {
+  <div class="post-hero-single">
+    <img src="@Model.CurrentPost.HeroImageUrl" alt="@Model.CurrentPost.Title" class="post-hero-single-image" />
+  </div>
+  }
+  
   <div class="entry-content" itemprop="articleBody">
     @Raw(Model.CurrentPost.ParsedBody)
   </div>

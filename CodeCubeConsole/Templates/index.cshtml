@@ -30,10 +30,17 @@
       }
     }
     @foreach(var post in latestPosts) {
-    <article class="post-item">
-      <h3><a href="@post.UrlPath" rel="bookmark">@post.Title</a></h3>
-      <time class="post-date" datetime="@post.PublishedOn.ToString("yyyy-MM-dd")">@post.PublishedOn.ToString("MMMM d, yyyy")</time>
-      <p class="post-summary">@post.BodySummary</p>
+    <article class="post-item @(string.IsNullOrEmpty(post.HeroImageUrl) ? "" : "post-item-with-hero")">
+      @if (!string.IsNullOrEmpty(post.HeroImageUrl)) {
+      <div class="post-hero">
+        <img src="@post.HeroImageUrl" alt="@post.Title" class="post-hero-image" />
+      </div>
+      }
+      <div class="post-content">
+        <h3><a href="@post.UrlPath" rel="bookmark">@post.Title</a></h3>
+        <time class="post-date" datetime="@post.PublishedOn.ToString("yyyy-MM-dd")">@post.PublishedOn.ToString("MMMM d, yyyy")</time>
+        <p class="post-summary">@post.BodySummary</p>
+      </div>
     </article>
     }
   </div>
