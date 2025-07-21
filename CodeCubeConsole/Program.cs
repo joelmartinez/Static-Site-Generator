@@ -106,11 +106,23 @@ namespace CodeCubeConsole
                 master.Meta["og:type"] = "article";
                 master.Meta["og:title"] = post.Title;
                 master.Meta["og:description"] = summary;
-                if (post.HasImage)
+                
+                // Use hero image if available, otherwise fall back to content image
+                string? imageUrl = null;
+                if (!string.IsNullOrEmpty(post.HeroImageUrl))
                 {
-                    master.Meta["twitter:image"] = post.ImageUrl;
-                    master.Meta["og:image"] = post.ImageUrl;
-                    master.Meta["image"] = post.ImageUrl;
+                    imageUrl = post.HeroImageUrl;
+                }
+                else if (post.HasImage)
+                {
+                    imageUrl = post.ImageUrl;
+                }
+                
+                if (!string.IsNullOrEmpty(imageUrl))
+                {
+                    master.Meta["twitter:image"] = imageUrl;
+                    master.Meta["og:image"] = imageUrl;
+                    master.Meta["image"] = imageUrl;
                 }
 
                 await SaveFile(master, post.UrlPath);
@@ -197,6 +209,7 @@ namespace CodeCubeConsole
 				
 				string? prevUrl = meta.ContainsKey("Prev") ? meta["Prev"].Trim() : null;
 				string? nextUrl = meta.ContainsKey("Next") ? meta["Next"].Trim() : null;
+				string? heroImageUrl = meta.ContainsKey("Hero") ? meta["Hero"].Trim() : null;
 				
 				yield return new Post {
 					Title = meta["Title"],
@@ -206,7 +219,8 @@ namespace CodeCubeConsole
 					IsPublished = isPublished,
 					ShouldRenderDoubleNewLine = false,
 					PreviousUrl = prevUrl,
-					NextUrl = nextUrl
+					NextUrl = nextUrl,
+					HeroImageUrl = heroImageUrl
 				};
 			}
 		}

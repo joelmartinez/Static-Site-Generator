@@ -210,6 +210,41 @@ main {
   border-radius: 8px;
   border: 1px solid #e5e5e5;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.post-item-with-hero {
+  padding: 0;
+  overflow: hidden;
+}
+
+.post-hero {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.post-hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.2s ease;
+}
+
+.post-item-with-hero:hover .post-hero-image {
+  transform: scale(1.05);
+}
+
+.post-content {
+  padding: 1.5rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.post-item-with-hero .post-content {
+  margin: 0;
 }
 
 .post-item:hover {
@@ -245,6 +280,20 @@ main {
   color: #4b5563;
   margin: 0;
   line-height: 1.5;
+  flex-grow: 1;
+}
+
+/* Responsive adjustments for hero images */
+@media (max-width: 767px) {
+  .post-hero {
+    height: 160px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .post-hero {
+    height: 180px;
+  }
 }
 
 /* Archive section */
