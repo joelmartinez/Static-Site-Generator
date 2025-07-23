@@ -19,8 +19,8 @@
 {
   "@@context": "https://schema.org",
   "@@type": "Article",
-  "headline": @System.Text.Json.JsonSerializer.Serialize(Model.CurrentPost.Title),
-  "description": @System.Text.Json.JsonSerializer.Serialize(Model.CurrentPost.BodySummary),
+  "headline": @Raw(System.Text.Json.JsonSerializer.Serialize(Model.CurrentPost.Title)),
+  "description": @Raw(System.Text.Json.JsonSerializer.Serialize(Model.CurrentPost.BodySummary)),
   "author": {
     "@@type": "Person",
     "name": "Joel Martinez",
