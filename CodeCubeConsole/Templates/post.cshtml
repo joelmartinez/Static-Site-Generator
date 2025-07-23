@@ -19,8 +19,8 @@
 {
   "@@context": "https://schema.org",
   "@@type": "Article",
-  "headline": "@Model.CurrentPost.Title.Replace("\"", "\\\"")",
-  "description": "@Model.CurrentPost.BodySummary.Replace("\"", "\\\"").Replace("\r", "").Replace("\n", " ")",
+  "headline": @System.Text.Json.JsonSerializer.Serialize(Model.CurrentPost.Title),
+  "description": @System.Text.Json.JsonSerializer.Serialize(Model.CurrentPost.BodySummary),
   "author": {
     "@@type": "Person",
     "name": "Joel Martinez",
