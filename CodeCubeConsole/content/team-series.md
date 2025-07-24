@@ -15,7 +15,7 @@ From tiny startups and teams that move fast and talk constantly to larger organi
 - **Generalists vs Specialists**  
 In a scrappy early team, everyone wears five hats and learns fast. As a company matures, deeper expertise becomes more valuable... but sometimes at the cost of speed and cross-functional awareness.
 
-- **Freeform Discussion vs Structured Reporting**  
+- [**Freeform Discussion vs Structured Reporting**](/2025/7/team-series-death-by-status/)  
 Some teams thrive on fluid, ongoing conversations. Others need clear rhythms of status updates, tickets, and plans. Each style can work... but mixing them without clarity can grind progress to a halt.
 
 - **Design Process vs Just Ship It**  
