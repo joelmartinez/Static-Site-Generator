@@ -24,6 +24,23 @@ namespace CodeCubeConsole
 
         static string MasterTemplate = string.Empty;
 
+        private static string MakeFullyQualifiedUrl(string url)
+        {
+            if (string.IsNullOrEmpty(url))
+                return url;
+                
+            // If URL already starts with http or https, return as-is
+            if (url.StartsWith("http://") || url.StartsWith("https://"))
+                return url;
+                
+            // If URL starts with /, prefix with the base domain
+            if (url.StartsWith("/"))
+                return "https://codecube.net" + url;
+                
+            // For relative URLs, return as-is (shouldn't happen in practice)
+            return url;
+        }
+
         public static async Task Main(string[] args)
         {
             await BuildSite();
@@ -120,9 +137,10 @@ namespace CodeCubeConsole
                 
                 if (!string.IsNullOrEmpty(imageUrl))
                 {
-                    master.Meta["twitter:image"] = imageUrl;
-                    master.Meta["og:image"] = imageUrl;
-                    master.Meta["image"] = imageUrl;
+                    string fullyQualifiedImageUrl = MakeFullyQualifiedUrl(imageUrl);
+                    master.Meta["twitter:image"] = fullyQualifiedImageUrl;
+                    master.Meta["og:image"] = fullyQualifiedImageUrl;
+                    master.Meta["image"] = fullyQualifiedImageUrl;
                 }
 
                 await SaveFile(master, post.UrlPath);
