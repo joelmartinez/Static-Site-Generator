@@ -589,11 +589,9 @@ code {
   
   /* Resume print styles */
   .resume {
-    padding: 0.5in;
     max-width: none;
     margin: 0;
-    font-size: 11px;
-    line-height: 1.3;
+    line-height: 1.5;
     page-break-inside: avoid;
   }
   
