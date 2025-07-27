@@ -50,19 +50,27 @@ export function createLinkMapVisualization(data) {
     .selectAll('circle')
     .data(data.nodes)
     .enter().append('circle')
-    .attr('class', 'map-node')
+    .attr('class', d => `map-node ${d.nodeType === 'year' ? 'map-node-year' : 'map-node-post'}`)
     .attr('r', d => {
-      // Size nodes based on how many connections they have
-      const connections = data.edges.filter(e => e.source === d.id || e.target === d.id).length;
-      return Math.max(8, Math.min(20, 8 + connections * 2));
+      // Size nodes based on connections and recency
+      const baseSize = d.nodeType === 'year' ? 12 : 8; // Year nodes start larger
+      const connectionBonus = d.connectionCount ? d.connectionCount * 2 : 0;
+      const recencyBonus = d.nodeType === 'post' ? (d.recencyFactor || 0) * 8 : 0; // Newer posts get larger
+      return Math.max(baseSize, Math.min(25, baseSize + connectionBonus + recencyBonus));
     })
     .call(d3.drag()
       .on('start', dragstarted)
       .on('drag', dragged)
       .on('end', dragended))
     .on('click', (event, d) => {
-      // Navigate to the article
-      window.location.href = d.url;
+      // Navigate to the article or year section
+      if (d.nodeType === 'year') {
+        // For year nodes, navigate to the home page with the year anchor
+        window.location.href = `/${d.id}`;
+      } else {
+        // For post nodes, navigate to the article
+        window.location.href = d.url;
+      }
     })
     .on('mouseover', (event, d) => {
       showTooltip(event, d);
@@ -100,6 +108,31 @@ export function createLinkMapVisualization(data) {
       .attr('x', d => d.x)
       .attr('y', d => d.y);
   });
+
+  // Fit the view to show all nodes after simulation settles
+  simulation.on('end', () => {
+    fitMapToView();
+  });
+
+  // Function to fit all nodes in view
+  function fitMapToView() {
+    const bounds = g.node().getBBox();
+    const fullWidth = containerNode.clientWidth;
+    const fullHeight = containerNode.clientHeight;
+    const width = bounds.width;
+    const height = bounds.height;
+    const midX = bounds.x + width / 2;
+    const midY = bounds.y + height / 2;
+    
+    if (width === 0 || height === 0) return; // Nothing to fit
+    
+    const scale = Math.min(fullWidth / width, fullHeight / height) * 0.9; // 90% to add padding
+    const translate = [fullWidth / 2 - scale * midX, fullHeight / 2 - scale * midY];
+    
+    svg.transition()
+      .duration(750)
+      .call(zoom.transform, d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale));
+  }
   
   // Drag functions
   function dragstarted(event, d) {
@@ -121,12 +154,23 @@ export function createLinkMapVisualization(data) {
   
   // Tooltip functions
   function showTooltip(event, d) {
-    const formatDate = d3.timeFormat('%B %d, %Y');
-    const tooltipContent = `
-      <strong>${d.title}</strong><br>
-      Published: ${formatDate(new Date(d.publishedOn))}<br>
-      ${d.description}
-    `;
+    let tooltipContent;
+    
+    if (d.nodeType === 'year') {
+      tooltipContent = `
+        <strong>${d.title}</strong><br>
+        ${d.description}<br>
+        Click to view archive
+      `;
+    } else {
+      const formatDate = d3.timeFormat('%B %d, %Y');
+      tooltipContent = `
+        <strong>${d.title}</strong><br>
+        Published: ${formatDate(new Date(d.publishedOn))}<br>
+        Connections: ${d.connectionCount || 0}<br>
+        ${d.description}
+      `;
+    }
     
     tooltip
       .style('opacity', 1)
@@ -159,7 +203,7 @@ export function createLinkMapVisualization(data) {
   });
   
   d3.select('#reset-view').on('click', () => {
-    svg.transition().call(zoom.transform, d3.zoomIdentity);
+    fitMapToView();
   });
   
   // Handle window resize
