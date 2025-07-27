@@ -20,7 +20,12 @@
         "additionalProperties": false
       }
     },
-    "outcomeId": { "type": "string" }
+    "title": { "type": "string" },
+    "detail": { "type": "string" },
+    "actions": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
   },
   "additionalProperties": false
 }
