@@ -73,3 +73,12 @@ CodeCubeConsole/out/feed/
 CodeCubeConsole/out/index*.html
 CodeCubeConsole/out/sitemap.xml
 CodeCubeConsole/out/nlweb.json
+
+# Generated frontend assets
+*.gen.js
+
+# Frontend dependencies
+frontend/node_modules/
+
+# CI/CD build artifacts
+publish/
