@@ -20,15 +20,18 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
-    - name: Restore
-      run: dotnet restore CodeCubeConsole/CodeCubeConsole.csproj
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
 
-    - name: Publish
+    - name: Build with PowerShell Script
+      run: pwsh ./build.ps1
+
+    - name: Publish .NET Application
       run: dotnet publish CodeCubeConsole/CodeCubeConsole.csproj -c Release -o publish --no-restore
-
-    - name: Run Site Generator
-      working-directory: ./publish
-      run: dotnet CodeCubeConsole.dll
 
     - name: 📂 Sync files
       if: github.ref == 'refs/heads/master'
