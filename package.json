@@ -1,0 +1,13 @@
+{
+  "name": "interactive-flows",
+  "version": "1.0.0",
+  "description": "Interactive decision-tree engine for CodeCube static site",
+  "scripts": {
+    "validate": "echo 'AJV validation placeholder - empty flows pass'",
+    "build": "echo 'Build placeholder for runtime stubs'"
+  },
+  "devDependencies": {},
+  "keywords": ["static-site", "decision-tree", "interactive"],
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,26 @@
+{
+  "$id": "flow-node",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Flow node",
+  "type": "object",
+  "required": ["id", "text", "type"],
+  "properties": {
+    "id":   { "type": "string" },
+    "text": { "type": "string" },
+    "type": { "enum": ["question", "outcome"] },
+    "options": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["label", "next"],
+        "properties": {
+          "label": { "type": "string" },
+          "next":  { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "outcomeId": { "type": "string" }
+  },
+  "additionalProperties": false
+}
