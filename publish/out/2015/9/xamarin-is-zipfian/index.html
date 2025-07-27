@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title> Xamarin is Zipfian</title>
+  <meta name="author" content="Joel Martinez" />
+  <meta name="nlweb:ai-access" content="allow" />
+  <link rel="icon" type="image/svg+xml" href="/design/images/codecube-logo-web.svg" />
+  <link rel="alternate" type="application/rss+xml" title=" Xamarin is Zipfian" href="//codecube.net/feed/" />
+  <link rel="nlweb-manifest" href="/nlweb.json" />
+	<link rel="stylesheet" type="text/css" href="/design/style2.css" />
+      <meta name="title" content=" Xamarin is Zipfian" />
+      <meta name="description" content="Michael, from the popular YouTube channel VSauce, recently published a video titled The Zipf Mystery, wherein he talks about several aspects of Zipf&#x27;s Law:&#xA;&#xA;&#xA;Zipf&#x27;s law states that given some corpu..." />
+      <link rel="canonical" href="https://codecube.net/2015/9/xamarin-is-zipfian/" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="@joelmartinez" />
+      <meta name="twitter:creator" content="@joelmartinez" />
+      <meta name="twitter:title" content=" Xamarin is Zipfian" />
+      <meta name="twitter:description" content="Michael, from the popular YouTube channel VSauce, recently published a video titled The Zipf Mystery, wherein he talks about several aspects of Zipf&#x27;s Law:&#xA;&#xA;&#xA;Zipf&#x27;s law states that given some corpu..." />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content=" Xamarin is Zipfian" />
+      <meta property="og:description" content="Michael, from the popular YouTube channel VSauce, recently published a video titled The Zipf Mystery, wherein he talks about several aspects of Zipf&#x27;s Law:&#xA;&#xA;&#xA;Zipf&#x27;s law states that given some corpu..." />
+      <meta name="twitter:image" content="https://codecube.net/posts/zipfian.png" />
+      <meta property="og:image" content="https://codecube.net/posts/zipfian.png" />
+      <meta name="image" content="https://codecube.net/posts/zipfian.png" />
+  
+  <script src="/script/tone.js"></script>
+  <script src="/script/app.gen.js"></script>
+</head>
+<body>
+  <header>
+    <div class="branding">
+      <a href="/" style="text-decoration: none; display: flex; align-items: center; gap: 1rem;">
+        <img
+          src="/design/images/codecube-logo-web.svg"
+          alt="CodeCube Ventures logo"
+          height="48"
+          id="site-logo"
+        />
+        <div class="site-title">
+          <span class="title-main">CODECUBE</span>
+          <span class="title-sub">VENTURES</span>
+        </div>
+      </a>
+    </div>
+    <nav>
+      <ul class="nav-list">
+        <li><a href="/resume/">Resume</a></li>
+        <li><a href="/about/">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+	  <article class="hentry" itemscope itemtype="https://schema.org/Article">
+  <h1 class="entry-title" itemprop="headline"> Xamarin is Zipfian</h1>
+  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="2015-09-27">09/27/2015</time>
+</p>
+  
+  
+  <div class="entry-content" itemprop="articleBody">
+    <p>Michael, from the popular YouTube channel VSauce, recently published a video titled <a href="https://www.youtube.com/watch?v=fCn8zs912OE"><em>The Zipf Mystery</em></a>, wherein he talks about several aspects of <a href="https://en.wikipedia.org/wiki/Zipf%27s_law">Zipf's Law</a>:</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/fCn8zs912OE" frameborder="0" allowfullscreen></iframe>
+<blockquote>
+<p>Zipf's law states that given some corpus of natural language utterances, the frequency of any word is inversely proportional to its rank in the frequency table. Thus the most frequent word will occur approximately twice as often as the second most frequent word, three times as often as the third most frequent word, etc.</p>
+</blockquote>
+<p>It was a pretty interesting video, and I realized I have access to a large repository of words in the form of Xamarin's <a href="https://developer.xamarin.com/">Developer Portal</a>. So I wondered, will the contents of Xamarin's documentation [1] adhere to Zipf's Law?</p>
+<p>As I had recently been learning the R programming language, I figured doing a bit of analysis would be some good practice. To start, I knew that I would need a way to tokenize each piece of content into individual words. The following function simply takes a string, and breaks it into a vector of individual words [2]:</p>
+<pre><code>tokenize &lt;- function(str) {
+    str &lt;- gsub(&quot;[^[:alnum:]'’]&quot;, &quot; &quot;, tolower(str))
+    str &lt;- strsplit(str, &quot; &quot;)
+}
+</code></pre>
+<p>Next is a function that would tokenize an entire file:</p>
+<pre><code>getwords &lt;- function(path) {
+	lines &lt;- readLines(path)
+    tokenized &lt;- sapply(lines, tokenize)
+	unlisted &lt;- unlist(tokenized, recursive=T)
+    words &lt;- unlisted[unlisted != &quot;&quot;]
+    return (words)
+}
+</code></pre>
+<p>Finally, we just get a list of all markdown files in a given directory, apply the <code>getwords</code> function, and use the <code>table</code> and <code>sort</code> functions to count the number of individual words, and sort them accordingly.</p>
+<pre><code>files &lt;- list.files(&quot;~/dev/xamarin/documentation&quot;, &quot;index.md&quot;, recursive=T, full.names=T)
+
+allwords &lt;- unlist(sapply(files, getwords), recursive=T)
+t &lt;- table(allwords)
+tsorted &lt;- sort(t, decreasing=T)
+</code></pre>
+<p>Lastly, we produce a log plot of the data:</p>
+<pre><code>plot(tsorted,log = &quot;xy&quot;)
+</code></pre>
+<p><img src="/posts/zipfian.png" alt="" /></p>
+<p>The word usage in our documentation (as of this post) perfectly follows the power-law distribution described in Zipf's Law! Ok, so what else could I pull from this data ... well, according to VSauce, the top 5 most commonly used english words are: &quot;the,&quot; &quot;of,&quot; &quot;and,&quot; &quot;to,&quot; &quot;a,&quot;. And in our corpus?</p>
+<pre><code>&gt; head(tsorted)
+allwords
+  the     a    to   and    in    of 
+65009 30381 29563 18613 16440 12840 
+</code></pre>
+<p>Stripping out all the &quot;normal&quot; words like &quot;the&quot; and &quot;and&quot; to find the first domain-specific word gives us a bit of a conundrum ... starting at rank # 8 we have the following three words:</p>
+<pre><code>  for       class     xamarin   
+10427       10216       10079   
+</code></pre>
+<p>&quot;for&quot; doesn't appear in the top 20 words as listed by VSauce, so either that's so highly ranked because it is also a programming keyword (ie. <code>for</code> loops), or the first domain-specific word is <code>class</code> followed closely by <code>Xamarin</code> :)</p>
+<p>Anyways, this was just a bit of fun ... if you have any other ideas for different insights that could be gleaned, feel free to <a href="http://twitter.com/joelmartinez">let me know on twitter</a>!</p>
+<p><em>[1]:</em> technically, only conceptual documentation, recipes, and some release notes (as some older ones are still in HTML format). doesn't include samples and api documentation for simplicity's sake.</p>
+<p><em>[2]:</em> yes, this <code>tokenize</code> function could probably stand to be a bit more sophisticated. But some spot-testing showed that it was roughly good enough for this light analysis :)</p>
+
+  </div>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": " Xamarin is Zipfian",
+  "description": "Michael, from the popular YouTube channel VSauce, recently published a video titled The Zipf Mystery, wherein he talks about several aspects of Zipf\u0027s Law:\n\n\nZipf\u0027s law states that given some corpu...",
+  "author": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net/about/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net"
+  },
+  "datePublished": "2015-09-27",
+  "dateModified": "2015-09-27",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://codecube.net/2015/9/xamarin-is-zipfian/"
+  }
+}
+</script>
+
+<p><strong>Latest post:</strong> <a href="/2025/7/team-series-death-by-status/"> Death By Status</a></p>
+
+
+<p>See more in the <a href="/#archives">archives</a>
+</p>
+
+  </main>
+
+  <footer>
+    copyright 2013 - 2025 - <a rel="me" href="https://mastodon.social/@joelmartinez">me @ Mastodon</a> and <a rel="me" href="https://www.threads.net/@joeldm1971">Threads</a>
+  </footer>
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WV9DDDSFMW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WV9DDDSFMW');
+</script>
+</body>
+</html>

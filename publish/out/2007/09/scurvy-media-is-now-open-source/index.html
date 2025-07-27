@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Scurvy Media is now Open Source</title>
+  <meta name="author" content="Joel Martinez" />
+  <meta name="nlweb:ai-access" content="allow" />
+  <link rel="icon" type="image/svg+xml" href="/design/images/codecube-logo-web.svg" />
+  <link rel="alternate" type="application/rss+xml" title="Scurvy Media is now Open Source" href="//codecube.net/feed/" />
+  <link rel="nlweb-manifest" href="/nlweb.json" />
+	<link rel="stylesheet" type="text/css" href="/design/style2.css" />
+      <meta name="title" content="Scurvy Media is now Open Source" />
+      <meta name="description" content="So this may or may not be exciting for you faithful readers, but I&#x27;ve decided to release my little project out into the world as open source.&#xA;&#xA;The project is called Scurvy Media, and can be found o..." />
+      <link rel="canonical" href="http://codecube.net/2007/09/scurvy-media-is-now-open-source/" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="@joelmartinez" />
+      <meta name="twitter:creator" content="@joelmartinez" />
+      <meta name="twitter:title" content="Scurvy Media is now Open Source" />
+      <meta name="twitter:description" content="So this may or may not be exciting for you faithful readers, but I&#x27;ve decided to release my little project out into the world as open source.&#xA;&#xA;The project is called Scurvy Media, and can be found o..." />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content="Scurvy Media is now Open Source" />
+      <meta property="og:description" content="So this may or may not be exciting for you faithful readers, but I&#x27;ve decided to release my little project out into the world as open source.&#xA;&#xA;The project is called Scurvy Media, and can be found o..." />
+  
+  <script src="/script/tone.js"></script>
+  <script src="/script/app.gen.js"></script>
+</head>
+<body>
+  <header>
+    <div class="branding">
+      <a href="/" style="text-decoration: none; display: flex; align-items: center; gap: 1rem;">
+        <img
+          src="/design/images/codecube-logo-web.svg"
+          alt="CodeCube Ventures logo"
+          height="48"
+          id="site-logo"
+        />
+        <div class="site-title">
+          <span class="title-main">CODECUBE</span>
+          <span class="title-sub">VENTURES</span>
+        </div>
+      </a>
+    </div>
+    <nav>
+      <ul class="nav-list">
+        <li><a href="/resume/">Resume</a></li>
+        <li><a href="/about/">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+	  <article class="hentry" itemscope itemtype="https://schema.org/Article">
+  <h1 class="entry-title" itemprop="headline">Scurvy Media is now Open Source</h1>
+  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="2007-09-08">09/08/2007</time>
+</p>
+  
+  
+  <div class="entry-content" itemprop="articleBody">
+    So this may or may not be exciting for you faithful readers, but I've decided to release my little project out into the world as open source.<br /><br />The project is called Scurvy Media, and can be found on CodePlex:
+<a href="http://www.codeplex.com/ScurvyMedia">http://www.codeplex.com/ScurvyMedia</a><br /><br />Why did I call it Scurvy Media when it only contains the Video playing library?  Well, I actually have a pretty big interest in both Audio and Video media.  I would like eventually for this library to encompass a lot of the ideas I have in that field.
+<h3>What's Included</h3>
+<ol>
+	<li>Content Pipeline assembly:
+<ol>
+	<li>AVI importer
+Lets you import AVI videos.  the importer architecture is such that you could create importers for additional types of videos.</li>
+	<li>In-memory processor
+Memory will be loaded fully into memory when you load the video.</li>
+	<li>Streaming processor
+Video will be streamed from disk at runtime.</li>
+</ol>
+</li>
+	<li>Runtime assembly
+<ol>
+	<li>Video class
+very simple runtime class that has a Play method, and properties such as Loop and IsPlaying.</li>
+	<li>video content manager.
+If you're using the streaming processor, you have to use this custom content manager because of the way the file stream must be handled.</li>
+</ol>
+</li>
+</ol>
+I'll be talking about some of the limitations soon, which is what's driving the current development.  Hopefully this project will grow to provide lots of media related functionality to the XNA community :-)
+  </div>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Scurvy Media is now Open Source",
+  "description": "So this may or may not be exciting for you faithful readers, but I\u0027ve decided to release my little project out into the world as open source.\n\nThe project is called Scurvy Media, and can be found o...",
+  "author": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net/about/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net"
+  },
+  "datePublished": "2007-09-08",
+  "dateModified": "2007-09-08",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://codecube.net/2007/09/scurvy-media-is-now-open-source/"
+  }
+}
+</script>
+
+<p><strong>Latest post:</strong> <a href="/2025/7/team-series-death-by-status/"> Death By Status</a></p>
+
+
+<p>See more in the <a href="/#archives">archives</a>
+</p>
+
+  </main>
+
+  <footer>
+    copyright 2013 - 2025 - <a rel="me" href="https://mastodon.social/@joelmartinez">me @ Mastodon</a> and <a rel="me" href="https://www.threads.net/@joeldm1971">Threads</a>
+  </footer>
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WV9DDDSFMW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WV9DDDSFMW');
+</script>
+</body>
+</html>

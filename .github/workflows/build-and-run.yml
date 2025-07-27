@@ -30,9 +30,6 @@ jobs:
     - name: Build with PowerShell Script
       run: pwsh ./build.ps1
 
-    - name: Publish .NET Application
-      run: dotnet publish CodeCubeConsole/CodeCubeConsole.csproj -c Release -o publish --no-restore
-
     - name: 📂 Sync files
       if: github.ref == 'refs/heads/master'
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4

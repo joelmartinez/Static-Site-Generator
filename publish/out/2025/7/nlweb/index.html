@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title> Making My Site AI-Ready for NLWeb</title>
+  <meta name="author" content="Joel Martinez" />
+  <meta name="nlweb:ai-access" content="allow" />
+  <link rel="icon" type="image/svg+xml" href="/design/images/codecube-logo-web.svg" />
+  <link rel="alternate" type="application/rss+xml" title=" Making My Site AI-Ready for NLWeb" href="//codecube.net/feed/" />
+  <link rel="nlweb-manifest" href="/nlweb.json" />
+	<link rel="stylesheet" type="text/css" href="/design/style2.css" />
+      <meta name="title" content=" Making My Site AI-Ready for NLWeb" />
+      <meta name="description" content="I was somewhat intrigued when I learned about NLWeb at Microsoft&#x27;s Build conference. It&#x27;s an open-source project from Microsoft that introduces a protocol for making websites more accessible to AI ..." />
+      <link rel="canonical" href="https://codecube.net/2025/7/nlweb/" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="@joelmartinez" />
+      <meta name="twitter:creator" content="@joelmartinez" />
+      <meta name="twitter:title" content=" Making My Site AI-Ready for NLWeb" />
+      <meta name="twitter:description" content="I was somewhat intrigued when I learned about NLWeb at Microsoft&#x27;s Build conference. It&#x27;s an open-source project from Microsoft that introduces a protocol for making websites more accessible to AI ..." />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content=" Making My Site AI-Ready for NLWeb" />
+      <meta property="og:description" content="I was somewhat intrigued when I learned about NLWeb at Microsoft&#x27;s Build conference. It&#x27;s an open-source project from Microsoft that introduces a protocol for making websites more accessible to AI ..." />
+  
+  <script src="/script/tone.js"></script>
+  <script src="/script/app.gen.js"></script>
+</head>
+<body>
+  <header>
+    <div class="branding">
+      <a href="/" style="text-decoration: none; display: flex; align-items: center; gap: 1rem;">
+        <img
+          src="/design/images/codecube-logo-web.svg"
+          alt="CodeCube Ventures logo"
+          height="48"
+          id="site-logo"
+        />
+        <div class="site-title">
+          <span class="title-main">CODECUBE</span>
+          <span class="title-sub">VENTURES</span>
+        </div>
+      </a>
+    </div>
+    <nav>
+      <ul class="nav-list">
+        <li><a href="/resume/">Resume</a></li>
+        <li><a href="/about/">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+	  <article class="hentry" itemscope itemtype="https://schema.org/Article">
+  <h1 class="entry-title" itemprop="headline"> Making My Site AI-Ready for NLWeb</h1>
+  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="2025-07-10">07/10/2025</time>
+</p>
+  
+  
+  <div class="entry-content" itemprop="articleBody">
+    <p>I was somewhat intrigued when I learned about NLWeb at Microsoft's Build conference. It's an open-source project from Microsoft that introduces a protocol for making websites more accessible to AI agents. The idea is to help AI assistants understand and interact with your content directly—without having to scrape pages or guess at structure.</p>
+<p>Now, this isn't the entire implementation of course ... but I wanted a low-effort way of starting to think towards this transition. Instead of building a chatbot or setting up middleware, I'm starting by updating the existing site with structured data like JSON-LD, a simple manifest file, and some semantic metadata. It's a low-friction way to prepare for the next phase of the internet, where AI tools might increasingly be the ones &quot;browsing&quot; on behalf of users.</p>
+<p>You can read more about NLWeb here:<br />
+<a href="https://github.com/microsoft/NLWeb">github.com/microsoft/NLWeb</a><br />
+<a href="https://news.microsoft.com/source/features/company-news/introducing-nlweb-bringing-conversational-interfaces-directly-to-the-web/">Introducing NLWeb from Microsoft</a></p>
+<p>Part of why I wanted to work on this was curiosity. I wanted to get hands-on with this emerging standard and see what it would take to make my content AI-friendly. But I also think it's a smart bet. The way we build and consume content is changing. Search is shifting. Agents are coming. This was my way of making sure I’m not caught flat-footed when that shift becomes the norm. I've always been a fan of microformats and the <a href="https://en.wikipedia.org/wiki/Semantic_Web">Semantic Web</a> from the early days of the web ... adding just a bit of semantic sugar to your markup so that machines could understand your intent. NLWeb feels like the next step in that same spirit, but designed for a world of language models instead of feed parsers.</p>
+<p>If my blog and project pages are going to be discovered, cited, and engaged with in that world, they need to speak the language of AI. NLWeb gives you a framework for doing that in a clean, standardized way.</p>
+<h2 id="i-built-all-of-it-using-copilot">I built all of it using Copilot!</h2>
+<p>A secondary goal for me was continuing to gain experience working with the intelligent coding experiences that are increasingly being built. For this, every step of this process was done with GitHub Copilot. First, I asked it to explain the <a href="https://github.com/microsoft/NLWeb">NLWeb GitHub repo</a> and walk me through what the spec required. It gave me a great summary and laid out the key pieces to get ready for NLWeb: a manifest file, structured data in the templates, updated <code>robots.txt</code>, and a few new meta tags.</p>
+<p>I then asked Copilot to make the changes directly to my static site generator, which is a custom project I’ve had sitting around for years. It added:</p>
+<ul>
+<li>A new <code>nlweb.json</code> manifest file</li>
+<li>Schema.org metadata in each article using microdata and JSON-LD</li>
+<li>A <code>&lt;link rel=&quot;nlweb-manifest&quot;&gt;</code> reference in the HTML head</li>
+<li>Meta tags to declare AI access permissions</li>
+<li>A <code>robots.txt</code> file that allows bots like GPTBot and OpenAI-SearchBot</li>
+</ul>
+<p>While I was in there, I figured I’d finally check something off my backlog as well, generating a proper <code>sitemap.xml</code> file. That’s another thing I asked Copilot to do—and it handled it cleanly.</p>
+<p>I came away from this feeling like I'm slowly preparing for the future. The spec itself is straightforward, and I'd like to keep going here. With Copilot guiding me through each step, it felt more like collaborative problem solving than manual coding. I completely understand there's a lot of fear around how this massive change will manifest, but the whole experience reminded me that the barriers to participating in emerging tech are getting lower. With the right tools, it's easy to dip your toes in and get something meaningful done in just a few hours.</p>
+<p>My site is now <em>more</em> AI-readable. If and when AI agents start crawling the web for meaningful content, mine will be ready. If you’re running your own site—especially if you publish content regularly—I recommend giving NLWeb a look. You can start to add a few building blocks that make your intent and structure machine-readable, and then continue on to the full implementation like I plan to once you get there.</p>
+<p>If you want help getting started or want to see the PR where I added structured and semantic metadata, it’s right here:<br />
+<a href="https://github.com/joelmartinez/Static-Site-Generator/pull/16">github.com/joelmartinez/Static-Site-Generator/pull/16</a></p>
+
+  </div>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": " Making My Site AI-Ready for NLWeb",
+  "description": "I was somewhat intrigued when I learned about NLWeb at Microsoft\u0027s Build conference. It\u0027s an open-source project from Microsoft that introduces a protocol for making websites more accessible to AI ...",
+  "author": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net/about/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net"
+  },
+  "datePublished": "2025-07-10",
+  "dateModified": "2025-07-10",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://codecube.net/2025/7/nlweb/"
+  }
+}
+</script>
+
+<p><strong>Latest post:</strong> <a href="/2025/7/team-series-death-by-status/"> Death By Status</a></p>
+
+
+<p>See more in the <a href="/#archives">archives</a>
+</p>
+
+  </main>
+
+  <footer>
+    copyright 2013 - 2025 - <a rel="me" href="https://mastodon.social/@joelmartinez">me @ Mastodon</a> and <a rel="me" href="https://www.threads.net/@joeldm1971">Threads</a>
+  </footer>
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WV9DDDSFMW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WV9DDDSFMW');
+</script>
+</body>
+</html>

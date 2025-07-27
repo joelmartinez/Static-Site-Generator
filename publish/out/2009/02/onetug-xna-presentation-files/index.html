@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>ONETUG XNA Presentation Files</title>
+  <meta name="author" content="Joel Martinez" />
+  <meta name="nlweb:ai-access" content="allow" />
+  <link rel="icon" type="image/svg+xml" href="/design/images/codecube-logo-web.svg" />
+  <link rel="alternate" type="application/rss+xml" title="ONETUG XNA Presentation Files" href="//codecube.net/feed/" />
+  <link rel="nlweb-manifest" href="/nlweb.json" />
+	<link rel="stylesheet" type="text/css" href="/design/style2.css" />
+      <meta name="title" content="ONETUG XNA Presentation Files" />
+      <meta name="description" content="As promised, here are the presentation files from the ONETUG presentation the other night.  http://codecube.net/bloguploads/ONETUG_XNA_20090129.zip ..." />
+      <link rel="canonical" href="http://codecube.net/2009/02/onetug-xna-presentation-files/" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="@joelmartinez" />
+      <meta name="twitter:creator" content="@joelmartinez" />
+      <meta name="twitter:title" content="ONETUG XNA Presentation Files" />
+      <meta name="twitter:description" content="As promised, here are the presentation files from the ONETUG presentation the other night.  http://codecube.net/bloguploads/ONETUG_XNA_20090129.zip ..." />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content="ONETUG XNA Presentation Files" />
+      <meta property="og:description" content="As promised, here are the presentation files from the ONETUG presentation the other night.  http://codecube.net/bloguploads/ONETUG_XNA_20090129.zip ..." />
+  
+  <script src="/script/tone.js"></script>
+  <script src="/script/app.gen.js"></script>
+</head>
+<body>
+  <header>
+    <div class="branding">
+      <a href="/" style="text-decoration: none; display: flex; align-items: center; gap: 1rem;">
+        <img
+          src="/design/images/codecube-logo-web.svg"
+          alt="CodeCube Ventures logo"
+          height="48"
+          id="site-logo"
+        />
+        <div class="site-title">
+          <span class="title-main">CODECUBE</span>
+          <span class="title-sub">VENTURES</span>
+        </div>
+      </a>
+    </div>
+    <nav>
+      <ul class="nav-list">
+        <li><a href="/resume/">Resume</a></li>
+        <li><a href="/about/">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+	  <article class="hentry" itemscope itemtype="https://schema.org/Article">
+  <h1 class="entry-title" itemprop="headline">ONETUG XNA Presentation Files</h1>
+  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="2009-02-04">02/04/2009</time>
+</p>
+  
+  
+  <div class="entry-content" itemprop="articleBody">
+    <p>As promised, here are the presentation files from the ONETUG presentation the other night. </p> <p><a href="http://codecube.net/bloguploads/ONETUG_XNA_20090129.zip">http://codecube.net/bloguploads/ONETUG_XNA_20090129.zip</a></p> <p>The .zip contains both the powerpoint slides that I used in the presentation, and the two sample projects I developed during the presentation.</p> <ul> <li>TwoD</li> <ul> <li>This sample shows some basic 2D techniques for dealing with sprites on the screen.</li> <li>Simple velocity calculations for locomotion (Position += Velocity)</li> <li>Orbiting one sprite around another</li> <li>Launching projectiles at a steady pace.</li> <li>Sprite helper class that makes it easy to position sprites around the world.</li> <li>I didn't use it in the sample, but I also have a ResourcePool datatype that makes it easy to reuse entities without having to reallocate new memory.&nbsp; This is actually a really useful technique, I'd like to write about it in a separate blog post.</li></ul> <li>ThreeD</li> <ul> <li>First Person Shooter style Camera.&nbsp; It's a GameComponent, so you just have to add it to the Components collection to use it.</li> <li>Used the QuadDrawer class from the <a href="http://creators.xna.com/en-US/sample/3daudio">3D Audio</a> sample.&nbsp; I added a few useful overloads and methods to let you draw billboarded sprites and the floor.</li> <li>ModelSprite that makes drawing sprites and positioning it about the world easy.</li> <li>Used the Sky box processor from the <a href="http://creators.xna.com/en-US/sample/generatedgeometry">Generated Geometry</a> sample.</li> <li>All the helper classes (QuadDrawer, ModelSprite, and Sky) all know the camera, so they can make use of its view and projection matrix.</li></ul></ul> <p>Thanks to everyone who showed up :-)</p>
+  </div>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "ONETUG XNA Presentation Files",
+  "description": "As promised, here are the presentation files from the ONETUG presentation the other night.  http://codecube.net/bloguploads/ONETUG_XNA_20090129.zip ...",
+  "author": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net/about/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net"
+  },
+  "datePublished": "2009-02-04",
+  "dateModified": "2009-02-04",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://codecube.net/2009/02/onetug-xna-presentation-files/"
+  }
+}
+</script>
+
+<p><strong>Latest post:</strong> <a href="/2025/7/team-series-death-by-status/"> Death By Status</a></p>
+
+
+<p>See more in the <a href="/#archives">archives</a>
+</p>
+
+  </main>
+
+  <footer>
+    copyright 2013 - 2025 - <a rel="me" href="https://mastodon.social/@joelmartinez">me @ Mastodon</a> and <a rel="me" href="https://www.threads.net/@joeldm1971">Threads</a>
+  </footer>
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WV9DDDSFMW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WV9DDDSFMW');
+</script>
+</body>
+</html>

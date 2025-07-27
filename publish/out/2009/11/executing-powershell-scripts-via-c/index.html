@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Executing PowerShell Scripts via C#</title>
+  <meta name="author" content="Joel Martinez" />
+  <meta name="nlweb:ai-access" content="allow" />
+  <link rel="icon" type="image/svg+xml" href="/design/images/codecube-logo-web.svg" />
+  <link rel="alternate" type="application/rss+xml" title="Executing PowerShell Scripts via C#" href="//codecube.net/feed/" />
+  <link rel="nlweb-manifest" href="/nlweb.json" />
+	<link rel="stylesheet" type="text/css" href="/design/style2.css" />
+      <meta name="title" content="Executing PowerShell Scripts via C#" />
+      <meta name="description" content="When Dave asked me for some help with a little side project of his that he was researching, I jumped at the chance.&#xA0; The requirement was to execute a powershell script programmatically and pass in ..." />
+      <link rel="canonical" href="http://codecube.net/2009/11/executing-powershell-scripts-via-c/" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="@joelmartinez" />
+      <meta name="twitter:creator" content="@joelmartinez" />
+      <meta name="twitter:title" content="Executing PowerShell Scripts via C#" />
+      <meta name="twitter:description" content="When Dave asked me for some help with a little side project of his that he was researching, I jumped at the chance.&#xA0; The requirement was to execute a powershell script programmatically and pass in ..." />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content="Executing PowerShell Scripts via C#" />
+      <meta property="og:description" content="When Dave asked me for some help with a little side project of his that he was researching, I jumped at the chance.&#xA0; The requirement was to execute a powershell script programmatically and pass in ..." />
+  
+  <script src="/script/tone.js"></script>
+  <script src="/script/app.gen.js"></script>
+</head>
+<body>
+  <header>
+    <div class="branding">
+      <a href="/" style="text-decoration: none; display: flex; align-items: center; gap: 1rem;">
+        <img
+          src="/design/images/codecube-logo-web.svg"
+          alt="CodeCube Ventures logo"
+          height="48"
+          id="site-logo"
+        />
+        <div class="site-title">
+          <span class="title-main">CODECUBE</span>
+          <span class="title-sub">VENTURES</span>
+        </div>
+      </a>
+    </div>
+    <nav>
+      <ul class="nav-list">
+        <li><a href="/resume/">Resume</a></li>
+        <li><a href="/about/">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+	  <article class="hentry" itemscope itemtype="https://schema.org/Article">
+  <h1 class="entry-title" itemprop="headline">Executing PowerShell Scripts via C#</h1>
+  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="2009-11-13">11/13/2009</time>
+</p>
+  
+  
+  <div class="entry-content" itemprop="articleBody">
+    When <a href="http://davidrbrown.com/">Dave</a> asked me for some help with a little side project of his that he was researching, I jumped at the chance.  The requirement was to execute a powershell script programmatically and pass in some parameters that were gathered from a simple form.<br /><br />I had been wanting to learn more about powershell since it came out (the original codename was called monad) and this was the perfect opportunity.  The end result is a simple little static class that you can use to execute a powershell script and pass in some parameters in a strongly typed fashion.<br /><br />Here's a sample usage:
+<pre>string result = PowerShell.Execute(
+    @"c:\users\joel\dev\script.ps1",
+    () =&gt; new
+    {
+        server = formserver,
+        fname = formname
+    });</pre>
+Although there are quite a few little nuances involved in the execution from a command line, once you figure them out it's quite easy.  The class basically just does a Process.Execute on the PowerShell.exe command and passes in some command line arguments that executes the ps1 file.<br /><br />I opted to do this instead of the cleaner API that is available via hosting the powershell runtime because that has an additional requirement on System.Management.Automation.dll which must be installed with the windows sdk.  I didn't want to introduce this dependency for the project, so the command line method was preferrable.<br /><br />Below is the class ... you'll obviously have to include a few extra using statements at the top of your file, but you can find those easily.  Enjoy!
+<pre>public static class PowerShell
+{
+    public static string Execute(string scriptPath, Expression&lt;Func&lt;object&gt;&gt; parameters)
+    {
+        string shellPath = "powershell.exe";
+        StringBuilder sb = new StringBuilder();
+        sb.AppendFormat("\"&amp; '{0}'\" ", scriptPath);<br /><br />        NewExpression n = parameters.Body as NewExpression;<br /><br />        for (int i = 0; i &lt; n.Members.Count; i++)
+        {
+            var member = n.Members[i];
+            var value = n.Arguments[i];
+            string paramValue;
+            if (value is MemberExpression)
+            {
+                paramValue = Expression.Lambda(value).Compile().DynamicInvoke().ToString();
+            }
+            else
+            {
+                paramValue = value.ToString().Replace("\"", string.Empty);
+            }
+            sb.AppendFormat(" -{0} {1}", member.Name.Replace("get_", ""), paramValue);
+        }<br /><br />        string result = ExecuteCommand(shellPath, sb.ToString());
+        return result;
+    }<br /><br />    private static string ExecuteCommand(string shellPath, string arguments)
+    {
+        arguments = "-noprofile " + arguments;
+        var process = new Process();
+        var info = process.StartInfo;<br /><br />        process.StartInfo.UseShellExecute = false;
+        process.StartInfo.FileName = shellPath;
+        process.StartInfo.Arguments = arguments;
+        process.StartInfo.RedirectStandardError = true;
+        process.StartInfo.RedirectStandardOutput = true;<br /><br />        process.Start();<br /><br />        var output = process.StandardOutput;
+        var error = process.StandardError;<br /><br />        string result = output.ReadToEnd();
+        process.WaitForExit();
+        return result;
+    }
+}</pre>
+  </div>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Executing PowerShell Scripts via C#",
+  "description": "When Dave asked me for some help with a little side project of his that he was researching, I jumped at the chance.\u00A0 The requirement was to execute a powershell script programmatically and pass in ...",
+  "author": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net/about/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net"
+  },
+  "datePublished": "2009-11-13",
+  "dateModified": "2009-11-13",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://codecube.net/2009/11/executing-powershell-scripts-via-c/"
+  }
+}
+</script>
+
+<p><strong>Latest post:</strong> <a href="/2025/7/team-series-death-by-status/"> Death By Status</a></p>
+
+<nav class="post-navigation">
+    
+    <div class="nav-next">
+        <p><strong>Next:</strong> <a href="/2025/7/powershell-from-csharp-updated/"> Running PowerShell from C# in 2025</a></p>
+        <p>While checking my analytics recently, I noticed that an old post of mine from 2009 was still getting hits. It was a little helper class I had put together to run PowerShell scripts from a C# app. A...</p>
+    </div>
+</nav>
+
+<p>See more in the <a href="/#archives">archives</a>
+</p>
+
+  </main>
+
+  <footer>
+    copyright 2013 - 2025 - <a rel="me" href="https://mastodon.social/@joelmartinez">me @ Mastodon</a> and <a rel="me" href="https://www.threads.net/@joeldm1971">Threads</a>
+  </footer>
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WV9DDDSFMW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WV9DDDSFMW');
+</script>
+</body>
+</html>

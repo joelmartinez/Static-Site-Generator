@@ -85,9 +85,32 @@ try {
     dotnet run --project CodeCubeConsole
     if ($LASTEXITCODE -ne 0) { throw "Site generation failed" }
     
+    # Copy generated files to publish directory for CI/CD compatibility
+    $SourcePath = "CodeCubeConsole/bin/Debug/net8.0/out"
+    $PublishPath = "publish/out"
+    
+    if (Test-Path $SourcePath) {
+        Write-BuildStep "Copying generated files to publish directory..."
+        
+        # Create publish directory if it doesn't exist
+        if (-not (Test-Path "publish")) {
+            New-Item -ItemType Directory -Path "publish" | Out-Null
+        }
+        
+        # Remove existing publish/out if it exists
+        if (Test-Path $PublishPath) {
+            Remove-Item -Recurse -Force $PublishPath
+        }
+        
+        # Copy generated site to publish directory
+        Copy-Item -Recurse $SourcePath $PublishPath
+        Write-BuildStep "Files copied to $PublishPath"
+    }
+    
     Write-BuildStep "Build completed successfully!" "Green"
     Write-Host ""
     Write-Host "Generated site is available in: CodeCubeConsole/bin/Debug/net8.0/out/" -ForegroundColor Cyan
+    Write-Host "CI/CD copy available in: $PublishPath" -ForegroundColor Cyan
     
 } catch {
     Write-BuildError $_.Exception.Message

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>SequentialActionQueue in C#</title>
+  <meta name="author" content="Joel Martinez" />
+  <meta name="nlweb:ai-access" content="allow" />
+  <link rel="icon" type="image/svg+xml" href="/design/images/codecube-logo-web.svg" />
+  <link rel="alternate" type="application/rss+xml" title="SequentialActionQueue in C#" href="//codecube.net/feed/" />
+  <link rel="nlweb-manifest" href="/nlweb.json" />
+	<link rel="stylesheet" type="text/css" href="/design/style2.css" />
+      <meta name="title" content="SequentialActionQueue in C#" />
+      <meta name="description" content="A while ago, I created a clone on Google Code of the Stateless library because I wanted to use it in a .NET 4.0 project, and the current distribution was using VS 2008. After I did that, I started ..." />
+      <link rel="canonical" href="http://codecube.net/2011/07/sequentialactionqueue-in-c/" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="@joelmartinez" />
+      <meta name="twitter:creator" content="@joelmartinez" />
+      <meta name="twitter:title" content="SequentialActionQueue in C#" />
+      <meta name="twitter:description" content="A while ago, I created a clone on Google Code of the Stateless library because I wanted to use it in a .NET 4.0 project, and the current distribution was using VS 2008. After I did that, I started ..." />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content="SequentialActionQueue in C#" />
+      <meta property="og:description" content="A while ago, I created a clone on Google Code of the Stateless library because I wanted to use it in a .NET 4.0 project, and the current distribution was using VS 2008. After I did that, I started ..." />
+  
+  <script src="/script/tone.js"></script>
+  <script src="/script/app.gen.js"></script>
+</head>
+<body>
+  <header>
+    <div class="branding">
+      <a href="/" style="text-decoration: none; display: flex; align-items: center; gap: 1rem;">
+        <img
+          src="/design/images/codecube-logo-web.svg"
+          alt="CodeCube Ventures logo"
+          height="48"
+          id="site-logo"
+        />
+        <div class="site-title">
+          <span class="title-main">CODECUBE</span>
+          <span class="title-sub">VENTURES</span>
+        </div>
+      </a>
+    </div>
+    <nav>
+      <ul class="nav-list">
+        <li><a href="/resume/">Resume</a></li>
+        <li><a href="/about/">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+	  <article class="hentry" itemscope itemtype="https://schema.org/Article">
+  <h1 class="entry-title" itemprop="headline">SequentialActionQueue in C#</h1>
+  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="2011-07-15">07/15/2011</time>
+</p>
+  
+  
+  <div class="entry-content" itemprop="articleBody">
+    A while ago, I created a <a href="http://code.google.com/r/joelmartinez-stateless/">clone</a> on Google Code of the <a href="http://code.google.com/p/stateless/">Stateless library</a> because I wanted to use it in a .NET 4.0 project, and the current distribution was using VS 2008. After I did that, I started playing around with the library. Specifically, I wanted a way to have multiple state machines, and be able to process triggers and state changes in parallel. The problem of course is that although you can usually easily process state changes from different state machines in parallel, you can only process multiple triggers for a <strong>single</strong> state machine sequentially.<br /><br />So I added a <em>ParallelExample</em> project to the solution and started experimenting. The end result is an easy to use class called <a href="http://code.google.com/r/joelmartinez-stateless/source/browse/Stateless/SequentialActionQueue.cs">SequentialActionQueue</a>. Usually when you need to synchronize access to a resource, you end up putting a lock section around your code so that only one thread may access it at a time. However things get more complex if you need to synchronize multiple sections of the code (ex. multiple methods in a class where only one may run at a time). This is classic thread-safety issues, and the dragons that lie in those waters. However, With the SequentialActionQueue, you can simply instantiate the class and proxy all actions through it and be guaranteed that everything will run safely one after the other.
+<blockquote>
+<pre>private SequentialActionQueue queue = new SequentialActionQueue();
+private int counter =0;<br /><br />public void Add(int i)
+{
+    queue.Enqueue(() =&gt; counter += i);
+}<br /><br />public void Subtract(int i)
+{
+    queue.Enqueue(() =&gt; counter -= i);
+}</pre>
+</blockquote>
+The above is a simplified example which emulates the ability to use <a href="http://msdn.microsoft.com/en-us/library/system.threading.interlocked.aspx">Interlocked</a> to safely increment/decrement a number. I'd love to get some thoughts on the class ... I wrote a few tests in the sample project, but that's not to say there won't be bugs in it, would love to hear your feedback :-)
+&nbsp;
+  </div>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "SequentialActionQueue in C#",
+  "description": "A while ago, I created a clone on Google Code of the Stateless library because I wanted to use it in a .NET 4.0 project, and the current distribution was using VS 2008. After I did that, I started ...",
+  "author": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net/about/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net"
+  },
+  "datePublished": "2011-07-15",
+  "dateModified": "2011-07-15",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://codecube.net/2011/07/sequentialactionqueue-in-c/"
+  }
+}
+</script>
+
+<p><strong>Latest post:</strong> <a href="/2025/7/team-series-death-by-status/"> Death By Status</a></p>
+
+
+<p>See more in the <a href="/#archives">archives</a>
+</p>
+
+  </main>
+
+  <footer>
+    copyright 2013 - 2025 - <a rel="me" href="https://mastodon.social/@joelmartinez">me @ Mastodon</a> and <a rel="me" href="https://www.threads.net/@joeldm1971">Threads</a>
+  </footer>
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WV9DDDSFMW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WV9DDDSFMW');
+</script>
+</body>
+</html>

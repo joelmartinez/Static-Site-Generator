@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>MS Tech-Ed 2011/Udder Chaos on XBLIG</title>
+  <meta name="author" content="Joel Martinez" />
+  <meta name="nlweb:ai-access" content="allow" />
+  <link rel="icon" type="image/svg+xml" href="/design/images/codecube-logo-web.svg" />
+  <link rel="alternate" type="application/rss+xml" title="MS Tech-Ed 2011/Udder Chaos on XBLIG" href="//codecube.net/feed/" />
+  <link rel="nlweb-manifest" href="/nlweb.json" />
+	<link rel="stylesheet" type="text/css" href="/design/style2.css" />
+      <meta name="title" content="MS Tech-Ed 2011/Udder Chaos on XBLIG" />
+      <meta name="description" content="What a whirlwind of a few weeks &#x2026; first order of business, I can&#x2019;t believe that I hadn&#x2019;t even posted a link to this, but Udder Chaos was released on XBox Live Indie Games several weeks ago.&#xA;&#xA;..." />
+      <link rel="canonical" href="http://codecube.net/2011/05/ms-tech-ed-2011/" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="@joelmartinez" />
+      <meta name="twitter:creator" content="@joelmartinez" />
+      <meta name="twitter:title" content="MS Tech-Ed 2011/Udder Chaos on XBLIG" />
+      <meta name="twitter:description" content="What a whirlwind of a few weeks &#x2026; first order of business, I can&#x2019;t believe that I hadn&#x2019;t even posted a link to this, but Udder Chaos was released on XBox Live Indie Games several weeks ago.&#xA;&#xA;..." />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content="MS Tech-Ed 2011/Udder Chaos on XBLIG" />
+      <meta property="og:description" content="What a whirlwind of a few weeks &#x2026; first order of business, I can&#x2019;t believe that I hadn&#x2019;t even posted a link to this, but Udder Chaos was released on XBox Live Indie Games several weeks ago.&#xA;&#xA;..." />
+      <meta name="twitter:image" content="http://download.xbox.com/content/xna/assets/5855082D_World/webboxart.jpg" />
+      <meta property="og:image" content="http://download.xbox.com/content/xna/assets/5855082D_World/webboxart.jpg" />
+      <meta name="image" content="http://download.xbox.com/content/xna/assets/5855082D_World/webboxart.jpg" />
+  
+  <script src="/script/tone.js"></script>
+  <script src="/script/app.gen.js"></script>
+</head>
+<body>
+  <header>
+    <div class="branding">
+      <a href="/" style="text-decoration: none; display: flex; align-items: center; gap: 1rem;">
+        <img
+          src="/design/images/codecube-logo-web.svg"
+          alt="CodeCube Ventures logo"
+          height="48"
+          id="site-logo"
+        />
+        <div class="site-title">
+          <span class="title-main">CODECUBE</span>
+          <span class="title-sub">VENTURES</span>
+        </div>
+      </a>
+    </div>
+    <nav>
+      <ul class="nav-list">
+        <li><a href="/resume/">Resume</a></li>
+        <li><a href="/about/">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+	  <article class="hentry" itemscope itemtype="https://schema.org/Article">
+  <h1 class="entry-title" itemprop="headline">MS Tech-Ed 2011/Udder Chaos on XBLIG</h1>
+  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="2011-05-24">05/24/2011</time>
+</p>
+  
+  
+  <div class="entry-content" itemprop="articleBody">
+    What a whirlwind of a few weeks … first order of business, I can’t believe that I hadn’t even posted a link to this, but Udder Chaos was released on XBox Live Indie Games several weeks ago.<br /><br /><a href="http://goo.gl/g0DfL"><img style="margin: 0px 10px 0px 0px; display: inline; float: left;" title="Udder Chaos" src="http://download.xbox.com/content/xna/assets/5855082D_World/webboxart.jpg" alt="Udder Chaos" align="left" /></a><br /><br />It’s <a href="http://www.dealspwn.com/xbligotw-ultraviolet-udder-chaos-delta-energy-ii-57221">received</a> favorable reviews (or <a href="http://www.gamemarx.com/video/trials/65/udder-chaos.aspx?amp&amp;amp">mildly tepid</a> at worst), and was even featured on Kotaku’s favorites list for a bit. All in all, I had a great time helping the team get that game to market, and is a testament to <a href="http://flatredball.com">FlatRedBall</a>. Though we’re all working on other projects right now, a <a title="Udder Chaos for Windows Phone" href="http://codecube.net/2011/07/udder-chaos-for-windows-phone/">windows phone 7 version</a> isn’t far away <img class="wlEmoticon wlEmoticon-smile" style="border-style: none;" src="http://codecube.net/wp-content/uploads/2011/05/wlEmoticon-smile.png" alt="Smile" />
+<blockquote>“Udder Chaos plays like one of the classic lightgun games of yesteryear, evoking nostalgic memories of the likes of Point Blank and Duck Hunt.” – <a href="http://www.dealspwn.com/xbligotw-ultraviolet-udder-chaos-delta-energy-ii-57221">Jonathan Lester of DealSpwn</a></blockquote>
+But on to the fun, last week I had the pleasure of attending Tech-Ed 2011 … wow, what a blast that was. This is just a brief offload of my notes of a few of the cool things I saw. Definitely need to follow up on some of these
+<ul>
+	<li>F# – interesting as always, did a hands on lab, but am still trying to find a compelling reason to really look at it in detail.</li>
+	<li>Task Parallel Library/Asynchrony
+<ul>
+	<li>Async Actions – I had seen this on the feature lists before, but hadn’t had a chance to actually use them before. Very cool! if your app is IO bound (i.e. database access), you should absolutely be using this.</li>
+	<li>By far, one of the coolest pieces of tech, SingalR uses some of the async request infrastructure mentioned above to provide some really sweet push notification functionality in a scalable way.  This is one to watch</li>
+</ul>
+</li>
+	<li>Windows Server AppFabric Cache – saw some cool sessions on this, glad to see that they’ve finally gone to market after seeing the first version back in PDC 2008.
+<ul>
+	<li>My takeaway here is that you will want to do a lot of capacity planning to understand read/write frequency, and max # of projected objects. This will drive memory/server requirements.</li>
+	<li>Also, the primary use case is not specifically to increase response times, although that will often be a side-effect … but actually to lighten the load on the database (or other external data source). Because the db is often the bottleneck, this gives you an easily scalable layer between your application and the database.</li>
+</ul>
+</li>
+	<li>Lots of cool HTML5 and client topics, in no particular order:
+<ul>
+	<li>Modernizr is cool</li>
+	<li>jQuery Visualize plugin is cool</li>
+	<li>jQuery.Unobtrusive is cool</li>
+	<li>must look into KnockoutJS</li>
+</ul>
+</li>
+	<li>And finally, NuGet represent! am really amped up for how easy NuGet makes dependency management and lib deployment.</li>
+</ul>
+Anyways, that was just a braindump of some of my notes … I still have a mountain of stuff to catch up and follow up on. Overall, very impressed with the conference, although one can make the argument that it was almost <em>too big</em>.
+  </div>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "MS Tech-Ed 2011/Udder Chaos on XBLIG",
+  "description": "What a whirlwind of a few weeks \u2026 first order of business, I can\u2019t believe that I hadn\u2019t even posted a link to this, but Udder Chaos was released on XBox Live Indie Games several weeks ago.\n\n...",
+  "author": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net/about/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net"
+  },
+  "datePublished": "2011-05-24",
+  "dateModified": "2011-05-24",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://codecube.net/2011/05/ms-tech-ed-2011/"
+  }
+}
+</script>
+
+<p><strong>Latest post:</strong> <a href="/2025/7/team-series-death-by-status/"> Death By Status</a></p>
+
+
+<p>See more in the <a href="/#archives">archives</a>
+</p>
+
+  </main>
+
+  <footer>
+    copyright 2013 - 2025 - <a rel="me" href="https://mastodon.social/@joelmartinez">me @ Mastodon</a> and <a rel="me" href="https://www.threads.net/@joeldm1971">Threads</a>
+  </footer>
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WV9DDDSFMW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WV9DDDSFMW');
+</script>
+</body>
+</html>

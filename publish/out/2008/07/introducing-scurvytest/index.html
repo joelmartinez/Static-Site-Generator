@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Introducing Scurvy.Test</title>
+  <meta name="author" content="Joel Martinez" />
+  <meta name="nlweb:ai-access" content="allow" />
+  <link rel="icon" type="image/svg+xml" href="/design/images/codecube-logo-web.svg" />
+  <link rel="alternate" type="application/rss+xml" title="Introducing Scurvy.Test" href="//codecube.net/feed/" />
+  <link rel="nlweb-manifest" href="/nlweb.json" />
+	<link rel="stylesheet" type="text/css" href="/design/style2.css" />
+      <meta name="title" content="Introducing Scurvy.Test" />
+      <meta name="description" content="Game development is by its nature a visual thing.&#xA0; Unit testing is code that tests other code ... and code is by its nature a non-visual exercise.&#xA0; Ever since XNA launched, a recurring thread I&#x27;ve ..." />
+      <link rel="canonical" href="http://codecube.net/2008/07/introducing-scurvytest/" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="@joelmartinez" />
+      <meta name="twitter:creator" content="@joelmartinez" />
+      <meta name="twitter:title" content="Introducing Scurvy.Test" />
+      <meta name="twitter:description" content="Game development is by its nature a visual thing.&#xA0; Unit testing is code that tests other code ... and code is by its nature a non-visual exercise.&#xA0; Ever since XNA launched, a recurring thread I&#x27;ve ..." />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content="Introducing Scurvy.Test" />
+      <meta property="og:description" content="Game development is by its nature a visual thing.&#xA0; Unit testing is code that tests other code ... and code is by its nature a non-visual exercise.&#xA0; Ever since XNA launched, a recurring thread I&#x27;ve ..." />
+  
+  <script src="/script/tone.js"></script>
+  <script src="/script/app.gen.js"></script>
+</head>
+<body>
+  <header>
+    <div class="branding">
+      <a href="/" style="text-decoration: none; display: flex; align-items: center; gap: 1rem;">
+        <img
+          src="/design/images/codecube-logo-web.svg"
+          alt="CodeCube Ventures logo"
+          height="48"
+          id="site-logo"
+        />
+        <div class="site-title">
+          <span class="title-main">CODECUBE</span>
+          <span class="title-sub">VENTURES</span>
+        </div>
+      </a>
+    </div>
+    <nav>
+      <ul class="nav-list">
+        <li><a href="/resume/">Resume</a></li>
+        <li><a href="/about/">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+	  <article class="hentry" itemscope itemtype="https://schema.org/Article">
+  <h1 class="entry-title" itemprop="headline">Introducing Scurvy.Test</h1>
+  <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="2008-07-27">07/27/2008</time>
+</p>
+  
+  
+  <div class="entry-content" itemprop="articleBody">
+    Game development is by its nature a visual thing.  Unit testing is code that tests other code ... and code is by its nature a non-visual exercise.  Ever since XNA launched, a recurring thread I've often seen is how to best apply unit testing methodology.  Particularly when much of the code-base requires things that wouldn't typically be available in the context of a unit test such as a graphics device.<br /><br />I still to this day haven't seen a comprehensive write-up on this subject. So at the risk of sparking a debate on the subject of whether this should be accomplished with mock objects, or via some other method; I decided to see what it would take to write a unit test framework that allows you to use resources such as the graphics device.<br /><br />You can find the project on CodePlex here: <a title="http://www.codeplex.com/ScurvyTest" href="http://www.codeplex.com/ScurvyTest">http://www.codeplex.com/ScurvyTest</a><br /><br />On the surface, it has most of the basic features of a unit test framework.  You can add some custom attributes to your unit test classes:
+<ul>
+	<li>[TestClass], to signify this is a unit test class</li>
+	<li>[TestSetup], run before every unit test</li>
+	<li>[TestMethod], the actual unit test</li>
+	<li>[TestCleanup], run after every unit test</li>
+</ul>
+This follows suit with most any unit testing framework I've come across.  Where things diverge is in the method of running the unit tests.  This framework is designed to run the unit tests in-process. You can run your unit test in one of two ways:
+<blockquote>TestRunner&lt;Program&gt;.RunTests(myServiceProvider);</blockquote>
+Where the generic argument is <strong>any type</strong> in the assembly that houses your unit tests.  This automatic mode will run all unit tests.  Good if you want to use this framework in a standalone project (since Scurvy.Test doesn't actually have any references to XNA libraries).<br /><br />Here's where things get interesting though.  What if you wanted to write unit tests that use content managers, or even that render content.  This is (probably) impossible with other unit test frameworks.  However, Scurvy.Test enables these scenarios in a few different ways.<br /><br />First, the TestRunner class can also be instantiated as a regular instance.
+<blockquote>this.runner = new TestRunner&lt;Game1&gt;(this.Services);<br /><br />...<br /><br />this.runner.Update(gameTime.ElapsedGameTime);<br /><br />...<br /><br />this.runner.Draw();</blockquote>
+This will cause the test runner to run in manual mode. When you do that, simply call the Update and Draw methods on the test runner instance.  A unit test will be run once every time the Update method is called, unless one of the unit tests specifies an ExitCriteria (more on this in a moment).<br /><br />Second, a [TestMethod] can either have no arguments, or can accept a TestContext.  This TestContext has two properties:
+<ol>
+	<li>public IServiceProvider Services</li>
+	<li>public ExitCriteria ExitCriteria</li>
+</ol>
+The IServiceProvider is cool because if you use the "Go To Source" feature on the game class' .Services property, you'll notice it's of type <a href="http://msdn.microsoft.com/en-us/library/microsoft.xna.framework.gameservicecontainer.aspx">GameServiceContainer</a>, which in turn implements the IServiceProvider interface.  Having a reference to this lets you instantiate <a href="http://msdn.microsoft.com/en-us/library/microsoft.xna.framework.content.contentmanager.aspx">ContentManager</a>s, and also query for services like the <a href="http://msdn.microsoft.com/en-us/library/microsoft.xna.framework.content.contentmanager.aspx">IGraphicsDeviceService</a> which could be used to instantiate a <a href="http://msdn.microsoft.com/en-us/library/microsoft.xna.framework.content.contentmanager.aspx">SpriteBatch</a>.<br /><br />The ExitCriteria is an abstract class that has the following definition:
+<blockquote>public abstract class ExitCriteria
+{
+public bool IsFinished;
+public readonly TestContext Context;<br /><br />public ExitCriteria(TestContext context)
+{
+this.Context = context;
+}<br /><br />public abstract void Update(TimeSpan elapsedTime);<br /><br />public abstract void Draw();
+}</blockquote>
+With this, you can write a unit test that can render to the game's viewport and allow a QA tester to verify correctness visually.  Simply set the context's ExitCriteria method from a unit test, and the framework will take care of executing the exit criteria until it sets the <strong>IsFinished</strong> property to true.
+<blockquote>[TestMethod]
+public void ManualContentVerificationTest(TestContext context)
+{
+context.ExitCriteria = new ContentVerificationExitCriteria(this.content, context);
+}</blockquote>
+The sample project included in the source code has a manual verification exit criteria that will wait until the tester presses a button.<br /><br />Right now, the weakest part of this framework is in the feedback department.  If an assert fails or one of the unit tests throws an exception, it will write some information to the Debug stream (which you can see in visual studio's Output window.  This is ok for now, but I have some plans on how to improve that.<br /><br />So I'd love to get feedback on this little project, feel free to comment on this post, or on the codeplex site.<br /><br />Thanks!
+  </div>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Introducing Scurvy.Test",
+  "description": "Game development is by its nature a visual thing.\u00A0 Unit testing is code that tests other code ... and code is by its nature a non-visual exercise.\u00A0 Ever since XNA launched, a recurring thread I\u0027ve ...",
+  "author": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net/about/"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Joel Martinez",
+    "url": "https://codecube.net"
+  },
+  "datePublished": "2008-07-27",
+  "dateModified": "2008-07-27",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://codecube.net/2008/07/introducing-scurvytest/"
+  }
+}
+</script>
+
+<p><strong>Latest post:</strong> <a href="/2025/7/team-series-death-by-status/"> Death By Status</a></p>
+
+
+<p>See more in the <a href="/#archives">archives</a>
+</p>
+
+  </main>
+
+  <footer>
+    copyright 2013 - 2025 - <a rel="me" href="https://mastodon.social/@joelmartinez">me @ Mastodon</a> and <a rel="me" href="https://www.threads.net/@joeldm1971">Threads</a>
+  </footer>
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WV9DDDSFMW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WV9DDDSFMW');
+</script>
+</body>
+</html>
