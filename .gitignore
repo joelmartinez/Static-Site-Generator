@@ -79,7 +79,6 @@ CodeCubeConsole/out/nlweb.json
 
 # Frontend dependencies
 frontend/node_modules/
-frontend/package-lock.json
 
 # CI/CD build artifacts
 publish/
