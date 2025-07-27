@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Interactive decision-tree engine for CodeCube static site",
   "scripts": {
-    "validate": "echo 'AJV validation placeholder - empty flows pass'",
+    "validate": "echo 'Usage: npm run validate -- <scenario> <locale>' && echo 'Example: npm run validate -- demo en-US'",
     "build": "echo 'Build placeholder for runtime stubs'"
   },
   "devDependencies": {},
