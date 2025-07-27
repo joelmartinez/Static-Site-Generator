@@ -357,8 +357,45 @@ namespace CodeCubeConsole
             // Create URL to post mapping for quick lookups
             var urlToPostMap = publishedPosts.ToDictionary(p => p.UrlPath, p => p);
             
+            // Calculate recency factors
+            var earliestDate = publishedPosts.Min(p => p.PublishedOn);
+            var latestDate = publishedPosts.Max(p => p.PublishedOn);
+            var dateRange = (latestDate - earliestDate).TotalDays;
+            
+            // Group posts by year for year nodes
+            var postsByYear = publishedPosts.GroupBy(p => p.PublishedOn.Year).ToArray();
+            
+            // Create year nodes
+            foreach (var yearGroup in postsByYear)
+            {
+                var year = yearGroup.Key.ToString();
+                var yearNode = new LinkMapNode
+                {
+                    Id = $"#{year}",
+                    Title = year,
+                    Url = $"/{year}",
+                    Description = $"{yearGroup.Count()} posts from {year}",
+                    PublishedOn = new DateTime(yearGroup.Key, 1, 1),
+                    NodeType = "year"
+                };
+                nodes.Add(yearNode);
+                
+                // Connect year node to all posts in that year
+                foreach (var post in yearGroup)
+                {
+                    edges.Add(new LinkMapEdge
+                    {
+                        Source = yearNode.Id,
+                        Target = post.UrlPath
+                    });
+                }
+            }
+            
             foreach (var post in publishedPosts)
             {
+                // Calculate recency factor (0.0 = oldest, 1.0 = newest)
+                var recencyFactor = dateRange > 0 ? (post.PublishedOn - earliestDate).TotalDays / dateRange : 0.5;
+                
                 // Create node for this post
                 var node = new LinkMapNode
                 {
@@ -366,7 +403,9 @@ namespace CodeCubeConsole
                     Title = post.Title,
                     Url = post.URL,
                     Description = post.BodySummary,
-                    PublishedOn = post.PublishedOn
+                    PublishedOn = post.PublishedOn,
+                    NodeType = "post",
+                    RecencyFactor = recencyFactor
                 };
                 nodes.Add(node);
                 
@@ -391,6 +430,12 @@ namespace CodeCubeConsole
                         edges.Add(edge);
                     }
                 }
+            }
+            
+            // Calculate connection counts for all nodes
+            foreach (var node in nodes)
+            {
+                node.ConnectionCount = edges.Count(e => e.Source == node.Id || e.Target == node.Id);
             }
             
             var mapData = new LinkMapData
@@ -455,6 +500,16 @@ namespace CodeCubeConsole
             if (string.IsNullOrEmpty(url))
                 return string.Empty;
                 
+            // Handle year anchor links like /#2023
+            if (url.StartsWith("/#") && url.Length >= 6)
+            {
+                var yearPart = url.Substring(2);
+                if (int.TryParse(yearPart, out var year) && year >= 2000 && year <= DateTime.Now.Year + 10)
+                {
+                    return $"#{yearPart}";
+                }
+            }
+                
             // Handle fully qualified URLs that point to our domain
             if (url.StartsWith("https://codecube.net"))
             {
@@ -468,7 +523,7 @@ namespace CodeCubeConsole
                 return url;
             }
             
-            // Skip external URLs and fragments
+            // Skip external URLs and fragments (except year anchors handled above)
             if (url.StartsWith("http") || url.StartsWith("mailto:") || url.StartsWith("#"))
             {
                 return string.Empty;
