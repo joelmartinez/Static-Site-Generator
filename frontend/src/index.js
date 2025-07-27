@@ -5,9 +5,12 @@
  * Future frontend functionality can be added here or imported from other modules.
  */
 
+// Import utility functions (example of how to structure larger frontend apps)
+import { addInteractiveElements, initializeThemeToggle, enhanceNavigation } from './utils.js';
+
 // Simple initialization function
 function initializeCodeCube() {
-    console.log('CodeCube frontend initialized');
+    console.log('CodeCube frontend initialized - modern build pipeline active!');
     
     // Add any initialization logic here
     // For example: analytics, theme switching, interactive elements, etc.
@@ -18,7 +21,14 @@ function initializeCodeCube() {
         const body = document.body;
         if (body) {
             body.setAttribute('data-codecube-frontend', 'loaded');
+            console.log('CodeCube frontend: DOM ready, attributes set');
         }
+        
+        // Initialize enhanced features (commented out as examples)
+        // Uncomment these when the corresponding HTML elements exist:
+        // addInteractiveElements();
+        // initializeThemeToggle();
+        // enhanceNavigation();
     });
 }
 
