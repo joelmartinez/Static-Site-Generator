@@ -31,12 +31,14 @@ export function createLinkMapVisualization(data) {
   // Create main group for zoom/pan
   const g = svg.append('g');
   
-  // Set up simulation
+  // Set up simulation with stronger centering
   const simulation = d3.forceSimulation(data.nodes)
-    .force('link', d3.forceLink(data.edges).id(d => d.id).distance(100))
-    .force('charge', d3.forceManyBody().strength(-300))
+    .force('link', d3.forceLink(data.edges).id(d => d.id).distance(80)) // Reduced from 100
+    .force('charge', d3.forceManyBody().strength(-200)) // Reduced from -300 for less repulsion
     .force('center', d3.forceCenter(width / 2, height / 2))
-    .force('collision', d3.forceCollide().radius(25));
+    .force('collision', d3.forceCollide().radius(30)) // Increased from 25
+    .force('x', d3.forceX(width / 2).strength(0.1)) // Add X centering force
+    .force('y', d3.forceY(height / 2).strength(0.1)); // Add Y centering force
   
   // Create links
   const link = g.append('g')
@@ -45,18 +47,39 @@ export function createLinkMapVisualization(data) {
     .enter().append('line')
     .attr('class', 'map-link');
   
-  // Create nodes
+  // Create nodes - use different shapes for different types
   const node = g.append('g')
-    .selectAll('circle')
+    .selectAll('.map-node')
     .data(data.nodes)
-    .enter().append('circle')
+    .enter()
+    .append(d => {
+      // Use rect for year nodes, circle for posts
+      return d.nodeType === 'year' ? 
+        document.createElementNS('http://www.w3.org/2000/svg', 'rect') :
+        document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    })
     .attr('class', d => `map-node ${d.nodeType === 'year' ? 'map-node-year' : 'map-node-post'}`)
-    .attr('r', d => {
+    .each(function(d) {
+      const element = d3.select(this);
       // Size nodes based on connections and recency
       const baseSize = d.nodeType === 'year' ? 12 : 8; // Year nodes start larger
       const connectionBonus = d.connectionCount ? d.connectionCount * 2 : 0;
-      const recencyBonus = d.nodeType === 'post' ? (d.recencyFactor || 0) * 8 : 0; // Newer posts get larger
-      return Math.max(baseSize, Math.min(25, baseSize + connectionBonus + recencyBonus));
+      // Stronger recency scaling: newest posts should be ~2x size of oldest
+      const recencyBonus = d.nodeType === 'post' ? (d.recencyFactor || 0) * 16 : 0; // Doubled from 8 to 16
+      const radius = Math.max(baseSize, Math.min(30, baseSize + connectionBonus + recencyBonus));
+      
+      if (d.nodeType === 'year') {
+        // Square for year nodes
+        const size = radius * 1.4; // Make squares slightly larger to match visual weight
+        element
+          .attr('width', size)
+          .attr('height', size)
+          .attr('x', -size/2)
+          .attr('y', -size/2);
+      } else {
+        // Circle for post nodes
+        element.attr('r', radius);
+      }
     })
     .call(d3.drag()
       .on('start', dragstarted)
@@ -101,8 +124,20 @@ export function createLinkMapVisualization(data) {
       .attr('y2', d => d.target.y);
     
     node
-      .attr('cx', d => d.x)
-      .attr('cy', d => d.y);
+      .each(function(d) {
+        const element = d3.select(this);
+        if (d.nodeType === 'year') {
+          // For rectangles, we need to update x and y (since we set them relative to center)
+          element
+            .attr('x', d.x - parseFloat(element.attr('width'))/2)
+            .attr('y', d.y - parseFloat(element.attr('height'))/2);
+        } else {
+          // For circles, just update cx and cy
+          element
+            .attr('cx', d.x)
+            .attr('cy', d.y);
+        }
+      });
     
     label
       .attr('x', d => d.x)

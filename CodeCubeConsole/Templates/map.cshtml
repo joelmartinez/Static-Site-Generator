@@ -21,16 +21,32 @@
   }
   
   .map-node {
-    fill: #3498db;
     stroke: #2c3e50;
     stroke-width: 1.5px;
     cursor: pointer;
     transition: all 0.2s ease;
   }
   
+  .map-node-post {
+    fill: #3498db;
+  }
+  
+  .map-node-year {
+    fill: #ff8c00;
+    stroke: #e67e00;
+    stroke-width: 2px;
+  }
+
   .map-node:hover {
-    fill: #e74c3c;
-    stroke-width: 2.5px;
+    stroke-width: 3px;
+  }
+  
+  .map-node-post:hover {
+    fill: #2980b9;
+  }
+  
+  .map-node-year:hover {
+    fill: #e67e00;
   }
   
   .map-link {
@@ -127,6 +143,7 @@
   </p>
   <p>
     <strong>Controls:</strong> Use your mouse to pan and zoom. On mobile, use touch gestures.
+    You can also <a href="/#archive">browse the complete archive</a> for a chronological view.
   </p>
 </div>
 
