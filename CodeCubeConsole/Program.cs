@@ -4,8 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using System.Text.Json;
 using RazorLight;
 using Markdig;
+using HtmlAgilityPack;
 
 namespace CodeCubeConsole
 {
@@ -80,6 +82,11 @@ namespace CodeCubeConsole
             result = await Engine.CompileRenderStringAsync("resume", resumetemplate, (object?)null);
             await SaveFile("Joel Martinez - Resume", result, "/resume/");
 
+            // the 'map' page
+            string maptemplate = await GetTemplate("map");
+            result = await Engine.CompileRenderStringAsync("map", maptemplate, (object?)null);
+            await SaveFile("Link Map - CodeCube Ventures", result, "/map/");
+
             // syndication
             string rsstemplate = await GetTemplate("rss");
             result = await Engine.CompileRenderStringAsync("rss", rsstemplate, model.Take(15).ToArray());
@@ -87,6 +94,9 @@ namespace CodeCubeConsole
 
             // sitemap
             await GenerateSitemap(model);
+
+            // link map data generation
+            await GenerateLinkMap(model);
 
             // now generate each individual content page
             string postTemplate = await GetTemplate("post");
@@ -336,6 +346,137 @@ namespace CodeCubeConsole
             {
                 await writer.WriteAsync(sitemap.ToString());
             }
+        }
+
+        private static async Task GenerateLinkMap(IEnumerable<Post> posts)
+        {
+            var publishedPosts = posts.Where(p => p.IsPublished).ToArray();
+            var nodes = new List<LinkMapNode>();
+            var edges = new List<LinkMapEdge>();
+            
+            // Create URL to post mapping for quick lookups
+            var urlToPostMap = publishedPosts.ToDictionary(p => p.UrlPath, p => p);
+            
+            foreach (var post in publishedPosts)
+            {
+                // Create node for this post
+                var node = new LinkMapNode
+                {
+                    Id = post.UrlPath,
+                    Title = post.Title,
+                    Url = post.URL,
+                    Description = post.BodySummary,
+                    PublishedOn = post.PublishedOn
+                };
+                nodes.Add(node);
+                
+                // Extract links from post content
+                var links = ExtractInternalLinks(post.Body, post.UrlPath);
+                
+                foreach (var linkUrl in links)
+                {
+                    // Normalize the link URL to match our UrlPath format
+                    var normalizedUrl = NormalizeLinkUrl(linkUrl);
+                    
+                    // Check if this link points to another published post
+                    if (!string.IsNullOrEmpty(normalizedUrl) && 
+                        urlToPostMap.ContainsKey(normalizedUrl) && 
+                        normalizedUrl != post.UrlPath) // Avoid self-links
+                    {
+                        var edge = new LinkMapEdge
+                        {
+                            Source = post.UrlPath,
+                            Target = normalizedUrl
+                        };
+                        edges.Add(edge);
+                    }
+                }
+            }
+            
+            var mapData = new LinkMapData
+            {
+                Nodes = nodes.ToArray(),
+                Edges = edges.ToArray()
+            };
+            
+            // Serialize to JSON and wrap in a JavaScript variable assignment
+            var jsonOptions = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                WriteIndented = false
+            };
+            
+            var json = JsonSerializer.Serialize(mapData, jsonOptions);
+            var jsContent = $"window.linkMapData = {json};";
+            
+            // Save to map.gen.js
+            var mapJsPath = Path.Combine(BasePath, "out", "script", "map.gen.js");
+            Directory.CreateDirectory(Path.GetDirectoryName(mapJsPath));
+            Console.WriteLine("Generating link map data at {0}", mapJsPath);
+            
+            await using (var writer = new StreamWriter(mapJsPath))
+            {
+                await writer.WriteAsync(jsContent);
+            }
+        }
+        
+        private static List<string> ExtractInternalLinks(string htmlContent, string currentPostPath)
+        {
+            var links = new List<string>();
+            
+            try
+            {
+                var doc = new HtmlDocument();
+                doc.LoadHtml($"<html><body>{htmlContent}</body></html>");
+                
+                var linkNodes = doc.DocumentNode.SelectNodes("//a[@href]");
+                if (linkNodes != null)
+                {
+                    foreach (var linkNode in linkNodes)
+                    {
+                        var href = linkNode.GetAttributeValue("href", "");
+                        if (!string.IsNullOrEmpty(href))
+                        {
+                            links.Add(href);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error extracting links from {0}: {1}", currentPostPath, ex.Message);
+            }
+            
+            return links;
+        }
+        
+        private static string NormalizeLinkUrl(string url)
+        {
+            if (string.IsNullOrEmpty(url))
+                return string.Empty;
+                
+            // Handle fully qualified URLs that point to our domain
+            if (url.StartsWith("https://codecube.net"))
+            {
+                var uri = new Uri(url);
+                return uri.AbsolutePath;
+            }
+            
+            // Handle root-relative URLs (starting with /)
+            if (url.StartsWith("/"))
+            {
+                return url;
+            }
+            
+            // Skip external URLs and fragments
+            if (url.StartsWith("http") || url.StartsWith("mailto:") || url.StartsWith("#"))
+            {
+                return string.Empty;
+            }
+            
+            // For relative URLs, we'd need more context to resolve them properly
+            // For now, return empty since the posts seem to use absolute paths
+            return string.Empty;
         }
     }
 }

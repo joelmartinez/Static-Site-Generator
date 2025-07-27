@@ -142,4 +142,25 @@ namespace CodeCubeConsole
             }
         }
     }
+    
+    public class LinkMapNode
+    {
+        public string Id { get; set; } = string.Empty;
+        public string Title { get; set; } = string.Empty;
+        public string Url { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public DateTime PublishedOn { get; set; }
+    }
+    
+    public class LinkMapEdge
+    {
+        public string Source { get; set; } = string.Empty;
+        public string Target { get; set; } = string.Empty;
+    }
+    
+    public class LinkMapData
+    {
+        public LinkMapNode[] Nodes { get; set; } = Array.Empty<LinkMapNode>();
+        public LinkMapEdge[] Edges { get; set; } = Array.Empty<LinkMapEdge>();
+    }
 }

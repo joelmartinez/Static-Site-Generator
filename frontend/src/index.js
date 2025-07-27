@@ -8,9 +8,15 @@
 // Import utility functions (example of how to structure larger frontend apps)
 import { addInteractiveElements, initializeThemeToggle, enhanceNavigation } from './utils.js';
 
+// Import map functionality
+import { createLinkMapVisualization } from './map.js';
+
 // Simple initialization function
 function initializeCodeCube() {
     console.log('CodeCube frontend initialized - modern build pipeline active!');
+    
+    // Make map function globally available for the map page
+    window.createLinkMapVisualization = createLinkMapVisualization;
     
     // Add any initialization logic here
     // For example: analytics, theme switching, interactive elements, etc.
