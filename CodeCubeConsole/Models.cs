@@ -63,6 +63,8 @@ namespace CodeCubeConsole
         public bool HasImage { get; private set; }
         public string ImageUrl { get; private set; }
         public string? HeroImageUrl { get; set; }
+        public string? HeroImageOptimizedUrl { get; set; }
+        public string? HeroImageThumbnailUrl { get; set; }
         
         public bool IsHeroImageInBody
         {
