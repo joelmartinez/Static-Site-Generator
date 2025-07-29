@@ -8,6 +8,10 @@ using System.Text.Json;
 using RazorLight;
 using Markdig;
 using HtmlAgilityPack;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats;
 
 namespace CodeCubeConsole
 {
@@ -25,6 +29,115 @@ namespace CodeCubeConsole
         static readonly string BasePath = AppContext.BaseDirectory;
 
         static string MasterTemplate = string.Empty;
+
+        private static readonly string[] SupportedImageExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".webp" };
+
+        private static bool IsImageFormatSupported(string filePath)
+        {
+            var extension = Path.GetExtension(filePath)?.ToLowerInvariant();
+            return !string.IsNullOrEmpty(extension) && SupportedImageExtensions.Contains(extension);
+        }
+
+        private static async Task ProcessHeroImages(IEnumerable<Post> posts)
+        {
+            foreach (var post in posts.Where(p => !string.IsNullOrEmpty(p.HeroImageUrl)))
+            {
+                await ProcessHeroImage(post);
+            }
+        }
+
+        private static async Task ProcessHeroImage(Post post)
+        {
+            if (string.IsNullOrEmpty(post.HeroImageUrl))
+                return;
+
+            // Convert URL path to file path
+            var imageUrl = post.HeroImageUrl;
+            if (imageUrl.StartsWith("/"))
+                imageUrl = imageUrl.Substring(1);
+
+            var imagePath = Path.Combine(BasePath, "out", imageUrl);
+            
+            if (!File.Exists(imagePath))
+            {
+                Console.WriteLine($"Warning: Hero image not found: {imagePath}");
+                return;
+            }
+
+            // Check if the image format is supported by ImageSharp
+            if (!IsImageFormatSupported(imagePath))
+            {
+                Console.WriteLine($"Skipping unsupported image format: {imagePath}");
+                return;
+            }
+
+            try
+            {
+                var fileInfo = new FileInfo(imagePath);
+                var nameWithoutExtension = Path.GetFileNameWithoutExtension(fileInfo.Name);
+                var extension = fileInfo.Extension;
+                var directory = fileInfo.DirectoryName;
+
+                var optimizedPath = Path.Combine(directory ?? "", $"{nameWithoutExtension}.optimized{extension}");
+                var thumbnailPath = Path.Combine(directory ?? "", $"{nameWithoutExtension}.thumb{extension}");
+
+                // Generate optimized version (max 1200px width, 85% quality)
+                if (!File.Exists(optimizedPath))
+                {
+                    using var image = await Image.LoadAsync(imagePath);
+                    
+                    // Only resize if image is larger than target
+                    if (image.Width > 1200)
+                    {
+                        image.Mutate(x => x.Resize(new ResizeOptions
+                        {
+                            Size = new Size(1200, 0), // Keep aspect ratio
+                            Mode = ResizeMode.Max
+                        }));
+                    }
+
+                    var encoder = GetEncoder(extension);
+                    await image.SaveAsync(optimizedPath, encoder);
+                    Console.WriteLine($"Generated optimized image: {optimizedPath}");
+                }
+
+                // Generate thumbnail version (max 300px width)
+                if (!File.Exists(thumbnailPath))
+                {
+                    using var image = await Image.LoadAsync(imagePath);
+                    
+                    image.Mutate(x => x.Resize(new ResizeOptions
+                    {
+                        Size = new Size(300, 0), // Keep aspect ratio
+                        Mode = ResizeMode.Max
+                    }));
+
+                    var encoder = GetEncoder(extension);
+                    await image.SaveAsync(thumbnailPath, encoder);
+                    Console.WriteLine($"Generated thumbnail image: {thumbnailPath}");
+                }
+
+                // Update post URLs to point to generated images
+                var optimizedUrl = post.HeroImageUrl.Replace(extension, $".optimized{extension}");
+                var thumbnailUrl = post.HeroImageUrl.Replace(extension, $".thumb{extension}");
+                
+                post.HeroImageOptimizedUrl = optimizedUrl;
+                post.HeroImageThumbnailUrl = thumbnailUrl;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing hero image {imagePath}: {ex.Message}");
+            }
+        }
+
+        private static IImageEncoder GetEncoder(string extension)
+        {
+            return extension.ToLowerInvariant() switch
+            {
+                ".jpg" or ".jpeg" => new JpegEncoder { Quality = 85 },
+                _ => new JpegEncoder { Quality = 85 } // Default to JPEG for other formats
+            };
+        }
 
         private static string MakeFullyQualifiedUrl(string url)
         {
@@ -51,6 +164,10 @@ namespace CodeCubeConsole
         private static async Task BuildSite()
         {
             var model = GetContent();
+            
+            // Process hero images to generate optimized and thumbnail versions
+            await ProcessHeroImages(model);
+            
             MasterTemplate = await GetTemplate("master");
 
             // start with the index page
@@ -138,7 +255,8 @@ namespace CodeCubeConsole
                 string? imageUrl = null;
                 if (!string.IsNullOrEmpty(post.HeroImageUrl))
                 {
-                    imageUrl = post.HeroImageUrl;
+                    // Prefer optimized version for social media, fallback to original
+                    imageUrl = post.HeroImageOptimizedUrl ?? post.HeroImageUrl;
                 }
                 else if (post.HasImage)
                 {

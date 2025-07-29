@@ -82,3 +82,7 @@ frontend/node_modules/
 
 # CI/CD build artifacts
 publish/
+
+# Generated image optimizations
+*.optimized.*
+*.thumb.*

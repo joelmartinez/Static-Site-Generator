@@ -33,7 +33,7 @@
     <article class="post-item @(string.IsNullOrEmpty(post.HeroImageUrl) ? "" : "post-item-with-hero")">
       @if (!string.IsNullOrEmpty(post.HeroImageUrl)) {
       <div class="post-hero">
-        <img src="@post.HeroImageUrl" alt="@post.Title" class="post-hero-image" />
+        <img src="@(post.HeroImageThumbnailUrl ?? post.HeroImageUrl)" alt="@post.Title" class="post-hero-image" />
       </div>
       }
       <div class="post-content">

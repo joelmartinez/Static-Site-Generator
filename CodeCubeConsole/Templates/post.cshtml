@@ -6,7 +6,7 @@
   @if (!string.IsNullOrEmpty(Model.CurrentPost.HeroImageUrl) && !Model.CurrentPost.IsHeroImageInBody)
   {
   <div class="post-hero-single">
-    <img src="@Model.CurrentPost.HeroImageUrl" alt="@Model.CurrentPost.Title" class="post-hero-single-image" />
+    <img src="@(Model.CurrentPost.HeroImageOptimizedUrl ?? Model.CurrentPost.HeroImageUrl)" alt="@Model.CurrentPost.Title" class="post-hero-single-image" />
   </div>
   }
   
