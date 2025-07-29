@@ -15,11 +15,6 @@ using SixLabors.ImageSharp.Formats;
 
 namespace CodeCubeConsole
 {
-    public class IndexModel
-    {
-        public Year[] Years { get; set; }
-    }
-
     class Program
     {
         static readonly RazorLightEngine Engine = new RazorLightEngineBuilder()
