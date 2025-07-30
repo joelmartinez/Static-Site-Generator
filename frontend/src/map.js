@@ -31,10 +31,15 @@ export function createLinkMapVisualization(data) {
   // Create main group for zoom/pan
   const g = svg.append('g');
   
-  // Set up simulation with stronger centering
+  // Set up simulation with different forces for different node types
   const simulation = d3.forceSimulation(data.nodes)
     .force('link', d3.forceLink(data.edges).id(d => d.id).distance(80)) // Reduced from 100
-    .force('charge', d3.forceManyBody().strength(-200)) // Reduced from -300 for less repulsion
+    .force('charge', d3.forceManyBody().strength(d => {
+      // Weaker repulsion for categories, stronger for years, normal for posts
+      if (d.nodeType === 'category') return -120; // Weaker pull for categories
+      if (d.nodeType === 'year') return -250; // Strong pull for years
+      return -200; // Normal for posts
+    }))
     .force('center', d3.forceCenter(width / 2, height / 2))
     .force('collision', d3.forceCollide().radius(30)) // Increased from 25
     .force('x', d3.forceX(width / 2).strength(0.1)) // Add X centering force
@@ -53,19 +58,27 @@ export function createLinkMapVisualization(data) {
     .data(data.nodes)
     .enter()
     .append(d => {
-      // Use rect for year nodes, circle for posts
-      return d.nodeType === 'year' ? 
-        document.createElementNS('http://www.w3.org/2000/svg', 'rect') :
-        document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      // Use rect for year nodes, polygon for categories, circle for posts
+      if (d.nodeType === 'year') {
+        return document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      } else if (d.nodeType === 'category') {
+        return document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+      } else {
+        return document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      }
     })
-    .attr('class', d => `map-node ${d.nodeType === 'year' ? 'map-node-year' : 'map-node-post'}`)
+    .attr('class', d => {
+      if (d.nodeType === 'year') return 'map-node map-node-year';
+      if (d.nodeType === 'category') return 'map-node map-node-category';
+      return 'map-node map-node-post';
+    })
     .each(function(d) {
       const element = d3.select(this);
       // Size nodes based on connections and recency
-      const baseSize = d.nodeType === 'year' ? 12 : 8; // Year nodes start larger
-      const connectionBonus = d.connectionCount ? d.connectionCount * 2 : 0;
+      const baseSize = d.nodeType === 'year' ? 12 : d.nodeType === 'category' ? 10 : 8; // Categories smaller than years but larger than posts
+      const connectionBonus = d.connectionCount ? d.connectionCount * (d.nodeType === 'category' ? 1 : 2) : 0; // Reduced bonus for categories
       // Stronger recency scaling: newest posts should be ~2x size of oldest
-      const recencyBonus = d.nodeType === 'post' ? (d.recencyFactor || 0) * 16 : 0; // Doubled from 8 to 16
+      const recencyBonus = d.nodeType === 'post' ? (d.recencyFactor || 0) * 16 : 0; // Only apply recency to posts
       const radius = Math.max(baseSize, Math.min(30, baseSize + connectionBonus + recencyBonus));
       
       if (d.nodeType === 'year') {
@@ -76,6 +89,20 @@ export function createLinkMapVisualization(data) {
           .attr('height', size)
           .attr('x', -size/2)
           .attr('y', -size/2);
+      } else if (d.nodeType === 'category') {
+        // Diamond/triangle for category nodes
+        const size = radius * 1.2;
+        // Create a diamond shape using points (store original points on the element)
+        const originalPoints = [
+          [0, -size], // top
+          [size * 0.8, 0], // right
+          [0, size], // bottom
+          [-size * 0.8, 0] // left
+        ];
+        const points = originalPoints.map(p => p.join(',')).join(' ');
+        element.attr('points', points);
+        // Store original points for later translation
+        element.datum().originalPoints = originalPoints;
       } else {
         // Circle for post nodes
         element.attr('r', radius);
@@ -86,14 +113,15 @@ export function createLinkMapVisualization(data) {
       .on('drag', dragged)
       .on('end', dragended))
     .on('click', (event, d) => {
-      // Navigate to the article or year section
+      // Navigate to the article or year section (categories are not clickable)
       if (d.nodeType === 'year') {
         // For year nodes, navigate to the home page with the year anchor
         window.location.href = `/${d.id}`;
-      } else {
+      } else if (d.nodeType === 'post') {
         // For post nodes, navigate to the article
         window.location.href = d.url;
       }
+      // Categories don't have URLs so no navigation
     })
     .on('mouseover', (event, d) => {
       showTooltip(event, d);
@@ -131,6 +159,14 @@ export function createLinkMapVisualization(data) {
           element
             .attr('x', d.x - parseFloat(element.attr('width'))/2)
             .attr('y', d.y - parseFloat(element.attr('height'))/2);
+        } else if (d.nodeType === 'category') {
+          // For polygons, translate the original points to the new position
+          if (d.originalPoints) {
+            const points = d.originalPoints.map(point => {
+              return [point[0] + d.x, point[1] + d.y].join(',');
+            }).join(' ');
+            element.attr('points', points);
+          }
         } else {
           // For circles, just update cx and cy
           element
@@ -196,6 +232,12 @@ export function createLinkMapVisualization(data) {
         <strong>${d.title}</strong><br>
         ${d.description}<br>
         Click to view archive
+      `;
+    } else if (d.nodeType === 'category') {
+      tooltipContent = `
+        <strong>Category: ${d.title}</strong><br>
+        ${d.description}<br>
+        Groups related posts
       `;
     } else {
       const formatDate = d3.timeFormat('%B %d, %Y');
