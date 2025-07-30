@@ -2,6 +2,7 @@ Title: How Teams Grow - leadership
 Date: 2025-07-07
 Published: true
 Next: /2025/7/team-series-size/
+Category: Leadership
 
 There’s a certain magic that happens in the right team, at the right time. I’ve seen it a few times in my career... whether it was a small crew at a fintech startup building trade settlement systems with a clear goal and almost no overhead, a tight team building profitable web and mobile app experiences for health, or being the only engineer building Xamarin’s docs infrastructure and shipping something that eventually scaled up to [power all of Microsoft’s .NET API reference](https://learn.microsoft.com/en-us/archive/teamblog/announcing-unified-dotnet-experience-on-docs). These moments stick with me because they felt different. We were fast, focused, and just effective ... and then things changed.
 
