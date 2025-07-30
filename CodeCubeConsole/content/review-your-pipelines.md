@@ -1,7 +1,7 @@
 Title: Review Your Pipelines
 Date: 2018-05-21  
 Published: true  
-Category: Programming  
+Category: DevOps  
 
 So everyone knows that [friends don't let friends right-click-publish](https://damianbrady.com.au/2018/02/01/friends-dont-let-friends-right-click-publish/).
 I had previously posted about how I [created a continuous deployment](http://codecube.net/2017/11/sprinkling-devops/) system for this blog, using VSTS, 

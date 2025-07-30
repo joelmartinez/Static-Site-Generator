@@ -1,7 +1,7 @@
 Title: Making My Site AI-Ready for NLWeb
 Date: 2025-07-10
 Published: true
-Category: AI
+Category: Microsoft
 
 I was somewhat intrigued when I learned about NLWeb at Microsoft's Build conference. It's an open-source project from Microsoft that introduces a protocol for making websites more accessible to AI agents. The idea is to help AI assistants understand and interact with your content directly—without having to scrape pages or guess at structure.
 

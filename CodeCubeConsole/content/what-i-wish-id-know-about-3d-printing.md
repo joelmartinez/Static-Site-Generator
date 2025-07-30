@@ -1,7 +1,7 @@
 Title: What I wish I'd known about 3d Printing
 Date: 2018-04-25
 Published: true
-Category: General
+Category: Maker
 
 A friend sent me a message recently, that they were getting their first 3d printer, 
 and they asked me if I had any advice that I wished I had known when I was starting out.

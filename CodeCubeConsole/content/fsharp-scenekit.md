@@ -1,7 +1,7 @@
 ﻿Title: F# And Functional Programming  
 Date: 2014-10-20  
 Published: true  
-Category: Programming  
+Category: Xamarin  
 
 I had the privilege to co-present a Session at [Xamarin Evolve 2014](https://evolve.xamarin.com) with the 
 incomparable [Larry O'Brien](http://www.knowing.net/).

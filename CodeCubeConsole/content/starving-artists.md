@@ -1,7 +1,7 @@
 Title: Starving Artists
 Date: 2025-06-24
 Published: true 
-Category: General
+Category: Gamedev
 
 It's an unfortunate truth that the more connected to someone's passion a job seems to be (artist, filmmaking, game development, musician, etc), the less financially rewarding and stable the career seems to be. Of course there are wildly successful individuals in all those roles, but the stats don't lie ... most gamedevs/musicians/artists have to do it in their spare time.
 

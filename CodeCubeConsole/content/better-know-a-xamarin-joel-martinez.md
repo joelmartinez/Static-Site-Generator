@@ -1,7 +1,7 @@
 ﻿Title: Better Know a Xamarin - Joel Martinez
 Date: 2014-10-24
 Published: true
-Category: Programming
+Category: Xamarin
 
 I had a short interview with [James Montemagno](http://motzcod.es/) at a company summit earlier this year :)
 
