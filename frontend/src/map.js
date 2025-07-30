@@ -19,9 +19,16 @@ export function createLinkMapVisualization(data) {
   // Set up SVG
   svg.attr('viewBox', `0 0 ${width} ${height}`);
   
-  // Create zoom behavior
+  // Create zoom behavior with middle mouse button support
   const zoom = d3.zoom()
     .scaleExtent([0.1, 4])
+    .filter((event) => {
+      // Allow zoom/pan with:
+      // - Left mouse button (default)
+      // - Middle mouse button (wheel click) for panning
+      // - Mouse wheel for zooming
+      return !event.ctrlKey && !event.button || event.button === 1;
+    })
     .on('zoom', (event) => {
       g.attr('transform', event.transform);
     });
