@@ -1,6 +1,7 @@
 Title: Recollecting My Thoughts
 Date: 2020-07-08
 Published: true
+Category: General
 
 As I've [egostistically announced yesterday](/2020/7/social-media-diet/), I'm taking a short break from social media.
 With this break, comes a chance to reflect over this activity that has certainly taken over our entire culture;

@@ -1,6 +1,7 @@
 Title: Social Media Diet
 Date: 2020-07-07
 Published: true
+Category: General
 
 This has been a long time coming, 
 but I'd never actually gathered up the ...

@@ -1,6 +1,7 @@
 Title: Charging Fatigue  
 Date: 2017-11-07  
 Published: true  
+Category: General  
 
 Anyone else get tired of charging stuff? 
 

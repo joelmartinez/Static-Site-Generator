@@ -523,7 +523,7 @@ namespace CodeCubeConsole
                 {
                     Id = $"#category-{category.Replace(" ", "-").ToLowerInvariant()}",
                     Title = category,
-                    Url = $"/category/{category.Replace(" ", "-").ToLowerInvariant()}",
+                    Url = null, // Category nodes are not clickable since there are no category pages
                     Description = $"{categoryGroup.Count()} posts in {category}",
                     PublishedOn = categoryGroup.Max(p => p.PublishedOn), // Use latest post date for category
                     NodeType = "category"

@@ -1,6 +1,7 @@
 Title: Sprinkling Some Devops  
 Date: 2017-11-09  
 Published: true  
+Category: Programming  
 
 DevOps ... it's something that I have a love/hate relationship with. When I'm working on a project
 that has a really nice devops pipeline (testing/deployment), it's pure bliss. However, when I'm 

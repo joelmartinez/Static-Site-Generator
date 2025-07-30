@@ -1,6 +1,7 @@
 Title: Programmatically Opening Pull Requests
 Date: 2018-10-24  
 Published: true 
+Category: Programming 
 
 When integrating github repositories into any automated workflow, a very common pattern is for the process to open a pull request against some repository. This lets a human step into the mix and review it, before accepting the change.
 

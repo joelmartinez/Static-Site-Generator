@@ -1,6 +1,7 @@
 Title: The Brewmite  
 Date: 2025-05-27 
 Published: true  
+Category: General  
 
 Sometimes life gives you weirdly unique opportunities. I wrote about my experience being in a beer commercial recently on LinkedIn (cheekily, in "Linkedinfluencer" style), which I've reproduced below ...
 

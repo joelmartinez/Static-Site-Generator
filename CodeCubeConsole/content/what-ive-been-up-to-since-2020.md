@@ -1,6 +1,7 @@
 Title: What I've Been Up To Since 2020
 Date: 2023-07-09  
 Published: true  
+Category: General  
 
 The last few years have been ... interesting, for lack of a better term.
 After basically [checking out](https://codecube.net/2020/7/clarity/) from 

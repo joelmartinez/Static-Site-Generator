@@ -1,6 +1,7 @@
 Title: Clarity  
 Date: 2020-07-08  
 Published: true  
+Category: General  
 
 There's a lot of things going on in the world today ... it feels like we've lived 10 lifetimes in the last 3-4 months.
 All of the above left my mind in almost a literal cloudy haze ... it was almost impossible to focus on anything, 
