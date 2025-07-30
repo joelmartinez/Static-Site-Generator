@@ -1,6 +1,7 @@
 Title: Xamarin is Zipfian
 Date: 2015-09-27
 Published: true
+Category: Programming
 
 Michael, from the popular YouTube channel VSauce, recently published a video titled [_The Zipf Mystery_](https://www.youtube.com/watch?v=fCn8zs912OE), wherein he talks about several aspects of [Zipf's Law](https://en.wikipedia.org/wiki/Zipf%27s_law):  
 

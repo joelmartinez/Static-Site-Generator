@@ -2,6 +2,7 @@ Title: Running PowerShell from C# in 2025
 Date: 2025-07-16
 Published: true
 Prev: /2009/11/executing-powershell-scripts-via-c/
+Category: Programming
 
 While checking my analytics recently, I noticed that an old post of mine from 2009 was still getting hits. It was a little helper class I had put together to run PowerShell scripts from a C# app. At the time, the approach was to just spin up a powershell.exe process, pass in a script path, and build the parameter list with some string interpolation. It worked well enough for simple automation, and the code was lightweight with no extra dependencies.
 

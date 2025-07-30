@@ -1,6 +1,7 @@
 Title: When Your Team Gets Bigger - How Teams Grow
 Date: 2025-07-14
 Published: true
+Category: Leadership
 
 There’s something electric about a tiny team… everyone’s on the same page, decisions happen in a hallway chat, and the work just seems to fly out the door. Whether you’re two engineers knocking out greenfield features or a half-dozen folks building a prototype in a weekend hackathon, that scrappy energy feels unstoppable. But as you add people, you also add conversations… and pretty soon you’ll recognize [Brooks’ Law](https://en.wikipedia.org/wiki/Brooks%27s_law) in action: more people means more communication overhead, which can actually slow you down before it ever makes you faster.
 

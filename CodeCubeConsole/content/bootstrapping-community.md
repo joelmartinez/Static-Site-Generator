@@ -1,6 +1,7 @@
 Title: Bootstrapping Community   
 Date: 2015-04-21  
 Published: true  
+Category: General  
 
 Ten years of the Orlando CodeCamp! That was the message that I was priviledged enough to deliver as the first keynote speaker at the 10th Annual [Orlando CodeCamp](http://orlandocodecamp.com/) on March 28th 2015. Even more incredible to me is that it's been almost 15 years since I started the [Orlando .NET User Group](http://onetug.org). 
 

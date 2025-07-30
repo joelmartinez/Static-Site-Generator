@@ -1,6 +1,7 @@
 Title: Is Being Mean to AI Bad?
 Date: 2025-06-16
 Published: true 
+Category: AI 
 
 ---
 

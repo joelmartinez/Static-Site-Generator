@@ -3,6 +3,7 @@ Date: 2025-07-24
 Published: true
 Prev: /2025/7/team-series-size/
 Hero: /posts/death-by-status-hero.png
+Category: Leadership
 
 There’s a moment, early on in a team’s life, when everything just flows. You don’t need a status meeting because everyone already knows what’s happening. You don’t need a kickoff doc because someone said something out loud, someone else nodded, and the work just... started. Updates happen in the hallway or over lunch. You bump into a teammate and knock out three blockers without realizing you had a meeting.
 

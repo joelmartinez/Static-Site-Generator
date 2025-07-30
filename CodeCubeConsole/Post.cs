@@ -100,6 +100,7 @@ namespace CodeCubeConsole
         }
         public DateTime PublishedOn { get; set; }
 		public bool IsPublished = true;
+        public string? Category { get; set; }
 
         private IEnumerable<string> GetHtml(HtmlNode node)
         {

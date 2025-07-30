@@ -39,6 +39,10 @@
       <div class="post-content">
         <h3><a href="@post.UrlPath" rel="bookmark">@post.Title</a></h3>
         <time class="post-date" datetime="@post.PublishedOn.ToString("yyyy-MM-dd")">@post.PublishedOn.ToString("MMMM d, yyyy")</time>
+        @if (!string.IsNullOrEmpty(post.Category))
+        {
+        <span class="category-pill">@post.Category</span>
+        }
         <p class="post-summary">@post.BodySummary</p>
       </div>
     </article>
@@ -66,6 +70,10 @@
         if(postIndex >= 6) { // Skip the first 6 posts already shown in latest posts
       <li class="hentry">
         <span class="entry-title"><a href="@post.UrlPath" rel="bookmark">@post.Title</a></span> (<abbr class="published" title="@post.PublishedOn">@month.Name</abbr>)
+        @if (!string.IsNullOrEmpty(post.Category))
+        {
+        <span class="category-pill">@post.Category</span>
+        }
         @if(postIndex < 11) { // Show summaries for posts 7-11 (5 posts with expanded display)
         <p class="entry-summary">@post.BodySummary</p>
         }

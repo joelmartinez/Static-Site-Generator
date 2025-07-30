@@ -3,6 +3,7 @@ Date: 2025-07-21
 Published: true
 Prev: /2013/09/how-work-is-changing/
 Hero: /posts/how-work-changed-hero.png
+Category: Leadership
 
 In 2013, I wrote [a post about how work was changing](/2013/09/how-work-is-changing/)—a snapshot of what felt like the beginning of a broader shift. Remote work was still a bit of a curiosity for many companies but growing, side projects were picking up steam, and the idea of a "swarm economy" was starting to gain traction: people floating between a handful of projects, some paid, some not, on their own time.
 

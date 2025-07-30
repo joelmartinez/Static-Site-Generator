@@ -309,7 +309,10 @@ namespace CodeCubeConsole
                                  Title = (string)xElem.Element("title").Value,
                                  Body = (string)xElem.Element("contentencoded").Value,
                                  URL = (string)xElem.Element("link").Value,
-                                 PublishedOn = DateTime.Parse(xElem.Element("pubDate").Value)
+                                 PublishedOn = DateTime.Parse(xElem.Element("pubDate").Value),
+                                 Category = xElem.Elements("category")
+                                    .Where(c => c.Attribute("domain")?.Value == "category")
+                                    .FirstOrDefault()?.Value
                              }
                         )
                        ;
@@ -351,6 +354,7 @@ namespace CodeCubeConsole
 				string? prevUrl = meta.ContainsKey("Prev") ? meta["Prev"].Trim() : null;
 				string? nextUrl = meta.ContainsKey("Next") ? meta["Next"].Trim() : null;
 				string? heroImageUrl = meta.ContainsKey("Hero") ? meta["Hero"].Trim() : null;
+				string? category = meta.ContainsKey("Category") ? meta["Category"].Trim() : null;
 				
 				yield return new Post {
 					Title = meta["Title"],
@@ -361,7 +365,8 @@ namespace CodeCubeConsole
 					ShouldRenderDoubleNewLine = false,
 					PreviousUrl = prevUrl,
 					NextUrl = nextUrl,
-					HeroImageUrl = heroImageUrl
+					HeroImageUrl = heroImageUrl,
+					Category = category
 				};
 			}
 		}
@@ -499,6 +504,38 @@ namespace CodeCubeConsole
                     edges.Add(new LinkMapEdge
                     {
                         Source = yearNode.Id,
+                        Target = post.UrlPath
+                    });
+                }
+            }
+            
+            // Group posts by category for category nodes
+            var postsByCategory = publishedPosts
+                .Where(p => !string.IsNullOrEmpty(p.Category))
+                .GroupBy(p => p.Category)
+                .ToArray();
+            
+            // Create category nodes
+            foreach (var categoryGroup in postsByCategory)
+            {
+                var category = categoryGroup.Key;
+                var categoryNode = new LinkMapNode
+                {
+                    Id = $"#category-{category.Replace(" ", "-").ToLowerInvariant()}",
+                    Title = category,
+                    Url = null, // Category nodes are not clickable since there are no category pages
+                    Description = $"{categoryGroup.Count()} posts in {category}",
+                    PublishedOn = categoryGroup.Max(p => p.PublishedOn), // Use latest post date for category
+                    NodeType = "category"
+                };
+                nodes.Add(categoryNode);
+                
+                // Connect category node to all posts in that category
+                foreach (var post in categoryGroup)
+                {
+                    edges.Add(new LinkMapEdge
+                    {
+                        Source = categoryNode.Id,
                         Target = post.UrlPath
                     });
                 }

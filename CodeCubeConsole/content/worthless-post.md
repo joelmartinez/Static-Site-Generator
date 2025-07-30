@@ -2,6 +2,7 @@ Title: This Post Is Worthless
 Date: 2025-07-28  
 Published: true  
 Hero: /posts/worthless-post-hero.png  
+Category: AI
 
 I’ve always loved what PageRank promised from the early days of Google: links as votes, authority that anyone could earn if readers found an idea useful enough to link to it. In that early blog era, the community was built by people actively engaging with each others’ content on their own websites. As your friends and acquaintances posted their own reactions to your post it opened the door to a world of strangers, and sometimes opportunities, as it spread. And Google's PageRank would recognize that, and reward you accordingly with higher and higher SERP rankings that drove even more traffic. ofncourse, then came the spammers, the seo keyword stuffers, etc. The incentives that were in place drove an over-influencerization of the online culture.
 

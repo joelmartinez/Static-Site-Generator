@@ -1,6 +1,7 @@
 Title: Dynamic Audio Posts
 Date: 2019-07-27  
 Published: true  
+Category: Programming  
 
 Trying out something new ... adding some dynamic audio generation
 capabilities to my blog posts, using [tone.js](https://tonejs.github.io/). 

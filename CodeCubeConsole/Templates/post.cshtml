@@ -1,6 +1,10 @@
 ﻿<article class="hentry" itemscope itemtype="https://schema.org/Article">
   <h1 class="entry-title" itemprop="headline">@Model.CurrentPost.Title</h1>
   <p id="author">By <a href="http://codecube.net" title="More posts by Joel Martinez" rel="author" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Joel Martinez</span></a> on <time class="published" itemprop="datePublished" datetime="@Model.CurrentPost.PublishedOn.ToString("yyyy-MM-dd")">@Model.CurrentPost.PublishedOn.ToShortDateString()</time>
+    @if (!string.IsNullOrEmpty(Model.CurrentPost.Category))
+    {
+    <span class="category-pill">@Model.CurrentPost.Category</span>
+    }
 </p>
   
   @if (!string.IsNullOrEmpty(Model.CurrentPost.HeroImageUrl) && !Model.CurrentPost.IsHeroImageInBody)

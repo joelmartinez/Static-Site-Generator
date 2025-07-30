@@ -1,6 +1,7 @@
 Title: The AI Race in 2025  
 Date: 2025-06-26  
 Published: true  
+Category: AI
 
 A quick thought as I scan the AI landscape: the early gold-rush chaos has started to settle into predictable lanes. Most products and services now fall into clear categories, and a couple of names in each lane are stretching their lead.
 

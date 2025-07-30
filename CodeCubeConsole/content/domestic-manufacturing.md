@@ -1,6 +1,7 @@
 Title: Domestic Manufacturing
 Date: 2025-06-09
 Published: true 
+Category: General
 
 This is probably one of the most important videos Smarter Every Day has posted. He doesn't shy away from talking about a lot of the complexities of a global economy ... and also about the catalyst that got him thinking about manufacturing capacity in America, which coincidentally was the exact same thing that got me thinking about it over the last few years as well (our inability to manufacture n95 masks when the pandemic hit in 2020).
 

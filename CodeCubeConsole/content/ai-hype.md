@@ -1,6 +1,7 @@
 Title: Demystifying AI Hype
 Date: 2025-06-05  
 Published: true  
+Category: AI
 
 Not everything in AI right now is as new as it sounds. Every week there’s a fresh term making the rounds ... “agentic workflows,” “context engines,” “MCP servers.” But when you peel it back, most of these are just evolutions of the same core ideas the industry has already been refining over the last few years: prompt engineering, RAG, and tool use (whether you called them plugins, functions, or skills a year ago).
 

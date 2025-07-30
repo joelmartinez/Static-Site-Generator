@@ -1,6 +1,7 @@
 ﻿Title: Orlando Open Source Initiative
 Date: 2014-07-08
 Published: false
+Category: Programming
   
 In case you haven't heard, [Orlando's tech scene is Rising](http://www.floridatechnologyjournal.com/orlandorising).
 Of course, the startup community is only part of the story; not only are there well established technology companies
