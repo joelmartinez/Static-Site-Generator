@@ -2,6 +2,7 @@ Title: Mapping My Own Content
 Date: 2025-07-31
 Published: true
 Hero: /posts/linkmap-hero.png
+Category: AI
 
 I wrote [*This Post is Worthless*](https://codecube.net/2025/7/worthless-post/) about how the old web worked, back when links weren’t just SEO fuel but the actual connective tissue of the internet. If I’m going to talk about that, I figured I should put my site where my mouth is and actually build something to explore it.
 
