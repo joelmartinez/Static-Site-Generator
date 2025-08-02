@@ -1,9 +1,102 @@
 import * as d3 from 'd3';
+import { createMapStateActor } from './mapState.js';
+
+let mapStateActor = null;
+let currentVisualization = null;
+
+/**
+ * Initialize the link map with state management
+ */
+export function initializeLinkMap(data) {
+  // Create state actor
+  mapStateActor = createMapStateActor();
+  
+  // Subscribe to state changes
+  mapStateActor.subscribe(state => {
+    console.log('Map state changed:', state.value);
+    
+    if (state.value === 'loaded' && state.context.filteredData) {
+      updateVisualization(state.context.filteredData);
+    }
+  });
+  
+  // Set up filter controls
+  setupFilterControls();
+  
+  // Load initial data
+  mapStateActor.send({ type: 'DATA_LOADED', data });
+}
 
 /**
  * Create the link map visualization using D3.js
  */
 export function createLinkMapVisualization(data) {
+  // Show loading state initially
+  showLoadingState();
+  
+  // Initialize with state management
+  setTimeout(() => {
+    initializeLinkMap(data);
+  }, 100); // Small delay to show loading state
+}
+
+/**
+ * Show loading state
+ */
+function showLoadingState() {
+  const container = d3.select('#link-map-container');
+  const loadingDiv = container.select('.map-loading');
+  
+  if (loadingDiv.empty()) {
+    container.append('div')
+      .attr('class', 'map-loading')
+      .html(`
+        <div class="loading-spinner"></div>
+        <p>Loading map data...</p>
+      `);
+  }
+}
+
+/**
+ * Hide loading state
+ */
+function hideLoadingState() {
+  d3.select('#link-map-container .map-loading').remove();
+}
+
+/**
+ * Set up filter control event handlers
+ */
+function setupFilterControls() {
+  const filterControls = d3.selectAll('input[name="nodeFilter"]');
+  
+  filterControls.on('change', function() {
+    const selectedFilter = this.value;
+    if (mapStateActor) {
+      mapStateActor.send({ type: 'FILTER_CHANGED', filter: selectedFilter });
+    }
+  });
+}
+
+/**
+ * Update the visualization with filtered data
+ */
+function updateVisualization(data) {
+  hideLoadingState();
+  
+  // Clear existing visualization
+  if (currentVisualization) {
+    currentVisualization.cleanup();
+  }
+  
+  // Create new visualization
+  currentVisualization = createVisualization(data);
+}
+
+/**
+ * Create the actual D3 visualization
+ */
+function createVisualization(data) {
   const container = d3.select('#link-map-container');
   const svg = d3.select('#link-map-svg');
   const tooltip = d3.select('#map-tooltip');
@@ -364,8 +457,14 @@ export function createLinkMapVisualization(data) {
   window.addEventListener('resize', handleResize);
   
   // Store cleanup function
-  container.node().__mapCleanup = () => {
+  const cleanup = () => {
     window.removeEventListener('resize', handleResize);
     simulation.stop();
+  };
+
+  container.node().__mapCleanup = cleanup;
+  
+  return {
+    cleanup: cleanup
   };
 }

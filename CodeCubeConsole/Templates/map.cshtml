@@ -147,6 +147,66 @@
     border-left: 4px solid #3498db;
   }
   
+  .map-filters {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: white;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+  
+  .map-filters h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1.1rem;
+    color: #2c3e50;
+  }
+  
+  .filter-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .filter-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .filter-option input[type="radio"] {
+    margin: 0;
+  }
+  
+  .filter-option label {
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #555;
+  }
+  
+  .map-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 1000;
+  }
+  
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem auto;
+  }
+  
+  @@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
   @@media (max-width: 768px) {
     #link-map-container {
       height: 400px;
@@ -154,6 +214,11 @@
     
     .map-node-label {
       font-size: 10px;
+    }
+    
+    .filter-options {
+      flex-direction: column;
+      gap: 0.5rem;
     }
     
     .map-controls {
@@ -180,6 +245,32 @@
     <strong>Controls:</strong> Use your mouse wheel to zoom, left mouse to pan, or middle mouse button (wheel click) to pan. On mobile, use touch gestures.
     You can also <a href="/#archive">browse the complete archive</a> for a chronological view.
   </p>
+</div>
+
+<div class="map-filters">
+  <h3>Filter by Node Type</h3>
+  <div class="filter-options">
+    <div class="filter-option">
+      <input type="radio" id="filter-entities" name="nodeFilter" value="entities" checked>
+      <label for="filter-entities">Entity Connections (Technologies, Companies, etc.)</label>
+    </div>
+    <div class="filter-option">
+      <input type="radio" id="filter-years" name="nodeFilter" value="years">
+      <label for="filter-years">Year Groupings</label>
+    </div>
+    <div class="filter-option">
+      <input type="radio" id="filter-categories" name="nodeFilter" value="categories">
+      <label for="filter-categories">Category Groupings</label>
+    </div>
+    <div class="filter-option">
+      <input type="radio" id="filter-posts" name="nodeFilter" value="posts">
+      <label for="filter-posts">Post-to-Post Links Only</label>
+    </div>
+    <div class="filter-option">
+      <input type="radio" id="filter-all" name="nodeFilter" value="all">
+      <label for="filter-all">Show All Connections</label>
+    </div>
+  </div>
 </div>
 
 <div id="link-map-container">
