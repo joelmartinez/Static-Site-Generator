@@ -9,7 +9,8 @@
     "clean": "rm -rf ../CodeCubeConsole/out/script/*.gen.js"
   },
   "dependencies": {
-    "d3": "^7.9.0"
+    "d3": "^7.9.0",
+    "xstate": "^5.0.0"
   },
   "devDependencies": {
     "webpack": "^5.89.0",
