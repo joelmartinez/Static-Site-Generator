@@ -8747,7 +8747,7 @@ I’ve learned a great deal in the last 5 years. And I’ve come away from the e
 		<description></description>
 		<contentencoded><![CDATA[This is already a few weeks old, but someone finally uploaded a good video of the presentation that I was a part of at the September New York Tech Meetup.
 
-<iframe src="http://www.youtube.com/embed/u09hLxTPJxw" frameborder="0" width="560" height="315"></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/u09hLxTPJxw?si=IuUTEpC07u2Ufk1f" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 Igor showed off the awesome new voice logging feature that we recently added to the iPhone version of the app (coming soon to the Android version). Then I manned the keyboard to show off a little hack that we put together that same day. We provisioned a <a href="http://twilio.com">Twilio</a> phone number, and let the user record a little 10 second clip of what they want to log (ie. "one banana, two cups of coffee"). We then took that clip and sent it to <a href="http://www.ispeech.org/">iSpeech</a> who transcribed it. And finally we ran the transcribed text through our own API to log it.
 
