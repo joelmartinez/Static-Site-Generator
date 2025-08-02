@@ -321,6 +321,7 @@ namespace CodeCubeConsole
 			var allPosts = query.Union(markdownPosts).OrderByDescending(p => p.PublishedOn).ToArray();
 
 			WireUpPostRelationships(allPosts);
+			ExtractEntitiesForAllPosts(allPosts);
 
 			return allPosts;
         }
@@ -400,6 +401,26 @@ namespace CodeCubeConsole
 			        }
 			    }
 			}
+		}
+
+		private static void ExtractEntitiesForAllPosts(Post[] allPosts)
+		{
+			Console.WriteLine("Extracting entities from content...");
+			
+			// First pass: extract entities for each post
+			foreach (var post in allPosts)
+			{
+				post.Entities = EntityExtractor.ExtractEntities(post.Body, post.Title);
+				Console.WriteLine($"Extracted {post.Entities.Length} entities from: {post.Title}");
+			}
+			
+			// Second pass: extract entity connections between posts
+			foreach (var post in allPosts)
+			{
+				post.EntityConnections = EntityExtractor.ExtractEntityConnections(post, allPosts);
+			}
+			
+			Console.WriteLine($"Entity extraction complete for {allPosts.Length} posts");
 		}
 
         private static async Task<string> GetTemplate(string template)
@@ -578,6 +599,50 @@ namespace CodeCubeConsole
                             Target = normalizedUrl
                         };
                         edges.Add(edge);
+                    }
+                }
+            }
+            
+            // Create entity nodes
+            var allEntities = publishedPosts.SelectMany(p => p.Entities).Distinct().ToArray();
+            Console.WriteLine($"Creating {allEntities.Length} entity nodes");
+            
+            foreach (var entity in allEntities)
+            {
+                var entityPosts = publishedPosts.Where(p => p.Entities.Contains(entity)).ToArray();
+                var entityNode = new LinkMapNode
+                {
+                    Id = $"#entity-{entity.Replace(" ", "-").Replace("#", "sharp").Replace("+", "plus").ToLowerInvariant()}",
+                    Title = entity,
+                    Url = null, // Entity nodes are not clickable
+                    Description = $"Entity mentioned in {entityPosts.Length} posts",
+                    PublishedOn = entityPosts.Max(p => p.PublishedOn), // Use latest post date for entity
+                    NodeType = "entity"
+                };
+                nodes.Add(entityNode);
+                
+                // Connect entity node to all posts that mention it
+                foreach (var post in entityPosts)
+                {
+                    edges.Add(new LinkMapEdge
+                    {
+                        Source = entityNode.Id,
+                        Target = post.UrlPath
+                    });
+                }
+                
+                // Create entity-to-entity connections based on co-occurrence in posts
+                foreach (var otherEntity in allEntities.Where(e => e != entity))
+                {
+                    var sharedPosts = entityPosts.Where(p => p.Entities.Contains(otherEntity)).ToArray();
+                    if (sharedPosts.Length > 0)
+                    {
+                        var otherEntityId = $"#entity-{otherEntity.Replace(" ", "-").Replace("#", "sharp").Replace("+", "plus").ToLowerInvariant()}";
+                        edges.Add(new LinkMapEdge
+                        {
+                            Source = entityNode.Id,
+                            Target = otherEntityId
+                        });
                     }
                 }
             }

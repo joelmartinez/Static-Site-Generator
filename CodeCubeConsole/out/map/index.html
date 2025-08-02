@@ -85,6 +85,12 @@
     stroke-width: 1.5px;
   }
 
+  .map-node-entity {
+    fill: #90EE90;
+    stroke: #228B22;
+    stroke-width: 1.5px;
+  }
+
   .map-node:hover {
     stroke-width: 3px;
   }
@@ -100,11 +106,30 @@
   .map-node-category:hover {
     fill: #DDA0DD;
   }
+
+  .map-node-entity:hover {
+    fill: #7CFC00;
+  }
   
   .map-link {
     stroke: #95a5a6;
     stroke-width: 1px;
     stroke-opacity: 0.6;
+  }
+
+  .map-link-label {
+    fill: #2c3e50;
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    text-anchor: middle;
+    pointer-events: none;
+    user-select: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .map-link-label.visible {
+    opacity: 1;
   }
   
   .map-node-label {

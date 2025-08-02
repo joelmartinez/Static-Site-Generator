@@ -101,6 +101,10 @@ namespace CodeCubeConsole
         public DateTime PublishedOn { get; set; }
 		public bool IsPublished = true;
         public string? Category { get; set; }
+        
+        // GraphRAG metadata
+        public string[] Entities { get; set; } = Array.Empty<string>();
+        public EntityConnection[] EntityConnections { get; set; } = Array.Empty<EntityConnection>();
 
         private IEnumerable<string> GetHtml(HtmlNode node)
         {
