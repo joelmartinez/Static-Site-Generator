@@ -7772,7 +7772,7 @@ I plan on maturing the app over time with better styling, and more features, esp
 		<wp:post_type>post</wp:post_type>
 		<wp:post_password></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-		<category domain="category" nicename="programming"><![CDATA[Programming]]></category>
+		<category domain="category" nicename="apps"><![CDATA[Apps]]></category>
 		<category domain="post_tag" nicename="wp7"><![CDATA[wp7]]></category>
 		<wp:postmeta>
 			<wp:meta_key>_edit_last</wp:meta_key>
@@ -7928,7 +7928,7 @@ If you are a lending club investor and find this useful, please let me know in t
 		<wp:post_type>post</wp:post_type>
 		<wp:post_password></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-		<category domain="category" nicename="xna"><![CDATA[XNA]]></category>
+		<category domain="category" nicename="gamedev"><![CDATA[GameDev]]></category>
 		<wp:postmeta>
 			<wp:meta_key>_edit_last</wp:meta_key>
 			<wp:meta_value><![CDATA[1]]></wp:meta_value>
@@ -8034,7 +8034,7 @@ Only reason I noticed was because I checked the download stats and saw a sustain
 		<wp:post_type>post</wp:post_type>
 		<wp:post_password></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-		<category domain="category" nicename="general"><![CDATA[General]]></category>
+		<category domain="category" nicename="Apps"><![CDATA[Apps]]></category>
 		<wp:postmeta>
 			<wp:meta_key>_edit_last</wp:meta_key>
 			<wp:meta_value><![CDATA[1]]></wp:meta_value>
@@ -9928,7 +9928,7 @@ Hope it's useful for someone out there :)]]></contentencoded>
 		<wp:post_type>post</wp:post_type>
 		<wp:post_password></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-		<category domain="category" nicename="programming"><![CDATA[Programming]]></category>
+		<category domain="category" nicename="apps"><![CDATA[Apps]]></category>
 		<wp:postmeta>
 			<wp:meta_key>_edit_last</wp:meta_key>
 			<wp:meta_value><![CDATA[1]]></wp:meta_value>
