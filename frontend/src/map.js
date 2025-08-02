@@ -58,6 +58,30 @@ export function createLinkMapVisualization(data) {
     .data(data.edges)
     .enter().append('line')
     .attr('class', 'map-link');
+
+  // Create edge labels (initially hidden)
+  const linkLabel = g.append('g')
+    .selectAll('text')
+    .data(data.edges.filter(d => {
+      // Only create labels for entity connections
+      const sourceNode = data.nodes.find(n => n.id === d.source.id || n.id === d.source);
+      const targetNode = data.nodes.find(n => n.id === d.target.id || n.id === d.target);
+      return sourceNode?.nodeType === 'entity' || targetNode?.nodeType === 'entity';
+    }))
+    .enter().append('text')
+    .attr('class', 'map-link-label')
+    .text(d => {
+      const sourceNode = data.nodes.find(n => n.id === (d.source.id || d.source));
+      const targetNode = data.nodes.find(n => n.id === (d.target.id || d.target));
+      
+      // Show different label text based on connection type
+      if (sourceNode?.nodeType === 'entity' && targetNode?.nodeType === 'entity') {
+        return 'related';
+      } else if (sourceNode?.nodeType === 'entity' || targetNode?.nodeType === 'entity') {
+        return 'mentions';
+      }
+      return '';
+    });
   
   // Create nodes - use different shapes for different types
   const node = g.append('g')
@@ -65,11 +89,13 @@ export function createLinkMapVisualization(data) {
     .data(data.nodes)
     .enter()
     .append(d => {
-      // Use rect for year nodes, polygon for categories, circle for posts
+      // Use rect for year nodes, polygon for categories, circle for posts and entities
       if (d.nodeType === 'year') {
         return document.createElementNS('http://www.w3.org/2000/svg', 'rect');
       } else if (d.nodeType === 'category') {
         return document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+      } else if (d.nodeType === 'entity') {
+        return document.createElementNS('http://www.w3.org/2000/svg', 'circle'); // Use circles for entities
       } else {
         return document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       }
@@ -77,13 +103,14 @@ export function createLinkMapVisualization(data) {
     .attr('class', d => {
       if (d.nodeType === 'year') return 'map-node map-node-year';
       if (d.nodeType === 'category') return 'map-node map-node-category';
+      if (d.nodeType === 'entity') return 'map-node map-node-entity';
       return 'map-node map-node-post';
     })
     .each(function(d) {
       const element = d3.select(this);
       // Size nodes based on connections and recency
-      const baseSize = d.nodeType === 'year' ? 12 : d.nodeType === 'category' ? 10 : 8; // Categories smaller than years but larger than posts
-      const connectionBonus = d.connectionCount ? d.connectionCount * (d.nodeType === 'category' ? 1 : 2) : 0; // Reduced bonus for categories
+      const baseSize = d.nodeType === 'year' ? 12 : d.nodeType === 'category' ? 10 : d.nodeType === 'entity' ? 6 : 8; // Entities smaller than categories
+      const connectionBonus = d.connectionCount ? d.connectionCount * (d.nodeType === 'entity' ? 0.5 : d.nodeType === 'category' ? 1 : 2) : 0; // Reduced bonus for entities and categories
       // Stronger recency scaling: newest posts should be ~2x size of oldest
       const recencyBonus = d.nodeType === 'post' ? (d.recencyFactor || 0) * 16 : 0; // Only apply recency to posts
       const radius = Math.max(baseSize, Math.min(30, baseSize + connectionBonus + recencyBonus));
@@ -111,7 +138,7 @@ export function createLinkMapVisualization(data) {
         // Store original points for later translation
         element.datum().originalPoints = originalPoints;
       } else {
-        // Circle for post nodes
+        // Circle for post and entity nodes
         element.attr('r', radius);
       }
     })
@@ -120,7 +147,7 @@ export function createLinkMapVisualization(data) {
       .on('drag', dragged)
       .on('end', dragended))
     .on('click', (event, d) => {
-      // Navigate to the article or year section (categories are not clickable)
+      // Navigate to the article or year section (categories and entities are not clickable)
       if (d.nodeType === 'year') {
         // For year nodes, navigate to the home page with the year anchor
         window.location.href = `/${d.id}`;
@@ -128,7 +155,7 @@ export function createLinkMapVisualization(data) {
         // For post nodes, navigate to the article
         window.location.href = d.url;
       }
-      // Categories don't have URLs so no navigation
+      // Categories and entities don't have URLs so no navigation
     })
     .on('mouseover', (event, d) => {
       showTooltip(event, d);
@@ -157,6 +184,10 @@ export function createLinkMapVisualization(data) {
       .attr('y1', d => d.source.y)
       .attr('x2', d => d.target.x)
       .attr('y2', d => d.target.y);
+
+    linkLabel
+      .attr('x', d => (d.source.x + d.target.x) / 2)
+      .attr('y', d => (d.source.y + d.target.y) / 2);
     
     node
       .each(function(d) {
@@ -175,7 +206,7 @@ export function createLinkMapVisualization(data) {
             element.attr('points', points);
           }
         } else {
-          // For circles, just update cx and cy
+          // For circles (posts and entities), just update cx and cy
           element
             .attr('cx', d.x)
             .attr('cy', d.y);
@@ -217,6 +248,11 @@ export function createLinkMapVisualization(data) {
     if (!event.active) simulation.alphaTarget(0.3).restart();
     d.fx = d.x;
     d.fy = d.y;
+    
+    // Show edge labels for entity nodes
+    if (d.nodeType === 'entity') {
+      showEntityEdgeLabels(d);
+    }
   }
   
   function dragged(event, d) {
@@ -228,6 +264,26 @@ export function createLinkMapVisualization(data) {
     if (!event.active) simulation.alphaTarget(0);
     d.fx = null;
     d.fy = null;
+    
+    // Hide edge labels when dragging ends
+    if (d.nodeType === 'entity') {
+      hideEntityEdgeLabels();
+    }
+  }
+
+  // Function to show edge labels for a specific entity
+  function showEntityEdgeLabels(entityNode) {
+    linkLabel
+      .classed('visible', d => {
+        const sourceId = d.source.id || d.source;
+        const targetId = d.target.id || d.target;
+        return sourceId === entityNode.id || targetId === entityNode.id;
+      });
+  }
+
+  // Function to hide all edge labels
+  function hideEntityEdgeLabels() {
+    linkLabel.classed('visible', false);
   }
   
   // Tooltip functions
@@ -245,6 +301,12 @@ export function createLinkMapVisualization(data) {
         <strong>Category: ${d.title}</strong><br>
         ${d.description}<br>
         Groups related posts
+      `;
+    } else if (d.nodeType === 'entity') {
+      tooltipContent = `
+        <strong>Entity: ${d.title}</strong><br>
+        ${d.description}<br>
+        Drag to show connections
       `;
     } else {
       const formatDate = d3.timeFormat('%B %d, %Y');
