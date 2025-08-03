@@ -26,3 +26,34 @@ Ensure you have the [.NET 8 SDK](https://dotnet.microsoft.com/) installed and th
 ```bash
 dotnet run --project CodeCubeConsole
 ```
+
+### Build with PowerShell Script
+
+For a complete build including frontend assets:
+
+```bash
+# Local development (no version)
+pwsh ./build.ps1
+
+# With version for cache busting
+pwsh ./build.ps1 -Version "1.2.3"
+```
+
+### Script and Style Versioning
+
+The build system supports automatic versioning of CSS and JavaScript files for cache busting:
+
+- **Local development**: Static assets are referenced without version query strings (e.g., `/design/style2.css`)
+- **Production builds**: When a version is provided, query strings are appended (e.g., `/design/style2.css?v=1.2.3`)
+
+To build with versioning:
+
+```bash
+# Using the PowerShell build script
+pwsh ./build.ps1 -Version "1.2.3"
+
+# Or directly with the .NET console app
+dotnet run --project CodeCubeConsole -- --version "1.2.3"
+```
+
+The GitHub Actions workflow automatically uses the build number as the version for deployed releases.
