@@ -9,9 +9,7 @@ export const linkMapMachine = createMachine({
   context: {
     filter: 'entities', // Default to entity connections
     data: null,
-    filteredData: null,
-    selectedNode: null, // Currently selected node for focus behavior
-    urlParams: null // URL parameters for state sharing
+    filteredData: null
   },
   states: {
     loading: {
@@ -20,62 +18,16 @@ export const linkMapMachine = createMachine({
           target: 'loaded',
           actions: [
             assign({ data: ({ event }) => event.data }),
-            'loadUrlState',
             'applyFilter'
           ]
         }
       }
     },
     loaded: {
-      initial: 'normal',
-      states: {
-        normal: {
-          on: {
-            NODE_SELECTED: {
-              target: 'nodeSelected',
-              actions: [
-                assign({ selectedNode: ({ event }) => event.node }),
-                'updateUrl',
-                'applyFilter'
-              ]
-            }
-          }
-        },
-        nodeSelected: {
-          on: {
-            NODE_SELECTED: {
-              target: 'nodeSelected',
-              actions: [
-                assign({ selectedNode: ({ event }) => event.node }),
-                'updateUrl',
-                'applyFilter'
-              ]
-            },
-            NODE_DESELECTED: {
-              target: 'normal',
-              actions: [
-                assign({ selectedNode: null }),
-                'updateUrl',
-                'applyFilter'
-              ]
-            }
-          }
-        }
-      },
       on: {
         FILTER_CHANGED: {
           actions: [
             assign({ filter: ({ event }) => event.filter }),
-            'updateUrl',
-            'applyFilter'
-          ]
-        },
-        URL_STATE_CHANGED: {
-          actions: [
-            assign({ 
-              filter: ({ event }) => event.filter || 'entities',
-              selectedNode: ({ event }) => event.selectedNode || null
-            }),
             'applyFilter'
           ]
         }
@@ -84,32 +36,6 @@ export const linkMapMachine = createMachine({
   }
 }, {
   actions: {
-    loadUrlState: assign(({ context }) => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const filter = urlParams.get('filter') || 'entities';
-      const selectedNodeId = urlParams.get('node');
-      
-      return {
-        filter,
-        selectedNode: selectedNodeId ? { id: selectedNodeId } : null,
-        urlParams: urlParams
-      };
-    }),
-
-    updateUrl: ({ context }) => {
-      const params = new URLSearchParams();
-      if (context.filter && context.filter !== 'entities') {
-        params.set('filter', context.filter);
-      }
-      if (context.selectedNode) {
-        params.set('node', context.selectedNode.id);
-      }
-      
-      const newUrl = window.location.pathname + 
-        (params.toString() ? '?' + params.toString() : '');
-      window.history.replaceState({}, '', newUrl);
-    },
-
     applyFilter: assign(({ context }) => {
       if (!context.data) {
         return { filteredData: null };
@@ -180,37 +106,6 @@ export const linkMapMachine = createMachine({
           filteredEdges = edges;
       }
 
-      // Mark nodes as selected/connected/unconnected for styling
-      if (context.selectedNode) {
-        const selectedNodeId = context.selectedNode.id;
-        const connectedNodeIds = new Set();
-        
-        // Find all nodes connected to the selected node
-        filteredEdges.forEach(edge => {
-          const sourceId = edge.source.id || edge.source;
-          const targetId = edge.target.id || edge.target;
-          
-          if (sourceId === selectedNodeId) {
-            connectedNodeIds.add(targetId);
-          } else if (targetId === selectedNodeId) {
-            connectedNodeIds.add(sourceId);
-          }
-        });
-
-        // Add selection state to nodes
-        filteredNodes = filteredNodes.map(node => ({
-          ...node,
-          selectionState: node.id === selectedNodeId ? 'selected' : 
-                         connectedNodeIds.has(node.id) ? 'connected' : 'unconnected'
-        }));
-      } else {
-        // Clear any selection state
-        filteredNodes = filteredNodes.map(node => ({
-          ...node,
-          selectionState: 'normal'
-        }));
-      }
-
       return {
         filteredData: {
           nodes: filteredNodes,
@@ -227,32 +122,5 @@ export const linkMapMachine = createMachine({
 export function createMapStateActor() {
   const actor = createActor(linkMapMachine);
   actor.start();
-  
-  // Handle browser back/forward navigation
-  window.addEventListener('popstate', () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const filter = urlParams.get('filter') || 'entities';
-    const selectedNodeId = urlParams.get('node');
-    
-    actor.send({ 
-      type: 'URL_STATE_CHANGED', 
-      filter, 
-      selectedNode: selectedNodeId ? { id: selectedNodeId } : null 
-    });
-  });
-  
   return actor;
-}
-
-/**
- * Get current state values from actor
- */
-export function getStateValues(actor) {
-  const state = actor.getSnapshot();
-  return {
-    filter: state.context.filter,
-    selectedNode: state.context.selectedNode,
-    filteredData: state.context.filteredData,
-    isNodeSelected: state.matches({ loaded: 'nodeSelected' })
-  };
 }
