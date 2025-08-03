@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { createMapStateActor } from './mapState.js';
+import { createMapStateActor, getStateValues } from './mapState.js';
 
 let mapStateActor = null;
 let currentVisualization = null;
@@ -15,8 +15,8 @@ export function initializeLinkMap(data) {
   mapStateActor.subscribe(state => {
     console.log('Map state changed:', state.value);
     
-    if (state.value === 'loaded' && state.context.filteredData) {
-      updateVisualization(state.context.filteredData);
+    if (state.matches('loaded') && state.context.filteredData) {
+      updateVisualization(state.context.filteredData, state.context.selectedNode);
     }
   });
   
@@ -70,6 +70,15 @@ function hideLoadingState() {
 function setupFilterControls() {
   const filterControls = d3.selectAll('input[name="nodeFilter"]');
   
+  // Set initial filter from URL or state
+  if (mapStateActor) {
+    const state = mapStateActor.getSnapshot();
+    const currentFilter = state.context.filter || 'entities';
+    filterControls.property('checked', function() {
+      return this.value === currentFilter;
+    });
+  }
+  
   filterControls.on('change', function() {
     const selectedFilter = this.value;
     if (mapStateActor) {
@@ -81,7 +90,7 @@ function setupFilterControls() {
 /**
  * Update the visualization with filtered data
  */
-function updateVisualization(data) {
+function updateVisualization(data, selectedNode) {
   hideLoadingState();
   
   // Clear existing visualization
@@ -90,13 +99,13 @@ function updateVisualization(data) {
   }
   
   // Create new visualization
-  currentVisualization = createVisualization(data);
+  currentVisualization = createVisualization(data, selectedNode);
 }
 
 /**
  * Create the actual D3 visualization
  */
-function createVisualization(data) {
+function createVisualization(data, selectedNode) {
   const container = d3.select('#link-map-container');
   const svg = d3.select('#link-map-svg');
   const tooltip = d3.select('#map-tooltip');
@@ -111,6 +120,10 @@ function createVisualization(data) {
   
   // Set up SVG
   svg.attr('viewBox', `0 0 ${width} ${height}`);
+  
+  // Track drag state to differentiate from click
+  let isDragging = false;
+  let dragStartTime = 0;
   
   // Create zoom behavior with middle mouse button support
   const zoom = d3.zoom()
@@ -128,22 +141,57 @@ function createVisualization(data) {
   
   svg.call(zoom);
   
+  // Handle clicks on empty space (deselect)
+  svg.on('click', (event) => {
+    // Only deselect if not dragging and not clicking on a node
+    if (!isDragging && event.target === svg.node()) {
+      if (mapStateActor) {
+        mapStateActor.send({ type: 'NODE_DESELECTED' });
+      }
+    }
+  });
+  
   // Create main group for zoom/pan
   const g = svg.append('g');
   
-  // Set up simulation with different forces for different node types
+  // Set up simulation with enhanced forces for selection behavior
   const simulation = d3.forceSimulation(data.nodes)
-    .force('link', d3.forceLink(data.edges).id(d => d.id).distance(80)) // Reduced from 100
+    .force('link', d3.forceLink(data.edges).id(d => d.id).distance(80))
     .force('charge', d3.forceManyBody().strength(d => {
-      // Weaker repulsion for categories, stronger for years, normal for posts
-      if (d.nodeType === 'category') return -120; // Weaker pull for categories
-      if (d.nodeType === 'year') return -250; // Strong pull for years
-      return -200; // Normal for posts
+      // Adjust forces based on selection state
+      if (selectedNode) {
+        if (d.id === selectedNode.id) {
+          return -500; // Strong repulsion for selected node to center it
+        } else if (d.selectionState === 'connected') {
+          return -150; // Attract connected nodes
+        } else if (d.selectionState === 'unconnected') {
+          return 50; // Weak attraction to push unconnected nodes away
+        }
+      }
+      
+      // Default forces based on node type
+      if (d.nodeType === 'category') return -120;
+      if (d.nodeType === 'year') return -250;
+      return -200;
     }))
     .force('center', d3.forceCenter(width / 2, height / 2))
-    .force('collision', d3.forceCollide().radius(30)) // Increased from 25
-    .force('x', d3.forceX(width / 2).strength(0.1)) // Add X centering force
-    .force('y', d3.forceY(height / 2).strength(0.1)); // Add Y centering force
+    .force('collision', d3.forceCollide().radius(30))
+    .force('x', d3.forceX(width / 2).strength(0.1))
+    .force('y', d3.forceY(height / 2).strength(0.1));
+  
+  // Add special attraction force for selected node
+  if (selectedNode) {
+    simulation.force('selection', d3.forceRadial(
+      d => d.selectionState === 'connected' ? 100 : 200, 
+      width / 2, 
+      height / 2
+    ).strength(d => {
+      if (d.id === selectedNode.id) return 0.8; // Strong centering for selected
+      if (d.selectionState === 'connected') return 0.3; // Attract connected
+      if (d.selectionState === 'unconnected') return -0.1; // Push away unconnected
+      return 0;
+    }));
+  }
   
   // Create links
   const link = g.append('g')
@@ -194,10 +242,18 @@ function createVisualization(data) {
       }
     })
     .attr('class', d => {
-      if (d.nodeType === 'year') return 'map-node map-node-year';
-      if (d.nodeType === 'category') return 'map-node map-node-category';
-      if (d.nodeType === 'entity') return 'map-node map-node-entity';
-      return 'map-node map-node-post';
+      let baseClass = 'map-node';
+      if (d.nodeType === 'year') baseClass += ' map-node-year';
+      else if (d.nodeType === 'category') baseClass += ' map-node-category';
+      else if (d.nodeType === 'entity') baseClass += ' map-node-entity';
+      else baseClass += ' map-node-post';
+      
+      // Add selection state classes
+      if (d.selectionState) {
+        baseClass += ` map-node-${d.selectionState}`;
+      }
+      
+      return baseClass;
     })
     .each(function(d) {
       const element = d3.select(this);
@@ -206,7 +262,12 @@ function createVisualization(data) {
       const connectionBonus = d.connectionCount ? d.connectionCount * (d.nodeType === 'entity' ? 0.5 : d.nodeType === 'category' ? 1 : 2) : 0; // Reduced bonus for entities and categories
       // Stronger recency scaling: newest posts should be ~2x size of oldest
       const recencyBonus = d.nodeType === 'post' ? (d.recencyFactor || 0) * 16 : 0; // Only apply recency to posts
-      const radius = Math.max(baseSize, Math.min(30, baseSize + connectionBonus + recencyBonus));
+      let radius = Math.max(baseSize, Math.min(30, baseSize + connectionBonus + recencyBonus));
+      
+      // Increase size for selected node
+      if (d.selectionState === 'selected') {
+        radius *= 1.3;
+      }
       
       if (d.nodeType === 'year') {
         // Square for year nodes
@@ -240,15 +301,37 @@ function createVisualization(data) {
       .on('drag', dragged)
       .on('end', dragended))
     .on('click', (event, d) => {
-      // Navigate to the article or year section (categories and entities are not clickable)
-      if (d.nodeType === 'year') {
-        // For year nodes, navigate to the home page with the year anchor
-        window.location.href = `/${d.id}`;
-      } else if (d.nodeType === 'post') {
-        // For post nodes, navigate to the article
-        window.location.href = d.url;
+      event.stopPropagation(); // Prevent deselection
+      
+      // Only process click if not dragging
+      if (!isDragging) {
+        if (d.nodeType === 'post') {
+          // For post nodes, navigate to the article
+          window.location.href = d.url;
+        } else if (d.nodeType === 'year') {
+          // For year nodes, check if already selected
+          if (selectedNode && selectedNode.id === d.id) {
+            // If clicking the same year node, navigate to it
+            window.location.href = `/${d.id}`;
+          } else {
+            // Otherwise, select for focus behavior
+            if (mapStateActor) {
+              mapStateActor.send({ type: 'NODE_SELECTED', node: d });
+            }
+          }
+        } else if (d.nodeType === 'category' || d.nodeType === 'entity') {
+          // Categories and entities are selectable for focus behavior
+          if (mapStateActor) {
+            if (selectedNode && selectedNode.id === d.id) {
+              // Deselect if clicking the same node
+              mapStateActor.send({ type: 'NODE_DESELECTED' });
+            } else {
+              // Select the node
+              mapStateActor.send({ type: 'NODE_SELECTED', node: d });
+            }
+          }
+        }
       }
-      // Categories and entities don't have URLs so no navigation
     })
     .on('mouseover', (event, d) => {
       showTooltip(event, d);
@@ -338,6 +421,9 @@ function createVisualization(data) {
   
   // Drag functions
   function dragstarted(event, d) {
+    isDragging = false;
+    dragStartTime = Date.now();
+    
     if (!event.active) simulation.alphaTarget(0.3).restart();
     d.fx = d.x;
     d.fy = d.y;
@@ -349,6 +435,15 @@ function createVisualization(data) {
   }
   
   function dragged(event, d) {
+    // Consider it dragging if moved more than a few pixels or time elapsed
+    if (!isDragging && (
+      Math.abs(event.x - d.fx) > 3 || 
+      Math.abs(event.y - d.fy) > 3 ||
+      Date.now() - dragStartTime > 150
+    )) {
+      isDragging = true;
+    }
+    
     d.fx = event.x;
     d.fy = event.y;
   }
@@ -357,6 +452,11 @@ function createVisualization(data) {
     if (!event.active) simulation.alphaTarget(0);
     d.fx = null;
     d.fy = null;
+    
+    // Reset drag state after a brief delay
+    setTimeout(() => {
+      isDragging = false;
+    }, 50);
     
     // Hide edge labels when dragging ends
     if (d.nodeType === 'entity') {
@@ -387,19 +487,19 @@ function createVisualization(data) {
       tooltipContent = `
         <strong>${d.title}</strong><br>
         ${d.description}<br>
-        Click to view archive
+        Click to select/focus or double-click to view archive
       `;
     } else if (d.nodeType === 'category') {
       tooltipContent = `
         <strong>Category: ${d.title}</strong><br>
         ${d.description}<br>
-        Groups related posts
+        Click to select and see related posts
       `;
     } else if (d.nodeType === 'entity') {
       tooltipContent = `
         <strong>Entity: ${d.title}</strong><br>
         ${d.description}<br>
-        Drag to show connections
+        Click to select and see related posts, drag to show connections
       `;
     } else {
       const formatDate = d3.timeFormat('%B %d, %Y');
