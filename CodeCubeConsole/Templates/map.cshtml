@@ -53,27 +53,6 @@
     stroke-width: 3px;
   }
   
-  .map-node-selected {
-    stroke-width: 4px !important;
-    stroke: #ff6b35 !important;
-    filter: drop-shadow(0 0 8px rgba(255, 107, 53, 0.6));
-  }
-  
-  .map-node-connected {
-    stroke-width: 2px;
-    stroke: #4a90e2 !important;
-    filter: drop-shadow(0 0 4px rgba(74, 144, 226, 0.4));
-  }
-  
-  .map-node-unconnected {
-    opacity: 0.4;
-    stroke-width: 1px;
-  }
-  
-  .map-node-normal {
-    opacity: 1;
-  }
-  
   .map-node-post:hover {
     fill: #2980b9;
   }
@@ -260,13 +239,11 @@
   <p>
     This interactive map shows how articles and posts on this site link to each other. 
     Isolated articles appear scattered, while articles that reference each other cluster together.
-    Click on any post to navigate to that article, or click on categories, years, or entities to focus on their connections.
-    Hover over nodes to see descriptions.
+    Click on any node to navigate to that article, or hover to see a description.
   </p>
   <p>
-    <strong>Controls:</strong> Use your mouse wheel to zoom, left mouse to pan, or middle mouse button (wheel click) to pan. 
-    Click categories, years, or entities to see related content highlighted. Click empty space to clear selection.
-    On mobile, use touch gestures. You can also <a href="/#archive">browse the complete archive</a> for a chronological view.
+    <strong>Controls:</strong> Use your mouse wheel to zoom, left mouse to pan, or middle mouse button (wheel click) to pan. On mobile, use touch gestures.
+    You can also <a href="/#archive">browse the complete archive</a> for a chronological view.
   </p>
 </div>
 
