@@ -153,10 +153,30 @@ namespace CodeCubeConsole
 
         public static async Task Main(string[] args)
         {
-            await BuildSite();
+            // Parse version from command line arguments
+            string? version = null;
+            for (int i = 0; i < args.Length; i++)
+            {
+                if ((args[i] == "--version" || args[i] == "-v") && i + 1 < args.Length)
+                {
+                    version = args[i + 1];
+                    break;
+                }
+            }
+            
+            if (!string.IsNullOrEmpty(version))
+            {
+                Console.WriteLine($"Building site with version: {version}");
+            }
+            else
+            {
+                Console.WriteLine("Building site without version (local development mode)");
+            }
+            
+            await BuildSite(version);
         }
 
-        private static async Task BuildSite()
+        private static async Task BuildSite(string? version = null)
         {
             var model = GetContent();
             
@@ -182,22 +202,22 @@ namespace CodeCubeConsole
                 })
                 .ToArray();
             string result = await Engine.CompileRenderStringAsync("index", indexTemplate, new IndexModel { Years = groupedModel });
-            await SaveFile("CodeCube Ventures", result, string.Format("{0}.html", templateName));
+            await SaveFile("CodeCube Ventures", result, string.Format("{0}.html", templateName), version);
 
             // the 'about' page
             string abouttemplate = await GetTemplate("about");
             result = await Engine.CompileRenderStringAsync("about", abouttemplate, (object?)null);
-            await SaveFile("About Joel Martinez", result, "/about/");
+            await SaveFile("About Joel Martinez", result, "/about/", version);
 
             // the 'resume' page
             string resumetemplate = await GetTemplate("resume");
             result = await Engine.CompileRenderStringAsync("resume", resumetemplate, (object?)null);
-            await SaveFile("Joel Martinez - Resume", result, "/resume/");
+            await SaveFile("Joel Martinez - Resume", result, "/resume/", version);
 
             // the 'map' page
             string maptemplate = await GetTemplate("map");
             result = await Engine.CompileRenderStringAsync("map", maptemplate, (object?)null);
-            await SaveFile("Link Map - CodeCube Ventures", result, "/map/");
+            await SaveFile("Link Map - CodeCube Ventures", result, "/map/", version);
 
             // syndication
             string rsstemplate = await GetTemplate("rss");
@@ -226,7 +246,8 @@ namespace CodeCubeConsole
                 Master master = new Master()
                 {
                     Title = post.Title,
-                    Content = postResult
+                    Content = postResult,
+                    Version = version
                 };
 
                 // set up meta tags
@@ -270,9 +291,9 @@ namespace CodeCubeConsole
             }
         }
 
-        private static async Task SaveFile(string title, string content, string path)
+        private static async Task SaveFile(string title, string content, string path, string? version = null)
         {
-            await SaveFile(new Master { Title = title, Content = content }, path);
+            await SaveFile(new Master { Title = title, Content = content, Version = version }, path);
         }
         private static async Task SaveFile(Master master, string path)
         {

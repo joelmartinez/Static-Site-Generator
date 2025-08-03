@@ -13,7 +13,8 @@
 
 param(
     [switch]$SkipFrontend = $false,
-    [switch]$Verbose = $false
+    [switch]$Verbose = $false,
+    [string]$Version = ""
 )
 
 # Set error action preference
@@ -81,8 +82,14 @@ try {
     
     Write-BuildStep "Step 3: Running static site generator..."
     
-    # Run the site generator
-    dotnet run --project CodeCubeConsole
+    # Run the site generator with version parameter if provided
+    if ([string]::IsNullOrEmpty($Version)) {
+        Write-BuildStep "Running site generator without version (local dev mode)..."
+        dotnet run --project CodeCubeConsole
+    } else {
+        Write-BuildStep "Running site generator with version: $Version"
+        dotnet run --project CodeCubeConsole -- --version $Version
+    }
     if ($LASTEXITCODE -ne 0) { throw "Site generation failed" }
     
     # Copy generated files to publish directory for CI/CD compatibility

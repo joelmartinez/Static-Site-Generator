@@ -9,7 +9,7 @@
   <link rel="icon" type="image/svg+xml" href="/design/images/codecube-logo-web.svg" />
   <link rel="alternate" type="application/rss+xml" title="@Model.Title" href="//codecube.net/feed/" />
   <link rel="nlweb-manifest" href="/nlweb.json" />
-	<link rel="stylesheet" type="text/css" href="/design/style2.css" />
+	<link rel="stylesheet" type="text/css" href="/design/style2.css@(Model.VersionQueryString)" />
   @foreach(var meta in Model.Meta)
   {
     if (meta.Key == "canonical") {
@@ -23,8 +23,8 @@
     }
   }
   
-  <script src="/script/tone.js"></script>
-  <script src="/script/app.gen.js"></script>
+  <script src="/script/tone.js@(Model.VersionQueryString)"></script>
+  <script src="/script/app.gen.js@(Model.VersionQueryString)"></script>
 </head>
 <body>
   <header>
