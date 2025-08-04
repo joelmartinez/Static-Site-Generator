@@ -2,6 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { FluentProvider, webLightTheme } from '@fluentui/react-components';
 import OSInterface from './OSInterface';
+import './commands'; // Import commands to register them
 
 // Initialize the OS when the DOM is ready
 const initOS = () => {

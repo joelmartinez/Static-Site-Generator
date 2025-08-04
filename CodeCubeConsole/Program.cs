@@ -221,7 +221,13 @@ namespace CodeCubeConsole
 
             // the 'os' page
             string ostemplate = await GetTemplate("os");
-            result = await Engine.CompileRenderStringAsync("os", ostemplate, (object?)null);
+            var osModel = new Master
+            {
+                Title = "CodeCube OS - Terminal Environment",
+                Content = string.Empty,
+                Version = version
+            };
+            result = await Engine.CompileRenderStringAsync("os", ostemplate, osModel);
             await SaveFile("CodeCube OS - Terminal Environment", result, "/os/", version);
 
             // syndication
