@@ -57,6 +57,11 @@ try {
             if ($LASTEXITCODE -ne 0) { throw "NPM install failed" }
         }
         
+        # Run frontend tests
+        Write-BuildStep "Running frontend tests..."
+        npm test
+        if ($LASTEXITCODE -ne 0) { throw "Frontend tests failed" }
+        
         # Build frontend assets
         Write-BuildStep "Bundling frontend JavaScript..."
         npm run build
