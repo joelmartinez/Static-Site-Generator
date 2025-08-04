@@ -7,6 +7,12 @@
           "node": "current"
         }
       }
+    ],
+    [
+      "@babel/preset-react",
+      {
+        "runtime": "automatic"
+      }
     ]
   ]
 }
