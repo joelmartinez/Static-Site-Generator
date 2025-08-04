@@ -1,0 +1,35 @@
+<div id="os-root" class="os-container">
+  <div class="loading-message">
+    Initializing CodeCube OS...
+  </div>
+</div>
+
+<style>
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.os-container {
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #000;
+  color: #0f0;
+  font-family: 'Courier New', monospace;
+  z-index: 1000;
+}
+
+.loading-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+}
+</style>
+
+<script src="/script/os.gen.js"></script>

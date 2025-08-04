@@ -219,6 +219,11 @@ namespace CodeCubeConsole
             result = await Engine.CompileRenderStringAsync("map", maptemplate, (object?)null);
             await SaveFile("Link Map - CodeCube Ventures", result, "/map/", version);
 
+            // the 'os' page
+            string ostemplate = await GetTemplate("os");
+            result = await Engine.CompileRenderStringAsync("os", ostemplate, (object?)null);
+            await SaveFile("CodeCube OS - Terminal Environment", result, "/os/", version);
+
             // syndication
             string rsstemplate = await GetTemplate("rss");
             result = await Engine.CompileRenderStringAsync("rss", rsstemplate, model.Take(15).ToArray());
