@@ -8,15 +8,15 @@ import date from './date.js';
 import about from './about.js';
 import clear from './clear.js';
 
-// Register all available commands
-registerCommand('help', help);
-registerCommand('echo', echo);
-registerCommand('whoami', whoami);
-registerCommand('pwd', pwd);
-registerCommand('ls', ls);
-registerCommand('date', date);
-registerCommand('about', about);
-registerCommand('clear', clear);
+// Register all available commands with their descriptions
+registerCommand('help', help, 'Show this help message');
+registerCommand('echo', echo, 'Echo back the arguments');
+registerCommand('whoami', whoami, 'Display current user');
+registerCommand('pwd', pwd, 'Show current directory');
+registerCommand('ls', ls, 'List directory contents');
+registerCommand('date', date, 'Show current date and time');
+registerCommand('about', about, 'About CodeCube OS');
+registerCommand('clear', clear, 'Clear the terminal');
 
 // Export the registry functions for use by terminal
 export { executeCommand, getCommands } from './registry.js';

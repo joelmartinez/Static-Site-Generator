@@ -1,8 +1,8 @@
 // Command registry for the terminal
 const commands = new Map();
 
-export const registerCommand = (name, handler) => {
-  commands.set(name.toLowerCase(), handler);
+export const registerCommand = (name, handler, description) => {
+  commands.set(name.toLowerCase(), { handler, description });
 };
 
 export const executeCommand = (commandLine) => {
@@ -13,9 +13,9 @@ export const executeCommand = (commandLine) => {
   const commandName = parts[0].toLowerCase();
   const args = parts.slice(1);
   
-  const handler = commands.get(commandName);
-  if (handler) {
-    return handler(args);
+  const command = commands.get(commandName);
+  if (command) {
+    return command.handler(args);
   } else {
     return `Command not found: ${commandName}. Type "help" for available commands.`;
   }
@@ -23,4 +23,16 @@ export const executeCommand = (commandLine) => {
 
 export const getCommands = () => {
   return Array.from(commands.keys()).sort();
+};
+
+export const getCommandHelp = (commandName) => {
+  const command = commands.get(commandName.toLowerCase());
+  return command ? command.description : 'No description available';
+};
+
+export const getAllCommandsWithHelp = () => {
+  return Array.from(commands.entries()).map(([name, { description }]) => ({
+    name,
+    description
+  })).sort((a, b) => a.name.localeCompare(b.name));
 };
