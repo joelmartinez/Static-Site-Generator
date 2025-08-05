@@ -1,0 +1,93 @@
+/* CodeCube OS Styles */
+
+.os-container {
+  background: #0c0c0c;
+  color: #cccccc;
+  font-family: "Cascadia Code", "Courier New", monospace;
+  min-height: 500px;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.loading-message {
+  text-align: center;
+  font-size: 18px;
+  color: #0dbc79;
+  padding: 32px;
+}
+
+/* Terminal styles */
+.os-terminal {
+  background: #0c0c0c;
+  color: #cccccc;
+  font-family: "Cascadia Code", "Courier New", monospace;
+  font-size: 14px;
+  padding: 8px;
+  overflow-y: auto;
+  max-height: 600px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.terminal-output {
+  margin-bottom: 4px;
+}
+
+.terminal-input-line {
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.terminal-prompt {
+  color: #0dbc79;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.terminal-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #cccccc;
+  font-family: inherit;
+  font-size: inherit;
+  flex: 1;
+  caret-color: #cccccc;
+}
+
+/* Layout system for future panels */
+.os-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.os-panel {
+  background: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 12px;
+}
+
+.os-panel-header {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #0dbc79;
+}
+
+/* Animations */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.terminal-cursor {
+  background-color: #cccccc;
+  width: 8px;
+  height: 16px;
+  display: inline-block;
+  animation: blink 1s infinite;
+}
