@@ -1,13 +1,9 @@
 /* CodeCube OS Styles */
 
 .os-container {
-  background: #0c0c0c;
   color: #cccccc;
   font-family: "Cascadia Code", "Courier New", monospace;
   min-height: 500px;
-  border: 1px solid #333;
-  border-radius: 8px;
-  padding: 16px;
   margin: 16px 0;
 }
 
