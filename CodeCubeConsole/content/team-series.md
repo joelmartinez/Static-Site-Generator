@@ -13,7 +13,7 @@ This is something I’ve wanted to write about for quite some time, so this post
 - [**Team Size**](/2025/7/team-series-size/)  
 From tiny startups and teams that move fast and talk constantly to larger organizations that need structure, planning, and coordination layers to function. The benefits and tradeoffs change dramatically as headcount grows.
 
-- **Generalists vs Specialists**  
+- [**Generalists vs Specialists**](/2025/8/team-series-specialization/)  
 In a scrappy early team, everyone wears five hats and learns fast. As a company matures, deeper expertise becomes more valuable... but sometimes at the cost of speed and cross-functional awareness.
 
 - [**Freeform Discussion vs Structured Reporting**](/2025/7/team-series-death-by-status/)  
