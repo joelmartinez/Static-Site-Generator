@@ -6,7 +6,7 @@ namespace CodeCubeConsole
     {
         public string Id { get; set; } = string.Empty;
         public string Title { get; set; } = string.Empty;
-        public string Url { get; set; } = string.Empty;
+        public string? Url { get; set; }
         public string Description { get; set; } = string.Empty;
         public DateTime PublishedOn { get; set; }
         public string NodeType { get; set; } = "post"; // "post", "year", "category", or "entity"
