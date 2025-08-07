@@ -5,7 +5,7 @@ export const registerCommand = (name, handler, description) => {
   commands.set(name.toLowerCase(), { handler, description });
 };
 
-export const executeCommand = (commandLine) => {
+export const executeCommand = async (commandLine) => {
   const trimmedCommand = commandLine.trim();
   if (!trimmedCommand) return '';
   
@@ -15,7 +15,12 @@ export const executeCommand = (commandLine) => {
   
   const command = commands.get(commandName);
   if (command) {
-    return command.handler(args);
+    try {
+      const result = await command.handler(args);
+      return result;
+    } catch (error) {
+      return `Error executing ${commandName}: ${error.message}`;
+    }
   } else {
     return `Command not found: ${commandName}. Type "help" for available commands.`;
   }

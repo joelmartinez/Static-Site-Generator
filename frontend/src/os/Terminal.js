@@ -39,22 +39,28 @@ const Terminal = () => {
     }
   }, [history]);
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = async (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       const command = currentInput;
       const newHistory = [...history, `codecube-user@codecube-os:~$ ${command}`];
       
-      const output = executeCommand(command);
-      
-      // Handle special commands like clear
-      if (output && typeof output === 'object' && output.special === 'clear') {
-        setHistory(['CodeCube OS Terminal', 'Type "help" for available commands.', '']);
-      } else if (output) {
-        newHistory.push(output);
-        newHistory.push('');
-        setHistory(newHistory);
-      } else {
+      try {
+        const output = await executeCommand(command);
+        
+        // Handle special commands like clear
+        if (output && typeof output === 'object' && output.special === 'clear') {
+          setHistory(['CodeCube OS Terminal', 'Type "help" for available commands.', '']);
+        } else if (output) {
+          newHistory.push(output);
+          newHistory.push('');
+          setHistory(newHistory);
+        } else {
+          newHistory.push('');
+          setHistory(newHistory);
+        }
+      } catch (error) {
+        newHistory.push(`Error: ${error.message}`);
         newHistory.push('');
         setHistory(newHistory);
       }
