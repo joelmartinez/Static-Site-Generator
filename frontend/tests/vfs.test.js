@@ -1,6 +1,7 @@
 import { VirtualNode } from '../src/os/vfs/VirtualNode.js';
 import { LinkMapDataSource } from '../src/os/vfs/LinkMapDataSource.js';
 import { VirtualFileSystem } from '../src/os/vfs/VirtualFileSystem.js';
+import { MockDataSource } from './MockDataSource.js';
 
 describe('VirtualNode', () => {
   test('should create a file node', () => {
@@ -61,11 +62,64 @@ describe('VirtualNode', () => {
     expect(node.getMetadata('type')).toBe('post');
     expect(node.getUrl()).toBe('https://example.com/test');
   });
+
+  test('should provide display names for different node types', () => {
+    const file = new VirtualNode('test.txt', 'file', 'content');
+    const dir = new VirtualNode('testdir', 'directory');
+    
+    expect(file.getDisplayName()).toBe('test.txt');
+    expect(dir.getDisplayName()).toBe('testdir/');
+  });
+
+  test('should provide display content for cat functionality', () => {
+    const file = new VirtualNode('test.txt', 'file', 'Hello World');
+    const dir = new VirtualNode('testdir', 'directory');
+    
+    expect(file.getDisplayContent()).toBe('Hello World');
+    expect(dir.getDisplayContent()).toContain('Directory: /testdir');
+    expect(dir.getDisplayContent()).toContain('Contents (0 items)');
+  });
+
+  test('should handle relative paths with .. and ../', () => {
+    const root = new VirtualNode('/', 'directory');
+    const home = root.addChild(new VirtualNode('home', 'directory'));
+    const user = home.addChild(new VirtualNode('user', 'directory'));
+    const docs = user.addChild(new VirtualNode('documents', 'directory'));
+    
+    // Test .. navigation
+    expect(docs.findByPath('..')).toBe(user);
+    expect(docs.findByPath('../..')).toBe(home);
+    expect(docs.findByPath('../../..')).toBe(root);
+    
+    // Test ../ with additional path
+    expect(docs.findByPath('../documents')).toBe(docs);
+    expect(user.findByPath('../user/documents')).toBe(docs);
+  });
 });
 
 describe('LinkMapDataSource', () => {
-  test('should return mock data when real data unavailable', async () => {
+  test('should fail gracefully when real data unavailable', async () => {
     const dataSource = new LinkMapDataSource();
+    
+    // Should throw error instead of returning mock data
+    await expect(dataSource.loadData()).rejects.toThrow('Unable to load linkmap data');
+  });
+
+  test('should clear cache', () => {
+    const dataSource = new LinkMapDataSource();
+    
+    // Set some dummy data
+    dataSource.data = { nodes: [], edges: [] };
+    expect(dataSource.getCachedData()).toBeDefined();
+    
+    dataSource.clearCache();
+    expect(dataSource.getCachedData()).toBe(null);
+  });
+});
+
+describe('MockDataSource', () => {
+  test('should return mock data for testing', async () => {
+    const dataSource = new MockDataSource();
     const data = await dataSource.loadData();
     
     expect(data).toBeDefined();
@@ -73,10 +127,11 @@ describe('LinkMapDataSource', () => {
     expect(data.edges).toBeDefined();
     expect(Array.isArray(data.nodes)).toBe(true);
     expect(Array.isArray(data.edges)).toBe(true);
+    expect(data.nodes.length).toBeGreaterThan(0);
   });
 
   test('should cache data', async () => {
-    const dataSource = new LinkMapDataSource();
+    const dataSource = new MockDataSource();
     
     const data1 = await dataSource.loadData();
     const data2 = await dataSource.loadData();
@@ -85,7 +140,7 @@ describe('LinkMapDataSource', () => {
   });
 
   test('should clear cache', async () => {
-    const dataSource = new LinkMapDataSource();
+    const dataSource = new MockDataSource();
     
     await dataSource.loadData();
     expect(dataSource.getCachedData()).toBeDefined();
@@ -99,7 +154,9 @@ describe('VirtualFileSystem', () => {
   let vfs;
 
   beforeEach(async () => {
+    // Create VFS with mock data source for testing
     vfs = new VirtualFileSystem();
+    vfs.dataSource = new MockDataSource(); // Replace with mock data source
     await vfs.initialize();
   });
 
@@ -118,7 +175,7 @@ describe('VirtualFileSystem', () => {
     expect(subdirs).toContain('entities');
   });
 
-  test('should change directories', () => {
+  test('should change directories with relative navigation', () => {
     expect(() => vfs.changeDirectory('/content')).not.toThrow();
     expect(vfs.getCurrentPath()).toBe('/content');
     
@@ -127,6 +184,16 @@ describe('VirtualFileSystem', () => {
     
     expect(() => vfs.changeDirectory('..')).not.toThrow();
     expect(vfs.getCurrentPath()).toBe('/content');
+    
+    // Test ../.. navigation
+    vfs.changeDirectory('posts');
+    expect(() => vfs.changeDirectory('../..')).not.toThrow();
+    expect(vfs.getCurrentPath()).toBe('/');
+    
+    // Test ../ with path
+    vfs.changeDirectory('/content/posts');
+    expect(() => vfs.changeDirectory('../years')).not.toThrow();
+    expect(vfs.getCurrentPath()).toBe('/content/years');
   });
 
   test('should list directory contents', () => {
@@ -138,8 +205,8 @@ describe('VirtualFileSystem', () => {
     expect(contentContents.length).toBeGreaterThan(0);
   });
 
-  test('should read file content', () => {
-    // Try to find any file in the system
+  test('should cat files and directories', () => {
+    // Test reading a file
     const contentContents = vfs.listDirectory('/content');
     const connectionsFile = contentContents.find(item => item.name === 'connections.txt');
     
@@ -148,6 +215,12 @@ describe('VirtualFileSystem', () => {
       expect(typeof content).toBe('string');
       expect(content.length).toBeGreaterThan(0);
     }
+    
+    // Test that directories can also provide display content
+    const rootNode = vfs.root;
+    const displayContent = rootNode.getDisplayContent();
+    expect(displayContent).toContain('Directory: /');
+    expect(displayContent).toContain('Contents');
   });
 
   test('should handle file not found errors', () => {

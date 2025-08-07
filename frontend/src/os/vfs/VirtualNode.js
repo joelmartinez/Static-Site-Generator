@@ -79,23 +79,31 @@ export class VirtualNode {
       return root.findByPath(path.substring(1));
     }
 
+    // Split path and process each part
     const parts = path.split('/').filter(part => part !== '');
     if (parts.length === 0) {
       return this;
     }
 
-    const [first, ...rest] = parts;
-    const child = this.getChild(first);
-    
-    if (!child) {
-      return null;
+    let currentNode = this;
+    for (const part of parts) {
+      if (part === '.') {
+        // Stay at current node
+        continue;
+      } else if (part === '..') {
+        // Go to parent
+        currentNode = currentNode.parent || currentNode;
+      } else {
+        // Go to child
+        const child = currentNode.getChild(part);
+        if (!child) {
+          return null;
+        }
+        currentNode = child;
+      }
     }
 
-    if (rest.length === 0) {
-      return child;
-    }
-
-    return child.findByPath(rest.join('/'));
+    return currentNode;
   }
 
   /**
@@ -138,5 +146,61 @@ export class VirtualNode {
    */
   getUrl() {
     return this.url;
+  }
+
+  /**
+   * Get a displayable filename for this node
+   * Ensures every node type has a well-defined file name
+   */
+  getDisplayName() {
+    if (this.isFile()) {
+      return this.name;
+    }
+    
+    // For directories, return the name with a trailing slash
+    return this.name + '/';
+  }
+
+  /**
+   * Get content for display purposes (for cat command)
+   * Every node type should be cat-able
+   */
+  getDisplayContent() {
+    if (this.isFile()) {
+      return this.content || '';
+    }
+    
+    // For directories, show a listing-style content
+    if (this.isDirectory()) {
+      let content = `Directory: ${this.getPath()}\n`;
+      content += `Type: ${this.type}\n`;
+      
+      if (this.url) {
+        content += `URL: ${this.url}\n`;
+      }
+      
+      const metadata = this.getMetadata('linkMapNode');
+      if (metadata) {
+        content += `Description: ${metadata.description || 'N/A'}\n`;
+        if (metadata.connectionCount !== undefined) {
+          content += `Connections: ${metadata.connectionCount}\n`;
+        }
+      }
+      
+      content += `\nContents (${this.children.size} items):\n`;
+      const children = this.getChildren();
+      if (children.length === 0) {
+        content += '  (empty)\n';
+      } else {
+        children.forEach(child => {
+          const indicator = child.isDirectory() ? '/' : '';
+          content += `  ${child.name}${indicator}\n`;
+        });
+      }
+      
+      return content;
+    }
+    
+    return `Node: ${this.name}\nType: ${this.type}\nPath: ${this.getPath()}`;
   }
 }

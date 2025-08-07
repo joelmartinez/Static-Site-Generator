@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { executeCommand } from './commands';
+import { getVFS } from './vfs';
 
 const Terminal = () => {
   const [history, setHistory] = useState([
@@ -10,8 +11,30 @@ const Terminal = () => {
   const [currentInput, setCurrentInput] = useState('');
   const [commandHistory, setCommandHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
+  const [currentPath, setCurrentPath] = useState('~');
   const inputRef = useRef(null);
   const terminalRef = useRef(null);
+
+  // Update current path when VFS changes
+  const updateCurrentPath = async () => {
+    try {
+      const vfs = getVFS();
+      if (vfs.isInitialized()) {
+        const path = vfs.getCurrentPath();
+        // Convert absolute path to display format
+        if (path === '/home/codecube-user') {
+          setCurrentPath('~');
+        } else if (path.startsWith('/home/codecube-user/')) {
+          setCurrentPath('~' + path.substring('/home/codecube-user'.length));
+        } else {
+          setCurrentPath(path);
+        }
+      }
+    } catch (error) {
+      // Keep default path if VFS fails
+      setCurrentPath('~');
+    }
+  };
 
   // Focus input when terminal is clicked
   useEffect(() => {
@@ -25,6 +48,9 @@ const Terminal = () => {
     if (terminal) {
       terminal.addEventListener('click', focusInput);
       focusInput(); // Focus immediately
+      
+      // Update path initially
+      updateCurrentPath();
       
       return () => {
         terminal.removeEventListener('click', focusInput);
@@ -43,7 +69,7 @@ const Terminal = () => {
     if (e.key === 'Enter') {
       e.preventDefault();
       const command = currentInput;
-      const newHistory = [...history, `codecube-user@codecube-os:~$ ${command}`];
+      const newHistory = [...history, `codecube-user@codecube-os:${currentPath}$ ${command}`];
       
       try {
         const output = await executeCommand(command);
@@ -59,6 +85,9 @@ const Terminal = () => {
           newHistory.push('');
           setHistory(newHistory);
         }
+        
+        // Update current path after command execution (in case cd was used)
+        await updateCurrentPath();
       } catch (error) {
         newHistory.push(`Error: ${error.message}`);
         newHistory.push('');
@@ -101,7 +130,7 @@ const Terminal = () => {
         </div>
       ))}
       <div className="terminal-input-line">
-        <span className="terminal-prompt">codecube-user@codecube-os:~$</span>
+        <span className="terminal-prompt">codecube-user@codecube-os:{currentPath}$</span>
         <input
           ref={inputRef}
           type="text"

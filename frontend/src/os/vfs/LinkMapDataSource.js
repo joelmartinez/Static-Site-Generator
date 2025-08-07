@@ -50,67 +50,11 @@ export class LinkMapDataSource {
       }
 
     } catch (error) {
-      console.error('Failed to load linkmap data:', error);
+      console.warn('Failed to load linkmap data:', error);
       
-      // Return mock data for development/testing
-      return this.getMockData();
+      // In production, throw the error so the VFS can handle it appropriately
+      throw new Error(`Unable to load linkmap data: ${error.message}`);
     }
-  }
-
-  /**
-   * Get mock data for testing when real data isn't available
-   */
-  getMockData() {
-    if (!this.data) {
-      this.data = {
-        nodes: [
-          {
-            id: '#2025',
-            title: '2025',
-            url: '/2025',
-            description: 'Posts from 2025',
-            nodeType: 'year',
-            connectionCount: 5
-          },
-          {
-            id: '/2025/7/test-post/',
-            title: 'Test Post',
-            url: 'https://codecube.net/2025/7/test-post/',
-            description: 'A test post for development',
-            nodeType: 'post',
-            connectionCount: 2
-          },
-          {
-            id: '#category-ai',
-            title: 'AI',
-            url: null,
-            description: 'AI related posts',
-            nodeType: 'category',
-            connectionCount: 3
-          },
-          {
-            id: '#entity-programming',
-            title: 'Programming',
-            url: null,
-            description: 'Programming concepts and tools',
-            nodeType: 'entity',
-            connectionCount: 10
-          }
-        ],
-        edges: [
-          {
-            source: '#2025',
-            target: '/2025/7/test-post/'
-          },
-          {
-            source: '#category-ai',
-            target: '/2025/7/test-post/'
-          }
-        ]
-      };
-      this.lastFetched = Date.now();
-    }
-    return this.data;
   }
 
   /**
