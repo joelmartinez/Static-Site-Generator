@@ -16,8 +16,21 @@ export default async function cat(args) {
     const filename = args[0];
     
     try {
-      const content = vfs.readFile(filename);
-      return content;
+      // Try to find the node (could be file or directory)
+      let targetNode;
+      if (filename.startsWith('/')) {
+        targetNode = vfs.root.findByPath(filename);
+      } else {
+        const currentDir = vfs.getCurrentDirectory();
+        targetNode = currentDir ? currentDir.findByPath(filename) : null;
+      }
+
+      if (!targetNode) {
+        return `cat: ${filename}: No such file or directory`;
+      }
+
+      // Use the new getDisplayContent method to cat any node type
+      return targetNode.getDisplayContent();
     } catch (error) {
       return `cat: ${error.message}`;
     }

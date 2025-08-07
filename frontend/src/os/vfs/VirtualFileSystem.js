@@ -151,8 +151,15 @@ export class VirtualFileSystem {
    */
   createMinimalFileSystem() {
     this.root = new VirtualNode('/', 'directory');
-    const contentDir = this.root.addChild(new VirtualNode('content', 'directory'));
-    contentDir.addChild(new VirtualNode('loading...', 'file', 'Content data is loading. Please try again later.'));
+    const homeDir = this.root.addChild(new VirtualNode('home', 'directory'));
+    const userDir = homeDir.addChild(new VirtualNode('codecube-user', 'directory'));
+    
+    // Add a welcome file
+    userDir.addChild(new VirtualNode('welcome.txt', 'file', 
+      'Welcome to CodeCube OS!\n\nThe content data could not be loaded.\nThis may be because:\n- The server is not running\n- Network connectivity issues\n- The linkmap data file is missing\n\nPlease try reloading the page or contact support.'));
+    
+    // Set current path to user home directory
+    this.currentPath = '/home/codecube-user';
   }
 
   /**
