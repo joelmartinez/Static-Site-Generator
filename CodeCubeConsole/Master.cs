@@ -8,8 +8,8 @@ namespace CodeCubeConsole
         {
             this.Meta = new Dictionary<string, string>();
         }
-        public string Title { get; set; }
-        public string Content { get; set; }
+        public required string Title { get; set; }
+        public required string Content { get; set; }
         public Dictionary<string, string> Meta { get; private set; }
         public string? Version { get; set; }
         

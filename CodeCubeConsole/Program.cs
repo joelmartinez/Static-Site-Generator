@@ -320,7 +320,7 @@ namespace CodeCubeConsole
 
             path = Path.Combine(BasePath, "out", path);
 
-            Directory.CreateDirectory(Path.GetDirectoryName(path));
+            Directory.CreateDirectory(Path.GetDirectoryName(path) ?? Path.GetDirectoryName(BasePath) ?? ".");
             Console.WriteLine("Persisting to {0}", path);
             using (StreamWriter writer = new StreamWriter(path))
             {
@@ -338,10 +338,10 @@ namespace CodeCubeConsole
                          select new
                              Post
                              {
-                                 Title = (string)xElem.Element("title").Value,
-                                 Body = (string)xElem.Element("contentencoded").Value,
-                                 URL = (string)xElem.Element("link").Value,
-                                 PublishedOn = DateTime.Parse(xElem.Element("pubDate").Value),
+                                 Title = xElem.Element("title")?.Value ?? "",
+                                 Body = xElem.Element("contentencoded")?.Value ?? "",
+                                 URL = xElem.Element("link")?.Value ?? "",
+                                 PublishedOn = DateTime.Parse(xElem.Element("pubDate")?.Value ?? DateTime.Now.ToString()),
                                  Category = xElem.Elements("category")
                                     .Where(c => c.Attribute("domain")?.Value == "category")
                                     .FirstOrDefault()?.Value
@@ -512,7 +512,7 @@ namespace CodeCubeConsole
 
             string sitemapPath = Path.Combine(BasePath, "out", "sitemap.xml");
             Console.WriteLine("Generating sitemap at {0}", sitemapPath);
-            Directory.CreateDirectory(Path.GetDirectoryName(sitemapPath));
+            Directory.CreateDirectory(Path.GetDirectoryName(sitemapPath) ?? Path.GetDirectoryName(BasePath) ?? ".");
             await using (var writer = new StreamWriter(sitemapPath))
             {
                 await writer.WriteAsync(sitemap.ToString());
@@ -572,6 +572,8 @@ namespace CodeCubeConsole
             foreach (var categoryGroup in postsByCategory)
             {
                 var category = categoryGroup.Key;
+                if (category == null) continue; // Skip if category is null
+                
                 var categoryNode = new LinkMapNode
                 {
                     Id = $"#category-{category.Replace(" ", "-").ToLowerInvariant()}",
@@ -703,7 +705,7 @@ namespace CodeCubeConsole
             
             // Save to map.gen.js
             var mapJsPath = Path.Combine(BasePath, "out", "script", "map.gen.js");
-            Directory.CreateDirectory(Path.GetDirectoryName(mapJsPath));
+            Directory.CreateDirectory(Path.GetDirectoryName(mapJsPath) ?? Path.GetDirectoryName(BasePath) ?? ".");
             Console.WriteLine("Generating link map data at {0}", mapJsPath);
             
             await using (var writer = new StreamWriter(mapJsPath))

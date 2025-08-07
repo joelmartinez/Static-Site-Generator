@@ -10,8 +10,8 @@ namespace CodeCubeConsole
     public class Post
     {
 
-        public string Title { get; set; }
-        public string Body { get; set; }
+        public required string Title { get; set; }
+        public required string Body { get; set; }
 		public bool ShouldRenderDoubleNewLine = true;
         public Post? Previous { get; set; }
         public Post? Next { get; set; }
@@ -34,7 +34,7 @@ namespace CodeCubeConsole
             }
         }
         public bool HasImage { get; private set; }
-        public string ImageUrl { get; private set; }
+        public string ImageUrl { get; private set; } = string.Empty;
         public string? HeroImageUrl { get; set; }
         public string? HeroImageOptimizedUrl { get; set; }
         public string? HeroImageThumbnailUrl { get; set; }
@@ -90,7 +90,7 @@ namespace CodeCubeConsole
                 return sb.ToString();
             }
         }
-        public string URL { get; set; }
+        public required string URL { get; set; }
         public string UrlPath
         {
             get

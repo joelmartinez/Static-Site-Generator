@@ -2,7 +2,7 @@ namespace CodeCubeConsole
 {
     public class PostPageModel
     {
-        public Post CurrentPost { get; set; }
-        public Post LatestPost { get; set; }
+        public required Post CurrentPost { get; set; }
+        public Post? LatestPost { get; set; }
     }
 }

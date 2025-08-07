@@ -2,7 +2,7 @@ namespace CodeCubeConsole
 {
     public class Month
     {
-        public string Name { get; set; }
-        public Post[] Posts { get; set; }
+        public required string Name { get; set; }
+        public required Post[] Posts { get; set; }
     }
 }
