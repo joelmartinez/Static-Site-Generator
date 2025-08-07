@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { executeCommand } from './commands';
+import vfs from './VirtualFileSystem.js';
 
 const Terminal = () => {
   const [history, setHistory] = useState([
@@ -10,8 +11,32 @@ const Terminal = () => {
   const [currentInput, setCurrentInput] = useState('');
   const [commandHistory, setCommandHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
+  const [currentDir, setCurrentDir] = useState('/');
+  const [vfsInitialized, setVfsInitialized] = useState(false);
   const inputRef = useRef(null);
   const terminalRef = useRef(null);
+
+  // Initialize virtual file system
+  useEffect(() => {
+    const initVfs = async () => {
+      try {
+        // Wait a bit for linkMapData to be available
+        if (typeof window !== 'undefined' && window.linkMapData) {
+          await vfs.initialize();
+          setVfsInitialized(true);
+          setHistory(prev => [...prev, 'Virtual file system initialized. Type "ls" to explore content.', '']);
+        } else {
+          // Retry after a short delay
+          setTimeout(initVfs, 1000);
+        }
+      } catch (error) {
+        console.error('Failed to initialize virtual file system:', error);
+        setHistory(prev => [...prev, `VFS Error: ${error.message}`, '']);
+      }
+    };
+
+    initVfs();
+  }, []);
 
   // Focus input when terminal is clicked
   useEffect(() => {
@@ -39,11 +64,26 @@ const Terminal = () => {
     }
   }, [history]);
 
+  // Update current directory display
+  useEffect(() => {
+    if (vfsInitialized) {
+      setCurrentDir(vfs.getCurrentPath());
+    }
+  }, [vfsInitialized, history]); // Update when history changes (after commands)
+
+  const getPrompt = () => {
+    if (!vfsInitialized) {
+      return 'codecube-user@codecube-os:~$';
+    }
+    return `codecube-user@codecube-os:${currentDir}$`;
+  };
+
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       const command = currentInput;
-      const newHistory = [...history, `codecube-user@codecube-os:~$ ${command}`];
+      const prompt = getPrompt();
+      const newHistory = [...history, `${prompt} ${command}`];
       
       const output = executeCommand(command);
       
@@ -57,6 +97,11 @@ const Terminal = () => {
       } else {
         newHistory.push('');
         setHistory(newHistory);
+      }
+      
+      // Update current directory after command execution
+      if (vfsInitialized) {
+        setCurrentDir(vfs.getCurrentPath());
       }
       
       // Add to command history if not empty
@@ -95,7 +140,7 @@ const Terminal = () => {
         </div>
       ))}
       <div className="terminal-input-line">
-        <span className="terminal-prompt">codecube-user@codecube-os:~$</span>
+        <span className="terminal-prompt">{getPrompt()}</span>
         <input
           ref={inputRef}
           type="text"

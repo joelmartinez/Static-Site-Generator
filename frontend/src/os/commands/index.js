@@ -7,6 +7,9 @@ import ls from './ls.js';
 import date from './date.js';
 import about from './about.js';
 import clear from './clear.js';
+import cat from './cat.js';
+import cd from './cd.js';
+import open from './open.js';
 
 // Register all available commands with their descriptions
 registerCommand('help', help, 'Show this help message');
@@ -17,6 +20,9 @@ registerCommand('ls', ls, 'List directory contents');
 registerCommand('date', date, 'Show current date and time');
 registerCommand('about', about, 'About CodeCube OS');
 registerCommand('clear', clear, 'Clear the terminal');
+registerCommand('cat', cat, 'Display content of a file');
+registerCommand('cd', cd, 'Change directory');
+registerCommand('open', open, 'Open a file URL in browser');
 
 // Export the registry functions for use by terminal
 export { executeCommand, getCommands } from './registry.js';
