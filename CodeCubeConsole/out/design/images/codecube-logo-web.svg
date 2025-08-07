@@ -1,32 +1,10 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
-
-<svg
-   width="70mm"
-   height="70mm"
-   viewBox="0 0 70 70"
-   version="1.1"
-   id="svg1"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <defs
-     id="defs1" />
-  <g
-     id="layer1">
-    <path
-       id="ccube"
-       style="fill:#f12100;fill-opacity:1;stroke-width:0.264365"
-       d="m 39.999789,9.9999755 v 9.9999065 h -9.999907 v 30.000236 h 9.999907 v 9.999907 H 60.000118 V 40.000211 h -9.999906 v -9.999906 h 9.999906 V 9.9999755 Z" />
-    <path
-       id="ccode"
-       style="fill:#ff8220;fill-opacity:1;stroke-width:0.264365"
-       d="M 19.999813,9.9999064 V 19.999813 H 9.9999064 v 30.000236 h 9.9999066 v 9.999906 H 40.000142 V 40.000142 h -9.999906 v -9.999906 h 9.999906 V 9.9999064 Z" />
-    <rect
-       style="fill:#0eccf1;fill-opacity:1;stroke-width:0.452653"
-       id="cchighlight"
-       width="20"
-       height="20"
-       x="0"
-       y="50" />
-  </g>
+<svg width="70mm" height="70mm" version="1.1" viewBox="0 0 70 70" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path id="ccube" d="m40 10v20h-9.9999v10h9.9999v20h20v-20h-9.9999v-9.9999h9.9999v-20z" fill="#f12100" stroke-width=".26436"/>
+  <path id="ccode" d="m20 9.9999v9.9999h-9.9999v30h9.9999v9.9999h20v-20h-9.9999v-9.9999h9.9999v-20z" fill="#ff8220" stroke-width=".26436"/>
+  <rect id="cchighlight" y="50" width="20" height="20" fill="#0eccf1" stroke-width=".45265"/>
+ </g>
 </svg>
+
