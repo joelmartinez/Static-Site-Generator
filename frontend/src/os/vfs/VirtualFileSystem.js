@@ -167,7 +167,8 @@ export class VirtualFileSystem {
    */
   generatePostContent(postData) {
     const publishedDate = postData.publishedOn ? new Date(postData.publishedOn).toDateString() : 'Unknown';
-    return `Title: ${postData.title}
+    const sanitizedName = this.sanitizeFileName(postData.title);
+    return `Title: ${postData.title.trim()}
 Published: ${publishedDate}
 URL: ${postData.url || 'N/A'}
 Connections: ${postData.connectionCount || 0}
@@ -175,7 +176,7 @@ Connections: ${postData.connectionCount || 0}
 Description:
 ${postData.description || 'No description available'}
 
-To open this post in your browser, use: open "${postData.title}"`;
+To open this post in your browser, use: open ${sanitizedName}`;
   }
 
   /**
@@ -200,7 +201,7 @@ To open this post in your browser, use: open "${postData.title}"`;
    * Sanitize filename for file system use
    */
   sanitizeFileName(name) {
-    return name.replace(/[^a-zA-Z0-9\-_\.]/g, '_').replace(/_+/g, '_');
+    return name.trim().replace(/[^a-zA-Z0-9\-_\.]/g, '_').replace(/_+/g, '_');
   }
 
   /**

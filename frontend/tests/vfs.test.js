@@ -241,6 +241,33 @@ describe('VirtualFileSystem', () => {
     expect(vfs.sanitizeFileName('Test & Example')).toBe('Test_Example');
     expect(vfs.sanitizeFileName('Special/Characters?')).toBe('Special_Characters_');
     expect(vfs.sanitizeFileName('Normal-Name_123')).toBe('Normal-Name_123');
+    // Test trimming whitespace
+    expect(vfs.sanitizeFileName(' The Brewmite  ')).toBe('The_Brewmite');
+    expect(vfs.sanitizeFileName('  Multiple   Spaces  ')).toBe('Multiple_Spaces');
+  });
+
+  test('should generate consistent cat content with open suggestions', () => {
+    // Test that the cat output suggests the correct filename for opening
+    const testPost = {
+      title: ' Test Post  ',
+      publishedOn: '2025-07-15T10:00:00Z',
+      url: 'https://example.com/test',
+      description: 'A test post',
+      connectionCount: 2
+    };
+    
+    const content = vfs.generatePostContent(testPost);
+    const sanitizedName = vfs.sanitizeFileName(testPost.title);
+    
+    // Should trim the title in display
+    expect(content).toContain('Title: Test Post');
+    
+    // Should suggest the sanitized name for opening (without quotes)
+    expect(content).toContain(`use: open ${sanitizedName}`);
+    expect(content).not.toContain('use: open " Test Post  "');
+    
+    // The suggested name should be what would actually work
+    expect(sanitizedName).toBe('Test_Post');
   });
 });
 
