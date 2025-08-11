@@ -99,6 +99,7 @@ namespace CodeCubeConsole
             }
         }
         public DateTime PublishedOn { get; set; }
+        public DateTime DateUpdated { get; set; }
 		public bool IsPublished = true;
         public string? Category { get; set; }
         
