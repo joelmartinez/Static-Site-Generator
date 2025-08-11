@@ -19,7 +19,7 @@ In a scrappy early team, everyone wears five hats and learns fast. As a company 
 - [**Freeform Discussion vs Structured Reporting**](/2025/7/team-series-death-by-status/)  
 Some teams thrive on fluid, ongoing conversations. Others need clear rhythms of status updates, tickets, and plans. Each style can work... but mixing them without clarity can grind progress to a halt.
 
-- **Design Process vs Just Ship It**  
+- [**Design Process vs Just Ship It**](/2025/8/team-series-process/)  
 A thoughtful, iterative design process with research and prototyping can lead to great outcomes... but so can throwing a prototype into the world and learning from real users. The trick is knowing when each is appropriate.
 
 - **On-Call Systems vs Cowboy Coders**  
