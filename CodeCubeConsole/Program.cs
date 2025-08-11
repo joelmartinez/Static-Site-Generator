@@ -335,13 +335,15 @@ namespace CodeCubeConsole
             XElement root = XElement.Load(contentFile);
 
             var query = (from xElem in root.Elements("channel").Elements("item")
+                         let publishedDate = DateTime.Parse(xElem.Element("pubDate")?.Value ?? DateTime.Now.ToString())
                          select new
                              Post
                              {
                                  Title = xElem.Element("title")?.Value ?? "",
                                  Body = xElem.Element("contentencoded")?.Value ?? "",
                                  URL = xElem.Element("link")?.Value ?? "",
-                                 PublishedOn = DateTime.Parse(xElem.Element("pubDate")?.Value ?? DateTime.Now.ToString()),
+                                 PublishedOn = publishedDate,
+                                 DateUpdated = publishedDate, // For XML posts, DateUpdated equals PublishedOn
                                  Category = xElem.Elements("category")
                                     .Where(c => c.Attribute("domain")?.Value == "category")
                                     .FirstOrDefault()?.Value
@@ -377,6 +379,13 @@ namespace CodeCubeConsole
                                 string transformedContent = Markdown.ToHtml (markdownContent, pipeline);
 
 				DateTime pubdate = DateTime.Parse (meta ["Date"]);
+				DateTime dateUpdated = pubdate; // Default to published date
+				if (meta.ContainsKey("DateUpdated")) {
+					dateUpdated = DateTime.Parse(meta["DateUpdated"]);
+				} else if (meta.ContainsKey("Updated")) {
+					dateUpdated = DateTime.Parse(meta["Updated"]);
+				}
+				
 				string url = Path.GetFileNameWithoutExtension (file);
 				url = string.Format ("https://codecube.net/{0}/{1}/{2}/", pubdate.Year, pubdate.Month, url);
 				bool isPublished = true;
@@ -393,6 +402,7 @@ namespace CodeCubeConsole
 					Title = meta["Title"],
 					Body = transformedContent,
 					PublishedOn = pubdate,
+					DateUpdated = dateUpdated,
 					URL = url,
 					IsPublished = isPublished,
 					ShouldRenderDoubleNewLine = false,
@@ -503,7 +513,7 @@ namespace CodeCubeConsole
                     from post in posts.Where(p => p.IsPublished)
                     select new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "url",
                         new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "loc", post.URL),
-                        new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "lastmod", post.PublishedOn.ToString("yyyy-MM-dd")),
+                        new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "lastmod", post.DateUpdated.ToString("yyyy-MM-dd")),
                         new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "changefreq", "monthly"),
                         new XElement(XNamespace.Get("http://www.sitemaps.org/schemas/sitemap/0.9") + "priority", "0.6")
                     )
