@@ -73,17 +73,30 @@ try {
         Write-BuildStep "Skipping frontend build as requested" "Yellow"
     }
     
-    Write-BuildStep "Step 2: Building .NET application..."
+    Write-BuildStep "Step 2: Building .NET applications..."
     
     # Check if .NET is available
     if (-not (Get-Command "dotnet" -ErrorAction SilentlyContinue)) {
         throw ".NET CLI is not available. Please install .NET 8."
     }
     
-    # Build the .NET solution
+    # Build the main .NET solution
     Write-BuildStep "Building CodeCubeConsole.sln..."
     dotnet build CodeCubeConsole.sln
     if ($LASTEXITCODE -ne 0) { throw ".NET build failed" }
+    
+    # Build the API solution
+    Write-BuildStep "Building CodeCube.Api.sln..."
+    Set-Location "$RepoRoot/api"
+    dotnet build CodeCube.Api.sln
+    if ($LASTEXITCODE -ne 0) { throw "API build failed" }
+    
+    # Run API tests
+    Write-BuildStep "Running API tests..."
+    dotnet test CodeCube.Api.sln
+    if ($LASTEXITCODE -ne 0) { throw "API tests failed" }
+    
+    Set-Location $RepoRoot
     
     Write-BuildStep "Step 3: Running static site generator..."
     
