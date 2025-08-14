@@ -32,14 +32,21 @@ public class WebCrawler : IWebCrawler
 
     public async Task<IEnumerable<PageContent>> CrawlUrlsAsync(IEnumerable<string> urls)
     {
+        var result = await CrawlUrlsWithErrorTrackingAsync(urls);
+        return result.SuccessfulPages;
+    }
+
+    public async Task<CrawlOperationResult> CrawlUrlsWithErrorTrackingAsync(IEnumerable<string> urls)
+    {
         if (urls == null)
             throw new ArgumentNullException(nameof(urls));
 
         var urlList = urls.Where(url => !string.IsNullOrWhiteSpace(url)).ToList();
         if (!urlList.Any())
-            return Enumerable.Empty<PageContent>();
+            return new CrawlOperationResult();
 
         var results = new List<PageContent>();
+        var errors = new List<CrawlError>();
         var semaphore = new SemaphoreSlim(5, 5); // Limit concurrent requests
 
         var tasks = urlList.Select(async url =>
@@ -47,13 +54,21 @@ public class WebCrawler : IWebCrawler
             await semaphore.WaitAsync();
             try
             {
-                return await _contentExtractor.ExtractContentAsync(url);
+                var pageContent = await _contentExtractor.ExtractContentAsync(url);
+                return (Success: true, Page: pageContent, Error: (CrawlError?)null);
             }
             catch (Exception ex)
             {
                 // Log error but continue with other URLs
                 Console.WriteLine($"Error crawling {url}: {ex.Message}");
-                return null;
+                var error = new CrawlError
+                {
+                    Url = url,
+                    Message = ex.Message,
+                    ExceptionType = ex.GetType().Name,
+                    ErrorAt = DateTime.UtcNow
+                };
+                return (Success: false, Page: (PageContent?)null, Error: error);
             }
             finally
             {
@@ -61,9 +76,24 @@ public class WebCrawler : IWebCrawler
             }
         });
 
-        var crawledPages = await Task.WhenAll(tasks);
-        results.AddRange(crawledPages.Where(page => page != null)!);
+        var crawlResults = await Task.WhenAll(tasks);
+        
+        foreach (var result in crawlResults)
+        {
+            if (result.Success && result.Page != null)
+            {
+                results.Add(result.Page);
+            }
+            else if (!result.Success && result.Error != null)
+            {
+                errors.Add(result.Error);
+            }
+        }
 
-        return results;
+        return new CrawlOperationResult
+        {
+            SuccessfulPages = results,
+            Errors = errors
+        };
     }
 }

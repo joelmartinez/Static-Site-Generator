@@ -101,7 +101,8 @@ class Program
                     SitemapUrl = sitemapUrl,
                     CutoffDate = cutoffDate,
                     TotalUrls = 0,
-                    CrawledPages = new List<PageContent>()
+                    CrawledPages = new List<PageContent>(),
+                    Errors = new List<CrawlError>()
                 };
                 
                 await SaveResultsAsync(emptyResult, outputFile);
@@ -126,10 +127,15 @@ class Program
             // Crawl all filtered URLs
             Console.WriteLine($"2. Crawling {entriesList.Count} URLs...");
             var urls = entriesList.Select(e => e.Url);
-            var crawledPages = await webCrawler.CrawlUrlsAsync(urls);
-            var pagesList = crawledPages.ToList();
+            var crawlResult = await webCrawler.CrawlUrlsWithErrorTrackingAsync(urls);
+            var pagesList = crawlResult.SuccessfulPages;
 
             Console.WriteLine($"   Successfully crawled {pagesList.Count} pages");
+            
+            if (crawlResult.Errors.Any())
+            {
+                Console.WriteLine($"   Encountered {crawlResult.Errors.Count} errors during crawling");
+            }
 
             // Create result object
             var result = new CrawlResult
@@ -138,7 +144,8 @@ class Program
                 SitemapUrl = sitemapUrl,
                 CutoffDate = cutoffDate,
                 TotalUrls = entriesList.Count,
-                CrawledPages = pagesList
+                CrawledPages = pagesList,
+                Errors = crawlResult.Errors
             };
 
             // Save results to JSON file
@@ -148,6 +155,47 @@ class Program
             Console.WriteLine($"✅ Crawling completed successfully!");
             Console.WriteLine($"📄 Results saved to: {outputFile}");
             Console.WriteLine($"📊 Crawled {pagesList.Count} pages from {entriesList.Count} URLs");
+            
+            // Display error summary if there were any errors
+            if (crawlResult.Errors.Any())
+            {
+                Console.WriteLine();
+                Console.WriteLine($"⚠️  Error Summary ({crawlResult.Errors.Count} errors encountered):");
+                
+                // Group errors by message to deduplicate similar errors
+                var errorGroups = crawlResult.Errors
+                    .GroupBy(e => e.Message)
+                    .OrderByDescending(g => g.Count())
+                    .Take(10); // Show top 10 most common errors
+                
+                foreach (var errorGroup in errorGroups)
+                {
+                    var count = errorGroup.Count();
+                    var message = errorGroup.Key;
+                    Console.WriteLine($"   • {message} ({count} occurrence{(count > 1 ? "s" : "")})");
+                    
+                    // Show first few URLs that had this error
+                    var exampleUrls = errorGroup.Take(3).Select(e => e.Url);
+                    foreach (var url in exampleUrls)
+                    {
+                        Console.WriteLine($"     - {url}");
+                    }
+                    
+                    if (errorGroup.Count() > 3)
+                    {
+                        Console.WriteLine($"     ... and {errorGroup.Count() - 3} more");
+                    }
+                }
+                
+                if (crawlResult.Errors.Count > 30) // Show message if many errors were grouped
+                {
+                    var hiddenErrors = crawlResult.Errors.Count - errorGroups.Sum(g => g.Count());
+                    if (hiddenErrors > 0)
+                    {
+                        Console.WriteLine($"   ... and {hiddenErrors} other errors (see JSON output for full details)");
+                    }
+                }
+            }
             
             return 0;
         }
@@ -177,25 +225,27 @@ class Program
 
     private static void ShowUsage()
     {
-        Console.WriteLine("Usage: CodeCube.Api.Crawler <sitemap-url> [options]");
-        Console.WriteLine();
-        Console.WriteLine("Arguments:");
-        Console.WriteLine("  sitemap-url          The URL of the XML sitemap to crawl");
-        Console.WriteLine();
-        Console.WriteLine("Options:");
-        Console.WriteLine("  --cutoff-date DATE   Only crawl content updated on or after DATE (format: YYYY-MM-DD)");
-        Console.WriteLine("  --output FILE        Output file path (default: crawled-content-TIMESTAMP.json)");
-        Console.WriteLine();
-        Console.WriteLine("Examples:");
-        Console.WriteLine("  CodeCube.Api.Crawler https://codecube.net/sitemap.xml");
-        Console.WriteLine("  CodeCube.Api.Crawler https://codecube.net/sitemap.xml --cutoff-date 2025-01-01");
-        Console.WriteLine("  CodeCube.Api.Crawler https://codecube.net/sitemap.xml --cutoff-date 2025-08-01 --output my-crawl.json");
-        Console.WriteLine();
-        Console.WriteLine("This tool will:");
-        Console.WriteLine("  1. Parse the provided sitemap XML");
-        Console.WriteLine("  2. Filter URLs by cutoff date if provided");
-        Console.WriteLine("  3. Extract content from all matching URLs");
-        Console.WriteLine("  4. Save results as structured JSON for indexing");
+        Console.WriteLine("""
+            Usage: CodeCube.Api.Crawler <sitemap-url> [options]
+
+            Arguments:
+              sitemap-url          The URL of the XML sitemap to crawl
+
+            Options:
+              --cutoff-date DATE   Only crawl content updated on or after DATE (format: YYYY-MM-DD)
+              --output FILE        Output file path (default: crawled-content-TIMESTAMP.json)
+
+            Examples:
+              CodeCube.Api.Crawler https://codecube.net/sitemap.xml
+              CodeCube.Api.Crawler https://codecube.net/sitemap.xml --cutoff-date 2025-01-01
+              CodeCube.Api.Crawler https://codecube.net/sitemap.xml --cutoff-date 2025-08-01 --output my-crawl.json
+
+            This tool will:
+              1. Parse the provided sitemap XML
+              2. Filter URLs by cutoff date if provided
+              3. Extract content from all matching URLs
+              4. Save results as structured JSON for indexing
+            """);
     }
 }
 
@@ -209,4 +259,5 @@ public class CrawlResult
     public DateTime? CutoffDate { get; set; }
     public int TotalUrls { get; set; }
     public List<PageContent> CrawledPages { get; set; } = new();
+    public List<CrawlError> Errors { get; set; } = new();
 }
