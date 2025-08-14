@@ -13,10 +13,10 @@ class Program
         Console.WriteLine("CodeCube Content Crawler");
         Console.WriteLine("========================");
 
-        if (args.Length == 0)
+        if (args.Length == 0 || args[0] == "--help" || args[0] == "-h")
         {
             ShowUsage();
-            return 1;
+            return args.Length == 0 ? 1 : 0;
         }
 
         var sitemapUrl = args[0];
