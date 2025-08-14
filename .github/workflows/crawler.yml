@@ -1,0 +1,73 @@
+name: Content Crawler
+
+on:
+  workflow_dispatch:
+    inputs:
+      cutoff_date:
+        description: 'Cutoff date for crawling (YYYY-MM-DD format). Only content updated on or after this date will be crawled. Leave empty to crawl all content.'
+        required: false
+        type: string
+  workflow_call:
+    inputs:
+      cutoff_date:
+        description: 'Cutoff date for crawling (YYYY-MM-DD format). Only content updated on or after this date will be crawled. Leave empty to crawl all content.'
+        required: false
+        type: string
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Build API solution
+      run: |
+        cd api
+        dotnet build
+
+    - name: Run tests
+      run: |
+        cd api
+        dotnet test
+
+    - name: Run crawler
+      run: |
+        cd api
+        if [ -n "${{ inputs.cutoff_date }}" ]; then
+          echo "Running crawler with cutoff date: ${{ inputs.cutoff_date }}"
+          dotnet run --project CodeCube.Api.Crawler -- https://codecube.net/sitemap.xml --cutoff-date ${{ inputs.cutoff_date }} --output crawled-content.json
+        else
+          echo "Running crawler for all content"
+          dotnet run --project CodeCube.Api.Crawler -- https://codecube.net/sitemap.xml --output crawled-content.json
+        fi
+
+    - name: Upload crawler output
+      uses: actions/upload-artifact@v4
+      with:
+        name: crawled-content
+        path: api/crawled-content.json
+        retention-days: 30
+
+    - name: Display crawl summary
+      run: |
+        if [ -f api/crawled-content.json ]; then
+          echo "Crawl completed successfully!"
+          echo "Output file size: $(du -h api/crawled-content.json | cut -f1)"
+          echo "Number of pages crawled: $(jq '.crawledPages | length' api/crawled-content.json)"
+          echo "Total URLs processed: $(jq '.totalUrls' api/crawled-content.json)"
+          if [ -n "${{ inputs.cutoff_date }}" ]; then
+            echo "Cutoff date used: ${{ inputs.cutoff_date }}"
+          else
+            echo "No cutoff date used (crawled all content)"
+          fi
+        else
+          echo "Error: Crawler output file not found"
+          exit 1
+        fi
