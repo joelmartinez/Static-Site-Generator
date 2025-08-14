@@ -23,3 +23,23 @@ public class PageContent
     public Dictionary<string, string> Metadata { get; set; } = new();
     public DateTime CrawledAt { get; set; } = DateTime.UtcNow;
 }
+
+/// <summary>
+/// Represents an error that occurred while crawling a URL
+/// </summary>
+public class CrawlError
+{
+    public string Url { get; set; } = string.Empty;
+    public string Message { get; set; } = string.Empty;
+    public string? ExceptionType { get; set; }
+    public DateTime ErrorAt { get; set; } = DateTime.UtcNow;
+}
+
+/// <summary>
+/// Result of a crawling operation including both successful pages and errors
+/// </summary>
+public class CrawlOperationResult
+{
+    public List<PageContent> SuccessfulPages { get; set; } = new();
+    public List<CrawlError> Errors { get; set; } = new();
+}

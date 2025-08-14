@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeCube.Api.Core", "CodeCu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeCube.Api.Tests", "CodeCube.Api.Tests\CodeCube.Api.Tests.csproj", "{4D6ADF00-6D21-40D5-A681-C1045EE4AB12}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeCube.Api.TestCli", "CodeCube.Api.TestCli\CodeCube.Api.TestCli.csproj", "{CB6F6F15-696F-42C1-96CF-F88F87AC0968}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeCube.Api.Crawler", "CodeCube.Api.Crawler\CodeCube.Api.Crawler.csproj", "{CB6F6F15-696F-42C1-96CF-F88F87AC0968}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
